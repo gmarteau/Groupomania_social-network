@@ -5,8 +5,9 @@ Projet fullstack de réseau social d'entreprise.
 
 <details>
 <summary>
-## API Guide
+<h2>API Guide</h2>
 </summary>
+
 ### User
 * **POST** /user/signup  
 Crée un nouvel utilisateur et l'ajoute à la table User  
@@ -94,7 +95,29 @@ Supprime l'utilisateur de la base de données
 `* 400 Bad Request: mot de passe erroné`  
   
 ### Topic
-* **POST** /topic  
+* **GET** /topics  
+Récupère la liste de tous les objets Topic de la base de données  
+  
+**req**: -  
+  
+**res**: **200 OK** [  
+  {topic1},  
+  {topic2},  
+  ...  
+]   
+  
+* **GET** /topics/:id  
+Récupère l'objet Topic correspondant à l'id passé en paramètre  
+  
+**req**: -  
+  
+**res**: **200 OK** {  
+  id: number,  
+  name: string,  
+  description: string  
+}  
+  
+* **POST** /topics  
 Crée un nouveau topic et l'ajoute à la table Topic  
   
 **req**: {  
@@ -113,7 +136,7 @@ Crée un nouveau topic et l'ajoute à la table Topic
 `* 400 Bad Request: un champ contient des caractères non autorisés`  
 `* 400 Bad Request: un champ requis n'est pas rempli`  
   
-* **DELETE** /topic/:id  
+* **DELETE** /topics/:id  
 Supprime un topic de la base de données (possible seulement pour le créateur du topic)  
   
 **req**: {  
@@ -128,8 +151,31 @@ Supprime un topic de la base de données (possible seulement pour le créateur d
 **res**: **200 OK** {  
   message: 'Topic supprimé'  
 }  
-</details>
+*erreurs possibles*:  
+`* 400 Bad Request: un champ contient des caractères non autorisés`  
+`* 400 Bad Request: un champ requis n'est pas rempli`  
   
+### Post
+* **POST** /posts  
+Crée un nouveau post et l'ajoute à la table Post  
+  
+**req**: {  
+  userId: number,  
+  topic_id: number,  
+  content: string  
+}  
+*exemple*: {  
+  userId: 123,  
+  topic_id: 15,  
+  content: "J'adore mon chien"  
+}  
+  
+**res**: **200 OK** {  
+  message: 'Post créé'  
+}
+  
+</details>
+
 ## DB Guide
 User:  
   * id  
