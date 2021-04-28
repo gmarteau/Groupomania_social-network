@@ -6,7 +6,7 @@ Projet fullstack de réseau social d'entreprise.
 
 ## API Guide
 ### User
-* POST /user/signup  
+* **POST** /user/signup  
 **req**: {  
   username: string,  
   password: string,  
@@ -29,7 +29,7 @@ erreurs possibles:
 `* 400 Bad Request: utilisateur déjà existant`  
 `* 400 Bad Request: utilisation de caractères non autorisés`  
   
-* POST /user/login  
+* **POST** /user/login  
 **req**: {  
   username || email: string,  
   password: string  
