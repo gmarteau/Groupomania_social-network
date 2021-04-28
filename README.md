@@ -1,5 +1,5 @@
 # P7 - Groupomania
-Projet fullstack de réseau social d'entreprise.
+Projet fullstack de réseau social d'entreprise. 
 
 ## Démarrer le serveur
 
