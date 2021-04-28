@@ -3,8 +3,10 @@ Projet fullstack de réseau social d'entreprise.
 
 ## Démarrer le serveur
 
-
+<details>
+<summary>
 ## API Guide
+</summary>
 ### User
 * **POST** /user/signup  
 Crée un nouvel utilisateur et l'ajoute à la table User  
@@ -126,6 +128,7 @@ Supprime un topic de la base de données (possible seulement pour le créateur d
 **res**: **200 OK** {  
   message: 'Topic supprimé'  
 }  
+</details>
   
 ## DB Guide
 User:  
