@@ -7,7 +7,7 @@ Projet fullstack de réseau social d'entreprise.
 ## API Guide
 ### User
 * POST /user/signup  
-_req_: {  
+**req**: {  
   username: string,  
   password: string,  
   email: string,  
@@ -22,7 +22,7 @@ exemple: {
   lastName: Dupont  
 }
   
-_res_: _200 OK_ {  
+**res**: **200 OK** {  
   message: 'Utilisateur créé'  
 }  
 erreurs possibles:  
@@ -30,7 +30,7 @@ erreurs possibles:
 `* 400 Bad Request: utilisation de caractères non autorisés`  
   
 * POST /user/login  
-_req_: {  
+**req**: {  
   username || email: string,  
   password: string  
 }  
@@ -39,7 +39,7 @@ exemple: {
   password: 425SFHjs6/  
 }  
   
-_res_: _200 OK_ {  
+**res**: **200 OK** {  
   token: string  
 }  
 erreurs possibles:  
