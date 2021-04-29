@@ -415,12 +415,11 @@ Met à jour les informations concernant les likes du commentaire donné dans la 
   `* UNIQUE`  
   `* NOT NULL`    
   * first_name  
-  `* IND`     
   `* NOT NULL`  
   * last_name  
-  `* IND`   
   `* NOT NULL`  
   * profilePicture  
+  INDEX(first_name, last_name)  
   
 ### Topic  
   * id  
@@ -454,6 +453,7 @@ Met à jour les informations concernant les likes du commentaire donné dans la 
   `* []`    
   * number_of_comments  
   PRIMARY_KEY(id, topic_id)  
+  INDEX(likes, number_of_comments)  
   
 ### Comment
   * id     
