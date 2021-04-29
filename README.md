@@ -8,21 +8,21 @@ Projet fullstack de réseau social d'entreprise.
 
 ### User
 * **POST** /user/signup  
-Crée un nouvel utilisateur et l'ajoute à la table User  
+Crée un nouvel utilisateur et l'ajoute à la table Users    
   
 **req**: {  
   username: string,  
   password: string,  
   email: string,  
-  firstName: string,  
-  lastName: string  
+  first_name: string,  
+  last_name: string  
 }  
 *exemple*: {  
   username: 'a.dupont',  
   password: '425SFHjs6/',  
   email: 'a.dupont@mail.com',  
-  firstName: 'Alain',  
-  lastName: 'Dupont'  
+  first_name: 'Alain',  
+  last_name: 'Dupont'  
 }
   
 **res**: **200 OK** {  
@@ -33,7 +33,7 @@ Crée un nouvel utilisateur et l'ajoute à la table User
 `* 400 Bad Request: utilisation de caractères non autorisés`  
   
 * **POST** /user/login  
-Va chercher l'utilisateur dans la table User, puis retourne un token de session  
+Va chercher l'utilisateur dans la table Users, puis retourne un token de session  
   
 **req**: {  
   username || email: string,  
@@ -53,19 +53,19 @@ Va chercher l'utilisateur dans la table User, puis retourne un token de session
 `* 400 Bad Request: mot de passe erroné`  
   
 * **PUT** /user/:id  
-Met à jour les infos de l'utilisateur dans la table User  
+Met à jour les infos de l'utilisateur dans la table Users  
   
 **req**: {  
   email: string,  
-  firstName: string,  
-  lastName: string,  
-  profilePicture: string  
+  first_name: string,  
+  last_name: string,  
+  profile_picture: string  
 }  
 *exemple*: {  
   email: 'new.mail@mail.com',  
-  firstName: 'Georges',  
-  lastName: 'Durand',  
-  profilePicture: 'https://host.new-pic.jpeg'  
+  first_name: 'Georges',  
+  last_name: 'Durand',  
+  profile_picture: 'https://host.new-pic.jpeg'  
 }  
   
 **res**: **200 OK** {  
@@ -117,7 +117,7 @@ Récupère l'objet Topic correspondant à l'id passé en paramètre
 }  
   
 * **POST** /topics  
-Crée un nouveau topic et l'ajoute à la table Topic  
+Crée un nouveau topic et l'ajoute à la table Topics  
   
 **req**: {  
   user_id: number,  
@@ -158,7 +158,7 @@ Supprime un topic de la base de données (possible seulement pour le créateur d
   
 ### Post
 * **POST** /topics/:id/posts  
-Crée un nouveau post et l'ajoute à la table Post  
+Crée un nouveau post et l'ajoute à la table Posts  
   
 **req**: {  
   user_id: number,  
@@ -205,9 +205,9 @@ Retourne le post (avec les infos liées nécessaires au bon affichage du post r�
   content: string,  
   likes: number,  
   dislikes: number,  
-  hasLiked: array,  
-  hasDisliked: array,  
-  numberOfComments: number  
+  has_liked: array,  
+  has_disliked: array,  
+  number_of_comments: number  
 }  
 *erreurs possibles*:  
 `* 404 Not Found: la ressource demandée n'existe pas`  
@@ -279,7 +279,7 @@ Met à jour les informations concernant les likes du post donné dans la base de
   
 ### Comment
 * **POST** /topics/:id/posts/:id/comments  
-Crée un nouveau commentaire pour le post et l'ajoute à la table Comment  
+Crée un nouveau commentaire pour le post et l'ajoute à la table Comments  
   
 **req**: {  
   user_id: number,  
@@ -326,8 +326,8 @@ Retourne le commentaire correspondant à l'id donné pour un post donné
   content: string,  
   likes: number,  
   dislikes: number,  
-  hasLiked: array,  
-  hasDisliked: array,  
+  has_liked: array,  
+  has_disliked: array,  
 }  
 *erreurs possibles*:  
 `* 404 Not Found: la ressource demandée n'existe pas`  
@@ -402,7 +402,7 @@ Met à jour les informations concernant les likes du commentaire donné dans la 
 ## DB Guide
 <details>
 
-User:  
+### User  
   * id  
   `* PRIMARY_KEY`   
   `* AUTO_INCREMENT`  
@@ -414,15 +414,15 @@ User:
   * email  
   `* UNIQUE`  
   `* NOT NULL`    
-  * firstName  
+  * first_name  
   `* IND`     
   `* NOT NULL`  
-  * lastName  
+  * last_name  
   `* IND`   
   `* NOT NULL`  
   * profilePicture  
   
-Topic:  
+### Topic  
   * id  
   `* PRIMARY_KEY`   
   `* AUTO_INCREMENT`  
@@ -435,7 +435,7 @@ Topic:
   * description  
   `* NOT NULL`    
   
-Post:  
+### Post
   * id  
   `* AUTO_INCREMENT`    
   * topic_id  
@@ -452,10 +452,10 @@ Post:
   `* []`    
   * hasDisliked  
   `* []`    
-  * numberOfComments  
+  * number_of_comments  
   PRIMARY_KEY(id, topic_id)  
   
-Comment:  
+### Comment
   * id     
   `* AUTO_INCREMENT`  
   * post_id  
@@ -468,9 +468,9 @@ Comment:
   `* NOT NULL`    
   * likes  
   * dislikes  
-  * hasLiked  
+  * has_liked  
   `* []`    
-  * hasDisliked  
+  * has_disliked  
   `* []`    
   PRIMARY_KEY(id, post_id)  
   
