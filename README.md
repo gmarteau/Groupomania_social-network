@@ -4,9 +4,7 @@ Projet fullstack de réseau social d'entreprise.
 ## Démarrer le serveur
 
 <details>
-<summary>
-<h2>API Guide</h2>
-</summary>
+<summary><h2>API Guide</h2></summary>
 
 ### User
 * **POST** /user/signup  
@@ -47,7 +45,7 @@ Va chercher l'utilisateur dans la table User, puis retourne un token de session
 }  
   
 **res**: **200 OK** {  
-  userId: number,  
+  user_id: number,  
   token: string  
 }  
 *erreurs possibles*:  
@@ -80,11 +78,11 @@ Met à jour les infos de l'utilisateur dans la table User
 Supprime l'utilisateur de la base de données  
   
 **req**: {  
-  userId: number,  
+  user_id: number,  
   password: string  
 }  
 *exemple*: {  
-  userId: 123,  
+  user_id: 123,  
   password: '425SFHjs6/'  
 }  
   
@@ -113,6 +111,7 @@ Récupère l'objet Topic correspondant à l'id passé en paramètre
   
 **res**: **200 OK** {  
   id: number,  
+  user_id: number,  
   name: string,  
   description: string  
 }  
@@ -121,10 +120,12 @@ Récupère l'objet Topic correspondant à l'id passé en paramètre
 Crée un nouveau topic et l'ajoute à la table Topic  
   
 **req**: {  
+  user_id: number,  
   name: string,  
   description: string  
 }  
 *exemple*: {  
+  user_id: 123,  
   name: 'Animaux',  
   description: 'Ce forum concerne les animaux'  
 }  
@@ -141,11 +142,11 @@ Supprime un topic de la base de données (possible seulement pour le créateur d
   
 **req**: {  
   id: number,  
-  userId: number  
+  user_id: number  
 }  
 *exemple*: {  
   id: 15,  
-  userId: 123  
+  user_id: 123  
 }  
   
 **res**: **200 OK** {  
@@ -156,27 +157,251 @@ Supprime un topic de la base de données (possible seulement pour le créateur d
 `* 400 Bad Request: un champ requis n'est pas rempli`  
   
 ### Post
-* **POST** /posts  
+* **POST** /topics/:id/posts  
 Crée un nouveau post et l'ajoute à la table Post  
   
 **req**: {  
-  userId: number,  
+  user_id: number,  
   topic_id: number,  
   content: string  
 }  
 *exemple*: {  
-  userId: 123,  
+  user_id: 123,  
   topic_id: 15,  
   content: "J'adore mon chien"  
 }  
   
 **res**: **200 OK** {  
   message: 'Post créé'  
+}  
+*erreurs possibles*:  
+`* 400 Bad Request: un champ contient des caractères non autorisés`  
+`* 400 Bad Request: un champ requis n'est pas rempli`  
+  
+* **GET** /topics/:id/posts  
+Récupère la liste de tous les objets post (contenant toutes les infos nécessaires à l'affichage des posts) pour le topic donné  
+  
+**req**: -  
+  
+**res**: **200 OK** [  
+  {post1},  
+  {post2},  
+  ...  
+]  
+  
+* **GET** /topics/:id/posts/:id  
+Retourne le post (avec les infos liées nécessaires au bon affichage du post récupérées d'autres tables) correspondant à l'id donné pour un topic donné  
+  
+**req**: -  
+  
+**res**: **200 OK** {  
+  id: number,  
+  topic_id: number,  
+  user_id: number,  
+  publisher_username: string,  
+  publisher_firstName: string,  
+  publisher_lastName: string,  
+  date_publication: string,  
+  content: string,  
+  likes: number,  
+  dislikes: number,  
+  hasLiked: array,  
+  hasDisliked: array,  
+  numberOfComments: number  
+}  
+*erreurs possibles*:  
+`* 404 Not Found: la ressource demandée n'existe pas`  
+    
+* **PUT** /topics/:id/posts/:id  
+Met à jour le post donné dans la base de données (possible seulement pour le créateur du post)  
+  
+**req**: {  
+  id: number,  
+  topic_id: number,  
+  user_id: number,  
+  content: string  
+}  
+*exemple*: {  
+  id: 456,  
+  topic_id: 15,  
+  user_id: 123,  
+  content: "J'adore vraiment mon chien"  
+}  
+  
+**res**: **200 OK** {  
+  message: 'Post mis à jour'  
+}  
+*erreurs possibles*:  
+`* 400 Bad Request: un champ contient des caractères non autorisés`  
+`* 401 Unauthorized: vous n'avez pas l'autorisation requise pour effectuer cette opération`  
+  
+* **DELETE** /topics/:id/posts/:id  
+Supprime le post de la base de données (possible seulement pour le créateur du post)  
+  
+**req**: {  
+  id: number,  
+  topic_id: number,  
+  user_id: number,  
+}  
+*exemple*: {  
+  id: 456,  
+  topic_id: 15,  
+  user_id: 123  
+}  
+  
+**res**: **200 OK** {  
+  message: 'Post supprimé'  
 }
+*erreurs possibles*:  
+`* 404 Not Found: la ressource demandée n'existe pas`  
+`* 401 Unauthorized: vous n'avez pas l'autorisation requise pour effectuer cette opération`  
+  
+* **POST** /topics/:id/posts/:id/like  
+Met à jour les informations concernant les likes du post donné dans la base de données  
+*Le paramètre like prend 3 valeurs possibles: -1 (dislike), 0 (neutre), 1 (like)*  
+  
+**req**: {  
+  id: number,  
+  topic_id: number,  
+  user_id: number,  
+  like: number  
+}  
+*exemple*: {  
+  id: 456,  
+  topic_id: 15,  
+  user_id: 175,  
+  like: 1  
+}  
+  
+**res**: **200 OK** {  
+  message: 'Post mis à jour avec la nouvelle réaction'  
+}  
+  
+### Comment
+* **POST** /topics/:id/posts/:id/comments  
+Crée un nouveau commentaire pour le post et l'ajoute à la table Comment  
+  
+**req**: {  
+  user_id: number,  
+  post_id: number,  
+  content: string  
+}  
+*exemple*: {  
+  user_id: 175,  
+  post_id: 456,  
+  content: "Comment s'appelle ton chien?"  
+}  
+  
+**res**: **200 OK** {  
+  message: 'Commentaire créé'  
+}  
+*erreurs possibles*:  
+`* 400 Bad Request: un champ contient des caractères non autorisés`  
+`* 400 Bad Request: un champ requis n'est pas rempli`  
+  
+* **GET** /topics/:id/posts/:id/comments  
+Récupère la liste de tous les objets comment pour le post donné  
+  
+**req**: -  
+  
+**res**: **200 OK** [  
+  {comment1},  
+  {comment2},  
+  ...  
+]  
+  
+* **GET** /topics/:id/posts/:id/comments/:id  
+Retourne le commentaire correspondant à l'id donné pour un post donné  
+  
+**req**: -  
+  
+**res**: **200 OK** {  
+  id: number,  
+  post_id: number,  
+  user_id: number,  
+  publisher_username: string,  
+  publisher_firstName: string,  
+  publisher_lastName: string,  
+  date_publication: string,  
+  content: string,  
+  likes: number,  
+  dislikes: number,  
+  hasLiked: array,  
+  hasDisliked: array,  
+}  
+*erreurs possibles*:  
+`* 404 Not Found: la ressource demandée n'existe pas`  
+    
+* **PUT** /topics/:id/posts/:id/comments/:id    
+Met à jour le commentaire donné dans la base de données (possible seulement pour le créateur du commentaire)  
+  
+**req**: {  
+  id: number,  
+  post_id: number,  
+  user_id: number,  
+  content: string  
+}  
+*exemple*: {  
+  id: 3,  
+  post_id: 456,  
+  user_id: 175,  
+  content: "Comment s'appelle ce joli chien?"  
+}  
+  
+**res**: **200 OK** {  
+  message: 'Commentaire mis à jour'  
+}  
+*erreurs possibles*:  
+`* 400 Bad Request: un champ contient des caractères non autorisés`  
+`* 401 Unauthorized: vous n'avez pas l'autorisation requise pour effectuer cette opération`  
+  
+* **DELETE** /topics/:id/posts/:id/comments/:id   
+Supprime le commentaire de la base de données (possible seulement pour le créateur du post)  
+  
+**req**: {  
+  id: number,  
+  post_id: number,  
+  user_id: number,  
+}  
+*exemple*: {  
+  id: 3,  
+  post_id: 456,  
+  user_id: 175  
+}  
+  
+**res**: **200 OK** {  
+  message: 'Commentaire supprimé'  
+}
+*erreurs possibles*:  
+`* 404 Not Found: la ressource demandée n'existe pas`  
+`* 401 Unauthorized: vous n'avez pas l'autorisation requise pour effectuer cette opération`  
+  
+* **POST** /topics/:id/posts/:id/comments/:id/like    
+Met à jour les informations concernant les likes du commentaire donné dans la base de données  
+*Le paramètre like prend 3 valeurs possibles: -1 (dislike), 0 (neutre), 1 (like)*  
+  
+**req**: {  
+  id: number,  
+  post_id: number,  
+  user_id: number,  
+  like: number  
+}  
+*exemple*: {  
+  id: 3,  
+  post_id: 456,  
+  user_id: 250,  
+  like: 1  
+}  
+  
+**res**: **200 OK** {  
+  message: 'Commentaire mis à jour avec la nouvelle réaction'  
+}  
   
 </details>
 
-## DB Guide
+<details>
+<summary><h2>DB Guide</h2></summary>
+
 User:  
   * id  
   `* PRIMARY_KEY`   
@@ -212,7 +437,6 @@ Topic:
   
 Post:  
   * id  
-  `* PRIMARY_KEY`   
   `* AUTO_INCREMENT`    
   * topic_id  
   `* FK(Topic.id)`    
@@ -229,6 +453,7 @@ Post:
   * hasDisliked  
   `* []`    
   * numberOfComments  
+  PRIMARY_KEY(id, topic_id)  
   
 Comment:  
   * id     
@@ -237,7 +462,7 @@ Comment:
   `* FK(Post.id)`    
   * user_id  
   `* FK(User.id)`  
-    * date_publication  
+  * date_publication  
   `* NOT NULL`      
   * content  
   `* NOT NULL`    
@@ -248,3 +473,5 @@ Comment:
   * hasDisliked  
   `* []`    
   PRIMARY_KEY(id, post_id)  
+  
+</details>
