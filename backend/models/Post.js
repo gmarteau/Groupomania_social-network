@@ -1,18 +1,17 @@
-const Topic = require("./Topic");
-const User = require("./User");
-
 module.exports = (sequelize, type) => {
     return sequelize.define('Post', {
         id: {
             type: type.INTEGER.UNSIGNED,
             autoIncrement: true,
-            unique: true
+            primaryKey: true
         },
         topic_id: {
             type: type.INTEGER.UNSIGNED,
             allowNull: false,
             references: {
-                model: Topic,
+                model: {
+                    tableName: 'topics'
+                },
                 key: 'id'
             }
         },
@@ -20,13 +19,16 @@ module.exports = (sequelize, type) => {
             type: type.INTEGER.UNSIGNED,
             allowNull: false,
             references: {
-                model: User,
+                model: {
+                    tableName: 'users'
+                },
                 key: 'id'
             }
         },
         date_publication: {
             type: type.DATE,
-            defaultValue: type.NOW
+            allowNull: false,
+            defaultValue: type.fn('NOW')
         },
         content: {
             type: type.TEXT,
@@ -50,8 +52,7 @@ module.exports = (sequelize, type) => {
     }, {
         indexes: [
             {
-                name: 'primary_topicId_id',
-                primaryKey: true,
+                name: 'ind_topicId_id',
                 fields: ['topic_id', 'id']
             },
             {

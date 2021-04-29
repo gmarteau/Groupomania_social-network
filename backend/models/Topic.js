@@ -1,5 +1,3 @@
-const User = require("./User");
-
 module.exports = (sequelize, type) => {
     return sequelize.define('Topic', {
         id: {
@@ -11,7 +9,9 @@ module.exports = (sequelize, type) => {
             type: type.INTEGER.UNSIGNED,
             allowNull: false,
             references: {
-                model: User,
+                model: {
+                    tableName: 'users'
+                },
                 key: 'id'
             }
         },

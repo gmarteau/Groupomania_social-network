@@ -436,6 +436,7 @@ Met à jour les informations concernant les likes du commentaire donné dans la 
   
 ### Post
   * id  
+  `* PRIMARY_KEY`   
   `* AUTO_INCREMENT`    
   * topic_id  
   `* FK(Topic.id)`    
@@ -452,11 +453,12 @@ Met à jour les informations concernant les likes du commentaire donné dans la 
   * hasDisliked  
   `* []`    
   * number_of_comments  
-  PRIMARY_KEY(id, topic_id)  
+  INDEX(id, topic_id)  
   INDEX(likes, number_of_comments)  
   
 ### Comment
   * id     
+  `* PRIMARY_KEY`   
   `* AUTO_INCREMENT`  
   * post_id  
   `* FK(Post.id)`    
@@ -472,6 +474,6 @@ Met à jour les informations concernant les likes du commentaire donné dans la 
   `* []`    
   * has_disliked  
   `* []`    
-  PRIMARY_KEY(id, post_id)  
+  INDEX(id, post_id)  
   
 </details>

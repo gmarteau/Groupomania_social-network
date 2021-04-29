@@ -1,18 +1,17 @@
-const Post = require("./Post")
-const User = require("./User")
-
 module.exports = (sequelize, type) => {
     return sequelize.define('Comment', {
         id: {
             type: type.INTEGER.UNSIGNED,
             autoIncrement: true,
-            unique: true
+            primaryKey: true
         },
         post_id: {
             type: type.INTEGER.UNSIGNED,
             allowNull: false,
             references: {
-                model: Post,
+                model: {
+                    tableName: 'posts'
+                },
                 key: 'id'
             }
         },
@@ -20,13 +19,16 @@ module.exports = (sequelize, type) => {
             type: type.INTEGER.UNSIGNED,
             allowNull: false,
             references: {
-                model: User,
+                model: {
+                    tableName: 'users'
+                },
                 key: 'id'
             }
         },
         date_publication: {
             type: type.DATE,
-            defaultValue: type.NOW
+            allowNull: false,
+            defaultValue: type.fn('NOW')
         },
         content: {
             type: type.TEXT,
@@ -47,8 +49,7 @@ module.exports = (sequelize, type) => {
     }, {
         indexes: [
             {
-                name: 'primary_postId_id',
-                primaryKey: true,
+                name: 'ind_postId_id',
                 fields: ['post_id', 'id']
             },
             {

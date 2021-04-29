@@ -27,7 +27,7 @@ const Topic = TopicModel(sequelize, Sequelize);
 const Post = PostModel(sequelize, Sequelize);
 const Comment = CommentModel(sequelize, Sequelize);
 
-sequelize.sync()
+sequelize.sync({ force: true })
     .then(() => console.log('Tables créées à l\'intérieur de la base de données'))
     .catch(error => console.log(error))
 ;
