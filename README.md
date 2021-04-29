@@ -3,8 +3,8 @@ Projet fullstack de réseau social d'entreprise.
 
 ## Démarrer le serveur
 
+## API Guide
 <details>
-<summary><h2>API Guide</h2></summary>
 
 ### User
 * **POST** /user/signup  
@@ -399,8 +399,8 @@ Met à jour les informations concernant les likes du commentaire donné dans la 
   
 </details>
 
+## DB Guide
 <details>
-<summary><h2>DB Guide</h2></summary>
 
 User:  
   * id  
