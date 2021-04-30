@@ -32,7 +32,6 @@ module.exports = (sequelize, type) => {
         },
         profile_picture: {
             type: type.STRING,
-            unique: true
         }
     }, {
         indexes: [

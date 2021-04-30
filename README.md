@@ -74,14 +74,14 @@ Récupère les informations de l'utilisateur correspondant à l'id donné
 Met à jour les infos de l'utilisateur dans la table Users  
   
 **req**: {  
-  email: string,  
+  user_id: number,  
   first_name: string,  
   last_name: string,  
   bio: string,  
   profile_picture: string  
 }  
 *exemple*: {  
-  email: 'new.mail@mail.com',  
+  user_id: 123,  
   first_name: 'Georges',  
   last_name: 'Durand',  
   bio: 'Je m'appelle Georges, je travaille dans le département RH.',  
@@ -110,7 +110,7 @@ Supprime l'utilisateur de la base de données
   message: 'Utilisateur supprimé'  
 }  
 *erreurs possibles*:  
-`* 400 Bad Request: mot de passe erroné`  
+`* 401 Unauthorized: mot de passe erroné`  
   
 ### Topic
 * **GET** /topics  
