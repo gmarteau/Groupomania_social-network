@@ -5,7 +5,7 @@ module.exports = (sequelize, type) => {
             primaryKey: true,
             autoIncrement: true
         },
-        user_id: {
+        author_id: {
             type: type.INTEGER.UNSIGNED,
             allowNull: false,
             references: {

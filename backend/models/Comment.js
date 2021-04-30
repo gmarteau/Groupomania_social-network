@@ -15,7 +15,7 @@ module.exports = (sequelize, type) => {
                 key: 'id'
             }
         },
-        user_id: {
+        author_id: {
             type: type.INTEGER.UNSIGNED,
             allowNull: false,
             references: {

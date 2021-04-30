@@ -7,7 +7,7 @@ Projet fullstack de réseau social d'entreprise.
 <details>
 
 ### User
-* **POST** /user/signup  
+* **POST** /users/signup  
 Crée un nouvel utilisateur et l'ajoute à la table Users    
   
 **req**: {  
@@ -15,14 +15,16 @@ Crée un nouvel utilisateur et l'ajoute à la table Users
   password: string,  
   email: string,  
   first_name: string,  
-  last_name: string  
+  last_name: string,  
+  bio: string  
 }  
 *exemple*: {  
   username: 'a.dupont',  
   password: '425SFHjs6/',  
   email: 'a.dupont@mail.com',  
   first_name: 'Alain',  
-  last_name: 'Dupont'  
+  last_name: 'Dupont',  
+  bio: 'Moi c'est Alain, responsable de la manutention chez Groupomania!'  
 }
   
 **res**: **200 OK** {  
@@ -32,15 +34,15 @@ Crée un nouvel utilisateur et l'ajoute à la table Users
 `* 400 Bad Request: utilisateur déjà existant`  
 `* 400 Bad Request: utilisation de caractères non autorisés`  
   
-* **POST** /user/login  
+* **POST** /users/login  
 Va chercher l'utilisateur dans la table Users, puis retourne un token de session  
   
 **req**: {  
-  username || email: string,  
+  username: string,  
   password: string  
 }  
 *exemple*: {  
-  username: 'a.dupont' || email: 'a.dupont@mail.com',  
+  username: 'a.dupont' || 'a.dupont@mail.com',  
   password: '425SFHjs6/'  
 }  
   
@@ -49,22 +51,40 @@ Va chercher l'utilisateur dans la table Users, puis retourne un token de session
   token: string  
 }  
 *erreurs possibles*:  
-`* 400 Bad Request: utilisateur inexistant`  
-`* 400 Bad Request: mot de passe erroné`  
+`* 401 Unauthorized: utilisateur inexistant`  
+`* 401 Unauthorized: mot de passe erroné`  
   
-* **PUT** /user/:id  
+* **GET** /users/:id  
+Récupère les informations de l'utilisateur correspondant à l'id donné  
+  
+**req**: -  
+  
+**res**: **200 OK** {  
+  id: number,  
+  username: string,  
+  first_name: string,  
+  last_name: string,  
+  bio: string,  
+  profile_picture: string  
+}  
+*erreurs possibles*:  
+`* 404 Not Found: aucun utilisateur ne correspondant à cet identifiant`  
+   
+* **PUT** /users/:id  
 Met à jour les infos de l'utilisateur dans la table Users  
   
 **req**: {  
   email: string,  
   first_name: string,  
   last_name: string,  
+  bio: string,  
   profile_picture: string  
 }  
 *exemple*: {  
   email: 'new.mail@mail.com',  
   first_name: 'Georges',  
   last_name: 'Durand',  
+  bio: 'Je m'appelle Georges, je travaille dans le département RH.',  
   profile_picture: 'https://host.new-pic.jpeg'  
 }  
   
@@ -74,7 +94,7 @@ Met à jour les infos de l'utilisateur dans la table Users
 *erreurs possibles*:  
 `* 400 Bad Request: un champ contient des caractères non autorisés`  
   
-* **DELETE** /user/delete  
+* **DELETE** /users/:id/delete  
 Supprime l'utilisateur de la base de données  
   
 **req**: {  
@@ -111,7 +131,7 @@ Récupère l'objet Topic correspondant à l'id passé en paramètre
   
 **res**: **200 OK** {  
   id: number,  
-  user_id: number,  
+  author_id: number,  
   name: string,  
   description: string  
 }  
@@ -120,12 +140,12 @@ Récupère l'objet Topic correspondant à l'id passé en paramètre
 Crée un nouveau topic et l'ajoute à la table Topics  
   
 **req**: {  
-  user_id: number,  
+  author_id: number,  
   name: string,  
   description: string  
 }  
 *exemple*: {  
-  user_id: 123,  
+  author_id: 123,  
   name: 'Animaux',  
   description: 'Ce forum concerne les animaux'  
 }  
@@ -161,12 +181,12 @@ Supprime un topic de la base de données (possible seulement pour le créateur d
 Crée un nouveau post et l'ajoute à la table Posts  
   
 **req**: {  
-  user_id: number,  
+  author_id: number,  
   topic_id: number,  
   content: string  
 }  
 *exemple*: {  
-  user_id: 123,  
+  author_id: 123,  
   topic_id: 15,  
   content: "J'adore mon chien"  
 }  
@@ -197,10 +217,10 @@ Retourne le post (avec les infos liées nécessaires au bon affichage du post r�
 **res**: **200 OK** {  
   id: number,  
   topic_id: number,  
-  user_id: number,  
-  publisher_username: string,  
-  publisher_firstName: string,  
-  publisher_lastName: string,  
+  author_id: number,  
+  author_username: string,  
+  author_firstName: string,  
+  author_lastName: string,  
   date_publication: string,  
   content: string,  
   likes: number,  
@@ -282,12 +302,12 @@ Met à jour les informations concernant les likes du post donné dans la base de
 Crée un nouveau commentaire pour le post et l'ajoute à la table Comments  
   
 **req**: {  
-  user_id: number,  
+  author_id: number,  
   post_id: number,  
   content: string  
 }  
 *exemple*: {  
-  user_id: 175,  
+  author_id: 175,  
   post_id: 456,  
   content: "Comment s'appelle ton chien?"  
 }  
@@ -318,10 +338,10 @@ Retourne le commentaire correspondant à l'id donné pour un post donné
 **res**: **200 OK** {  
   id: number,  
   post_id: number,  
-  user_id: number,  
-  publisher_username: string,  
-  publisher_firstName: string,  
-  publisher_lastName: string,  
+  author_id: number,  
+  author_username: string,  
+  author_firstName: string,  
+  author_lastName: string,  
   date_publication: string,  
   content: string,  
   likes: number,  
@@ -425,7 +445,7 @@ Met à jour les informations concernant les likes du commentaire donné dans la 
   * id  
   `* PRIMARY_KEY`   
   `* AUTO_INCREMENT`  
-  * user_id  
+  * author_id  
   `* FK(User.id)`  
   * name  
   `* UNIQUE`  
@@ -440,7 +460,7 @@ Met à jour les informations concernant les likes du commentaire donné dans la 
   `* AUTO_INCREMENT`    
   * topic_id  
   `* FK(Topic.id)`    
-  * user_id  
+  * author_id  
   `* FK(User.id)`  
   * date_publication  
   `* NOT NULL`    
@@ -453,7 +473,7 @@ Met à jour les informations concernant les likes du commentaire donné dans la 
   * hasDisliked  
   `* []`    
   * number_of_comments  
-  INDEX(id, topic_id)  
+  INDEX(topic_id, id)  
   INDEX(likes, number_of_comments)  
   
 ### Comment
@@ -462,7 +482,7 @@ Met à jour les informations concernant les likes du commentaire donné dans la 
   `* AUTO_INCREMENT`  
   * post_id  
   `* FK(Post.id)`    
-  * user_id  
+  * author_id  
   `* FK(User.id)`  
   * date_publication  
   `* NOT NULL`      
@@ -474,6 +494,6 @@ Met à jour les informations concernant les likes du commentaire donné dans la 
   `* []`    
   * has_disliked  
   `* []`    
-  INDEX(id, post_id)  
+  INDEX(post_id, id)  
   
 </details>

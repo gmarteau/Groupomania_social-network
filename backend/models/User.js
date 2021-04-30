@@ -27,6 +27,9 @@ module.exports = (sequelize, type) => {
             type: type.STRING,
             allowNull: false
         },
+        bio: {
+            type: type.STRING,
+        },
         profile_picture: {
             type: type.STRING,
             unique: true

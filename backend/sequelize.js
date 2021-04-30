@@ -27,12 +27,12 @@ const Topic = TopicModel(sequelize, Sequelize);
 const Post = PostModel(sequelize, Sequelize);
 const Comment = CommentModel(sequelize, Sequelize);
 
-sequelize.sync({ force: true })
+sequelize.sync()
     .then(() => console.log('Tables créées à l\'intérieur de la base de données'))
     .catch(error => console.log(error))
 ;
 
-module.exports = User;
-module.exports = Topic;
-module.exports = Post;
-module.exports = Comment;
+exports.user = User;
+exports.topic = Topic;
+exports.post = Post;
+exports.comment = Comment;
