@@ -20,6 +20,7 @@ exports.signup = (req, res, next) => {
                 email: req.body.email,
                 first_name: req.body.first_name,
                 last_name: req.body.last_name,
+                bio: req.body.bio,
                 profile_picture: defaultAvatar
             })
                 .then(() => res.status(201).json({ message: 'Utilisateur créé' }))
@@ -140,12 +141,13 @@ exports.deleteUser = (req, res, next) => {
                     if (!valid) {
                         return res.status(401).json({ message: 'Mot de passe erroné' });
                     }
-                    if (user.profile_picture !== defaultAvatarUrl(req)) {
+                    const defaultAvatar = defaultAvatarUrl(req);
+                    if (user.profile_picture !== defaultAvatar) {
                         const filename = user.profile_picture.split('/images/')[1];
                         fs.unlink(`images/${filename}`, () => {
                             User.destroy({
                                 where: {
-                                    id: req.body.user_id
+                                    id: req.params.id
                                 }
                             })
                                 .then(() => res.status(200).json({ message: 'Utilisateur supprimé' }))
@@ -154,7 +156,7 @@ exports.deleteUser = (req, res, next) => {
                     } else {
                         User.destroy({
                             where: {
-                                id: req.body.user_id
+                                id: req.params.id
                             }
                         })
                             .then(() => res.status(200).json({ message: 'Utilisateur supprimé' }))

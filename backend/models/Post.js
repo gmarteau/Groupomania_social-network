@@ -63,6 +63,7 @@ module.exports = (sequelize, type) => {
                 name: 'ind_post_datePublication',
                 fields: ['date_publication']
             }
-        ]
+        ],
+        timestamps: true
     });
 };

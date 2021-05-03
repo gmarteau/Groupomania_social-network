@@ -94,7 +94,7 @@ Met à jour les infos de l'utilisateur dans la table Users
 *erreurs possibles*:  
 `* 400 Bad Request: un champ contient des caractères non autorisés`  
   
-* **DELETE** /users/:id/delete  
+* **DELETE** /users/:id  
 Supprime l'utilisateur de la base de données  
   
 **req**: {  

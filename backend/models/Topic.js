@@ -30,6 +30,7 @@ module.exports = (sequelize, type) => {
                 name: 'ind_topic_name',
                 fields: ['name']
             }
-        ]
+        ],
+        timestamps: true
     });
 };

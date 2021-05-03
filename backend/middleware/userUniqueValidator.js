@@ -1,4 +1,5 @@
-const User = require('../sequelize').User;
+const seq = require('../sequelize');
+const User = seq.user;
 
 module.exports = (req, res, next) => {
     User.findOne({

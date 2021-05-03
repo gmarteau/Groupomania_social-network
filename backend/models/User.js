@@ -39,6 +39,7 @@ module.exports = (sequelize, type) => {
                 name: 'ind_firstName_lastName',
                 fields: ['first_name', 'last_name']
             }
-        ]
+        ],
+        timestamps: true
     });
 };

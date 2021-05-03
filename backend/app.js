@@ -4,6 +4,7 @@ const xXssProtection = require('x-xss-protection');
 const path = require('path');
 
 const userRoutes = require('./routes/user');
+const topicRoutes = require('./routes/topic');
 
 const app = express();
 
@@ -21,5 +22,6 @@ app.use(xXssProtection());
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
 app.use('/api/users', userRoutes);
+app.use('/api/topics', topicRoutes);
 
 module.exports = app;
