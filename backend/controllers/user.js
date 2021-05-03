@@ -2,20 +2,25 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const fs = require('fs');
 require('dotenv').config();
-const User = require('../sequelize').User;
+const seq = require('../sequelize');
+const User = seq.user;
 
-const defaultAvatarUrl = `${req.protocol}://${req.get('host')}/images/default_avatar.png`;
+const defaultAvatarUrl = (req) => {
+    return `${req.protocol}://${req.get('host')}/images/default_avatar.png`;
+};
+
 
 exports.signup = (req, res, next) => {
     bcrypt.hash(req.body.password, 10)
         .then(hash => {
+            const defaultAvatar = defaultAvatarUrl(req);
             User.create({
                 username: req.body.username,
                 password: hash,
                 email: req.body.email,
                 first_name: req.body.first_name,
                 last_name: req.body.last_name,
-                profile_picture: defaultAvatarUrl
+                profile_picture: defaultAvatar
             })
                 .then(() => res.status(201).json({ message: 'Utilisateur créé' }))
                 .catch(error => res.status(400).json({ error }));
@@ -76,7 +81,7 @@ exports.updateUserProfile = (req, res, next) => {
             }
         })
             .then(user => {
-                if (user.profile_picture !== defaultAvatarUrl) {
+                if (user.profile_picture !== defaultAvatarUrl(req)) {
                     const filename = user.profile_picture.split('/images/')[1];
                     fs.unlink(`images/${filename}`, () => {
                         User.update({
@@ -135,7 +140,7 @@ exports.deleteUser = (req, res, next) => {
                     if (!valid) {
                         return res.status(401).json({ message: 'Mot de passe erroné' });
                     }
-                    if (user.profile_picture !== defaultAvatarUrl) {
+                    if (user.profile_picture !== defaultAvatarUrl(req)) {
                         const filename = user.profile_picture.split('/images/')[1];
                         fs.unlink(`images/${filename}`, () => {
                             User.destroy({
@@ -157,4 +162,5 @@ exports.deleteUser = (req, res, next) => {
                     }
                 })
         })
+        .catch(error => res.status(500).json({ error }));
 };

@@ -438,6 +438,7 @@ Met à jour les informations concernant les likes du commentaire donné dans la 
   `* NOT NULL`  
   * last_name  
   `* NOT NULL`  
+  * bio  
   * profilePicture  
   INDEX(first_name, last_name)  
   

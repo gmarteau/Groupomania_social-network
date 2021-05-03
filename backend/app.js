@@ -1,6 +1,9 @@
 const express = require('express');
 const helmet = require('helmet');
 const xXssProtection = require('x-xss-protection');
+const path = require('path');
+
+const userRoutes = require('./routes/user');
 
 const app = express();
 
@@ -14,5 +17,9 @@ app.use((req, res, next) => {
 app.use(express.json());
 app.use(helmet());
 app.use(xXssProtection());
+
+app.use('/images', express.static(path.join(__dirname, 'images')));
+
+app.use('/api/users', userRoutes);
 
 module.exports = app;

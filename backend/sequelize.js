@@ -28,7 +28,7 @@ const Post = PostModel(sequelize, Sequelize);
 const Comment = CommentModel(sequelize, Sequelize);
 
 sequelize.sync()
-    .then(() => console.log('Tables créées à l\'intérieur de la base de données'))
+    .then(() => console.log('Data synced'))
     .catch(error => console.log(error))
 ;
 
