@@ -27,6 +27,19 @@ const Topic = TopicModel(sequelize, Sequelize);
 const Post = PostModel(sequelize, Sequelize);
 const Comment = CommentModel(sequelize, Sequelize);
 
+User.hasMany(Topic);
+Topic.belongsTo(User);
+User.hasMany(Post);
+Post.belongsTo(User);
+User.hasMany(Comment);
+Comment.belongsTo(User);
+
+Topic.hasMany(Post);
+Post.belongsTo(Topic);
+
+Post.hasMany(Comment);
+Comment.belongsTo(Post);
+
 sequelize.sync()
     .then(() => console.log('Data synced'))
     .catch(error => console.log(error))

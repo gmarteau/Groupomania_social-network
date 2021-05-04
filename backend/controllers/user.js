@@ -19,10 +19,10 @@ exports.signup = (req, res, next) => {
                 username: req.body.username,
                 password: hash,
                 email: req.body.email,
-                first_name: req.body.first_name,
-                last_name: req.body.last_name,
+                firstName: req.body.firstName,
+                lastName: req.body.lastName,
                 bio: req.body.bio,
-                profile_picture: defaultAvatar
+                profilePicture: defaultAvatar
             })
                 .then(() => res.status(201).json({ message: 'Utilisateur créé' }))
                 .catch(error => res.status(400).json({ error }));
@@ -88,13 +88,13 @@ exports.updateUserProfile = (req, res, next) => {
                     const filename = user.profile_picture.split('/images/')[1];
                     fs.unlink(`images/${filename}`, () => {
                         User.update({
-                            first_name: req.body.user.first_name,
-                            last_name: req.body.user.last_name,
+                            firstName: req.body.user.firstName,
+                            lastName: req.body.user.lastName,
                             bio: req.body.user.bio,
-                            profile_picture: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+                            profilePicture: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
                         }, {
                             where: {
-                                id: req.body.user.user_id
+                                id: req.body.user.userId
                             }
                         })
                             .then(() => res.status(200).json({ message: 'Informations mises à jour' }))
@@ -102,13 +102,13 @@ exports.updateUserProfile = (req, res, next) => {
                     });
                 } else {
                     User.update({
-                        first_name: req.body.user.first_name,
-                        last_name: req.body.user.last_name,
+                        firstName: req.body.user.firstName,
+                        lastName: req.body.user.lastName,
                         bio: req.body.user.bio,
-                        profile_picture: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+                        profilePicture: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
                     }, {
                         where: {
-                            id: req.body.user.user_id
+                            id: req.body.user.userId
                         }
                     })
                         .then(() => res.status(200).json({ message: 'Informations mises à jour' }))
@@ -118,12 +118,12 @@ exports.updateUserProfile = (req, res, next) => {
             .catch(error => res.status(500).json({ error }));
     } else {
         User.update({
-            first_name: req.body.first_name,
-            last_name: req.body.last_name,
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
             bio: req.body.bio
         }, {
             where: {
-                id: req.body.user_id
+                id: req.body.userId
             }
         })
         .then(() => res.status(200).json({ message: 'Informations mises à jour' }))
@@ -134,7 +134,7 @@ exports.updateUserProfile = (req, res, next) => {
 exports.deleteUser = (req, res, next) => {
     User.findOne({
         where: {
-            id: req.body.user_id
+            id: req.body.userId
         }
     })
         .then(user => {
@@ -144,8 +144,8 @@ exports.deleteUser = (req, res, next) => {
                         return res.status(401).json({ message: 'Mot de passe erroné' });
                     }
                     const defaultAvatar = defaultAvatarUrl(req);
-                    if (user.profile_picture !== defaultAvatar) {
-                        const filename = user.profile_picture.split('/images/')[1];
+                    if (user.profilePicture !== defaultAvatar) {
+                        const filename = user.profilePicture.split('/images/')[1];
                         fs.unlink(`images/${filename}`, () => {
                             User.destroy({
                                 where: {

@@ -1,5 +1,6 @@
 const seq = require('../sequelize');
 const Topic = seq.topic;
+const User = seq.user;
 
 exports.createTopic = (req, res, next) => {
     Topic.findOne({
@@ -12,7 +13,7 @@ exports.createTopic = (req, res, next) => {
                 return res.status(400).json({ error: 'Un topic porte déjà ce nom' });
             } else {
                 Topic.create({
-                    author_id: req.body.author_id,
+                    UserId: req.body.userId,
                     name: req.body.name,
                     description: req.body.description
                 })
@@ -31,11 +32,15 @@ exports.getTopicsNamesList = (req, res, next) => {
         ]
     })
         .then(topics => res.status(200).json(topics))
-        .catch(error => res.status(500).json({ error }));
+        .catch(error => res.status(400).json({ error }));
 };
 
 exports.getTopicById = (req, res, next) => {
     Topic.findOne({
+        include: {
+            model: User,
+            attributes: ['username', 'firstName', 'lastName', 'profilePicture']
+        },
         where: {
             id: req.params.id
         }
@@ -51,7 +56,7 @@ exports.deleteTopic = (req, res, next) => {
         }
     })
         .then(topic => {
-            if (topic.dataValues.author_id !== req.body.user_id) {
+            if (topic.dataValues.UserId !== req.body.userId) {
                 return res.status(401).json({ error: 'Vous n\'avez pas les droits nécessaires à la suppression de ce topic' });
             } else {
                 Topic.destroy({

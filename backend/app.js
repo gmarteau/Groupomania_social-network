@@ -2,9 +2,11 @@ const express = require('express');
 const helmet = require('helmet');
 const xXssProtection = require('x-xss-protection');
 const path = require('path');
+const urlParamTopicId = require('./middleware/urlParamTopicId');
 
 const userRoutes = require('./routes/user');
 const topicRoutes = require('./routes/topic');
+const postRoutes = require('./routes/post');
 
 const app = express();
 
@@ -21,7 +23,10 @@ app.use(xXssProtection());
 
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
+app.param('topicId', urlParamTopicId);
+
 app.use('/api/users', userRoutes);
 app.use('/api/topics', topicRoutes);
+app.use('/api/topics/:topicId/posts', postRoutes);
 
 module.exports = app;

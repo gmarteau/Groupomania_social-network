@@ -5,16 +5,6 @@ module.exports = (sequelize, type) => {
             primaryKey: true,
             autoIncrement: true
         },
-        author_id: {
-            type: type.INTEGER.UNSIGNED,
-            allowNull: false,
-            references: {
-                model: {
-                    tableName: 'users'
-                },
-                key: 'id'
-            }
-        },
         name: {
             type: type.STRING,
             allowNull: false,

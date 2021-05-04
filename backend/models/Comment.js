@@ -5,27 +5,7 @@ module.exports = (sequelize, type) => {
             autoIncrement: true,
             primaryKey: true
         },
-        post_id: {
-            type: type.INTEGER.UNSIGNED,
-            allowNull: false,
-            references: {
-                model: {
-                    tableName: 'posts'
-                },
-                key: 'id'
-            }
-        },
-        author_id: {
-            type: type.INTEGER.UNSIGNED,
-            allowNull: false,
-            references: {
-                model: {
-                    tableName: 'users'
-                },
-                key: 'id'
-            }
-        },
-        date_publication: {
+        datePublication: {
             type: type.DATE,
             allowNull: false,
             defaultValue: type.fn('NOW')
@@ -40,21 +20,17 @@ module.exports = (sequelize, type) => {
         dislikes: {
             type: type.INTEGER.UNSIGNED
         },
-        has_liked: {
+        hasLiked: {
             type: type.TEXT
         },
-        has_disliked: {
+        hasDisliked: {
             type: type.TEXT
         }
     }, {
         indexes: [
             {
-                name: 'ind_postId_id',
-                fields: ['post_id', 'id']
-            },
-            {
                 name: 'ind_comment_datePublication',
-                fields: ['date_publication']
+                fields: ['datePublication']
             }
         ],
         timestamps: true

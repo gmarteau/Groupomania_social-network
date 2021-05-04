@@ -5,27 +5,7 @@ module.exports = (sequelize, type) => {
             autoIncrement: true,
             primaryKey: true
         },
-        topic_id: {
-            type: type.INTEGER.UNSIGNED,
-            allowNull: false,
-            references: {
-                model: {
-                    tableName: 'topics'
-                },
-                key: 'id'
-            }
-        },
-        author_id: {
-            type: type.INTEGER.UNSIGNED,
-            allowNull: false,
-            references: {
-                model: {
-                    tableName: 'users'
-                },
-                key: 'id'
-            }
-        },
-        date_publication: {
+        datePublication: {
             type: type.DATE,
             allowNull: false,
             defaultValue: type.fn('NOW')
@@ -35,33 +15,34 @@ module.exports = (sequelize, type) => {
             allowNull: false
         },
         likes: {
-            type: type.INTEGER.UNSIGNED
+            type: type.INTEGER.UNSIGNED,
+            defaultValue: 0
         },
         dislikes: {
-            type: type.INTEGER.UNSIGNED
+            type: type.INTEGER.UNSIGNED,
+            defaultValue: 0
         },
-        has_liked: {
-            type: type.TEXT
+        hasLiked: {
+            type: type.TEXT,
+            defaultValue: '[]'
         },
-        has_disliked: {
-            type: type.TEXT
+        hasDisliked: {
+            type: type.TEXT,
+            defaultValue: '[]'
         },
-        number_of_comments: {
-            type: type.INTEGER.UNSIGNED
+        numberOfComments: {
+            type: type.INTEGER.UNSIGNED,
+            defaultValue: 0
         }
     }, {
         indexes: [
             {
-                name: 'ind_topicId_id',
-                fields: ['topic_id', 'id']
-            },
-            {
                 name: 'ind_likes_comments',
-                fields: ['likes', 'number_of_comments']
+                fields: ['likes', 'numberOfComments']
             },
             {
                 name: 'ind_post_datePublication',
-                fields: ['date_publication']
+                fields: ['datePublication']
             }
         ],
         timestamps: true

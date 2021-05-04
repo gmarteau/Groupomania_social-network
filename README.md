@@ -14,16 +14,16 @@ Crée un nouvel utilisateur et l'ajoute à la table Users
   username: string,  
   password: string,  
   email: string,  
-  first_name: string,  
-  last_name: string,  
+  firstName: string,  
+  lastName: string,  
   bio: string  
 }  
 *exemple*: {  
   username: 'a.dupont',  
   password: '425SFHjs6/',  
   email: 'a.dupont@mail.com',  
-  first_name: 'Alain',  
-  last_name: 'Dupont',  
+  firstName: 'Alain',  
+  lastName: 'Dupont',  
   bio: 'Moi c'est Alain, responsable de la manutention chez Groupomania!'  
 }
   
@@ -47,7 +47,7 @@ Va chercher l'utilisateur dans la table Users, puis retourne un token de session
 }  
   
 **res**: **200 OK** {  
-  user_id: number,  
+  userId: number,  
   token: string  
 }  
 *erreurs possibles*:  
@@ -62,10 +62,10 @@ Récupère les informations de l'utilisateur correspondant à l'id donné
 **res**: **200 OK** {  
   id: number,  
   username: string,  
-  first_name: string,  
-  last_name: string,  
+  firstName: string,  
+  lastName: string,  
   bio: string,  
-  profile_picture: string  
+  profilePicture: string  
 }  
 *erreurs possibles*:  
 `* 404 Not Found: aucun utilisateur ne correspondant à cet identifiant`  
@@ -74,18 +74,18 @@ Récupère les informations de l'utilisateur correspondant à l'id donné
 Met à jour les infos de l'utilisateur dans la table Users  
   
 **req**: {  
-  user_id: number,  
-  first_name: string,  
-  last_name: string,  
+  userId: number,  
+  firstName: string,  
+  lastName: string,  
   bio: string,  
-  profile_picture: string  
+  profilePicture: string  
 }  
 *exemple*: {  
-  user_id: 123,  
-  first_name: 'Georges',  
-  last_name: 'Durand',  
+  userId: 123,  
+  firstName: 'Georges',  
+  lastName: 'Durand',  
   bio: 'Je m'appelle Georges, je travaille dans le département RH.',  
-  profile_picture: 'https://host.new-pic.jpeg'  
+  profilePicture: 'https://host.new-pic.jpeg'  
 }  
   
 **res**: **200 OK** {  
@@ -98,11 +98,11 @@ Met à jour les infos de l'utilisateur dans la table Users
 Supprime l'utilisateur de la base de données  
   
 **req**: {  
-  user_id: number,  
+  userId: number,  
   password: string  
 }  
 *exemple*: {  
-  user_id: 123,  
+  userId: 123,  
   password: '425SFHjs6/'  
 }  
   
@@ -131,21 +131,22 @@ Récupère l'objet Topic correspondant à l'id passé en paramètre
   
 **res**: **200 OK** {  
   id: number,  
-  author_id: number,  
   name: string,  
-  description: string  
+  description: string,  
+  UserId: number,  
+  User: Object    
 }  
   
 * **POST** /topics  
 Crée un nouveau topic et l'ajoute à la table Topics  
   
 **req**: {  
-  author_id: number,  
+  userId: number,  
   name: string,  
   description: string  
 }  
 *exemple*: {  
-  author_id: 123,  
+  userId: 123,  
   name: 'Animaux',  
   description: 'Ce forum concerne les animaux'  
 }  
@@ -161,12 +162,10 @@ Crée un nouveau topic et l'ajoute à la table Topics
 Supprime un topic de la base de données (possible seulement pour le créateur du topic)  
   
 **req**: {  
-  id: number,  
-  user_id: number  
+  userId: number  
 }  
 *exemple*: {  
-  id: 15,  
-  user_id: 123  
+  userId: 123  
 }  
   
 **res**: **200 OK** {  
@@ -176,17 +175,17 @@ Supprime un topic de la base de données (possible seulement pour le créateur d
 `* 401 Unauthorized: vous n'avez pas les droits nécessaires à la suppression de ce topic`  
   
 ### Post
-* **POST** /topics/:id/posts  
+* **POST** /topics/:topicId/posts  
 Crée un nouveau post et l'ajoute à la table Posts  
   
 **req**: {  
-  author_id: number,  
-  topic_id: number,  
+  userId: number,  
+  topicId: number,  
   content: string  
 }  
 *exemple*: {  
-  author_id: 123,  
-  topic_id: 15,  
+  userId: 123,  
+  topicId: 15,  
   content: "J'adore mon chien"  
 }  
   
@@ -197,7 +196,7 @@ Crée un nouveau post et l'ajoute à la table Posts
 `* 400 Bad Request: un champ contient des caractères non autorisés`  
 `* 400 Bad Request: un champ requis n'est pas rempli`  
   
-* **GET** /topics/:id/posts  
+* **GET** /topics/:topicId/posts  
 Récupère la liste de tous les objets post (contenant toutes les infos nécessaires à l'affichage des posts) pour le topic donné  
   
 **req**: -  
@@ -208,42 +207,37 @@ Récupère la liste de tous les objets post (contenant toutes les infos nécessa
   ...  
 ]  
   
-* **GET** /topics/:id/posts/:id  
+* **GET** /topics/:topicId/posts/:id  
 Retourne le post (avec les infos liées nécessaires au bon affichage du post récupérées d'autres tables) correspondant à l'id donné pour un topic donné  
   
 **req**: -  
   
 **res**: **200 OK** {  
   id: number,  
-  topic_id: number,  
-  author_id: number,  
-  author_username: string,  
-  author_firstName: string,  
-  author_lastName: string,  
   date_publication: string,  
   content: string,  
   likes: number,  
   dislikes: number,  
-  has_liked: array,  
-  has_disliked: array,  
-  number_of_comments: number  
+  hasLiked: array,  
+  hasDisliked: array,  
+  numberOfComments: number,   
+  UserId: number,  
+  TopicId: number,  
+  User: Object,  
+  Topic: Object  
 }  
 *erreurs possibles*:  
 `* 404 Not Found: la ressource demandée n'existe pas`  
     
-* **PUT** /topics/:id/posts/:id  
+* **PUT** /topics/:topicId/posts/:id  
 Met à jour le post donné dans la base de données (possible seulement pour le créateur du post)  
   
 **req**: {  
-  id: number,  
-  topic_id: number,  
-  user_id: number,  
+  userId: number,  
   content: string  
 }  
 *exemple*: {  
-  id: 456,  
-  topic_id: 15,  
-  user_id: 123,  
+  userId: 123,  
   content: "J'adore vraiment mon chien"  
 }  
   
@@ -254,18 +248,14 @@ Met à jour le post donné dans la base de données (possible seulement pour le 
 `* 400 Bad Request: un champ contient des caractères non autorisés`  
 `* 401 Unauthorized: vous n'avez pas l'autorisation requise pour effectuer cette opération`  
   
-* **DELETE** /topics/:id/posts/:id  
+* **DELETE** /topics/:topicId/posts/:id  
 Supprime le post de la base de données (possible seulement pour le créateur du post)  
   
 **req**: {  
-  id: number,  
-  topic_id: number,  
-  user_id: number,  
+  userId: number,  
 }  
 *exemple*: {  
-  id: 456,  
-  topic_id: 15,  
-  user_id: 123  
+  userId: 123  
 }  
   
 **res**: **200 OK** {  
@@ -275,20 +265,16 @@ Supprime le post de la base de données (possible seulement pour le créateur du
 `* 404 Not Found: la ressource demandée n'existe pas`  
 `* 401 Unauthorized: vous n'avez pas l'autorisation requise pour effectuer cette opération`  
   
-* **POST** /topics/:id/posts/:id/like  
+* **POST** /topics/:topicId/posts/:id/like  
 Met à jour les informations concernant les likes du post donné dans la base de données  
 *Le paramètre like prend 3 valeurs possibles: -1 (dislike), 0 (neutre), 1 (like)*  
   
 **req**: {  
-  id: number,  
-  topic_id: number,  
-  user_id: number,  
+  userId: number,  
   like: number  
 }  
 *exemple*: {  
-  id: 456,  
-  topic_id: 15,  
-  user_id: 175,  
+  userId: 175,  
   like: 1  
 }  
   
@@ -297,17 +283,15 @@ Met à jour les informations concernant les likes du post donné dans la base de
 }  
   
 ### Comment
-* **POST** /topics/:id/posts/:id/comments  
+* **POST** /topics/:topicId/posts/:postId/comments  
 Crée un nouveau commentaire pour le post et l'ajoute à la table Comments  
   
 **req**: {  
-  author_id: number,  
-  post_id: number,  
+  userId: number,  
   content: string  
 }  
 *exemple*: {  
-  author_id: 175,  
-  post_id: 456,  
+  userId: 175,  
   content: "Comment s'appelle ton chien?"  
 }  
   
@@ -318,7 +302,7 @@ Crée un nouveau commentaire pour le post et l'ajoute à la table Comments
 `* 400 Bad Request: un champ contient des caractères non autorisés`  
 `* 400 Bad Request: un champ requis n'est pas rempli`  
   
-* **GET** /topics/:id/posts/:id/comments  
+* **GET** /topics/:topicId/posts/:postId/comments  
 Récupère la liste de tous les objets comment pour le post donné  
   
 **req**: -  
@@ -329,41 +313,36 @@ Récupère la liste de tous les objets comment pour le post donné
   ...  
 ]  
   
-* **GET** /topics/:id/posts/:id/comments/:id  
+* **GET** /topics/:topicId/posts/:postId/comments/:id  
 Retourne le commentaire correspondant à l'id donné pour un post donné  
   
 **req**: -  
   
 **res**: **200 OK** {  
   id: number,  
-  post_id: number,  
-  author_id: number,  
-  author_username: string,  
-  author_firstName: string,  
-  author_lastName: string,  
   date_publication: string,  
   content: string,  
   likes: number,  
   dislikes: number,  
-  has_liked: array,  
-  has_disliked: array,  
+  hasLiked: array,  
+  hasDisliked: array,  
+  UserId: number,  
+  PostId: number,  
+  User: Object,  
+  Post: Object,  
 }  
 *erreurs possibles*:  
 `* 404 Not Found: la ressource demandée n'existe pas`  
     
-* **PUT** /topics/:id/posts/:id/comments/:id    
+* **PUT** /topics/:topicId/posts/:postId/comments/:id    
 Met à jour le commentaire donné dans la base de données (possible seulement pour le créateur du commentaire)  
   
 **req**: {  
-  id: number,  
-  post_id: number,  
-  user_id: number,  
+  userId: number,  
   content: string  
 }  
 *exemple*: {  
-  id: 3,  
-  post_id: 456,  
-  user_id: 175,  
+  userId: 175,  
   content: "Comment s'appelle ce joli chien?"  
 }  
   
@@ -374,18 +353,14 @@ Met à jour le commentaire donné dans la base de données (possible seulement p
 `* 400 Bad Request: un champ contient des caractères non autorisés`  
 `* 401 Unauthorized: vous n'avez pas l'autorisation requise pour effectuer cette opération`  
   
-* **DELETE** /topics/:id/posts/:id/comments/:id   
+* **DELETE** /topics/:topicId/posts/:postId/comments/:id   
 Supprime le commentaire de la base de données (possible seulement pour le créateur du post)  
   
 **req**: {  
-  id: number,  
-  post_id: number,  
-  user_id: number,  
+  userId: number,  
 }  
 *exemple*: {  
-  id: 3,  
-  post_id: 456,  
-  user_id: 175  
+  userId: 175  
 }  
   
 **res**: **200 OK** {  
@@ -395,20 +370,16 @@ Supprime le commentaire de la base de données (possible seulement pour le créa
 `* 404 Not Found: la ressource demandée n'existe pas`  
 `* 401 Unauthorized: vous n'avez pas l'autorisation requise pour effectuer cette opération`  
   
-* **POST** /topics/:id/posts/:id/comments/:id/like    
+* **POST** /topics/:topicId/posts/:postId/comments/:id/like    
 Met à jour les informations concernant les likes du commentaire donné dans la base de données  
 *Le paramètre like prend 3 valeurs possibles: -1 (dislike), 0 (neutre), 1 (like)*  
   
 **req**: {  
-  id: number,  
-  post_id: number,  
-  user_id: number,  
+  userId: number,  
   like: number  
 }  
 *exemple*: {  
-  id: 3,  
-  post_id: 456,  
-  user_id: 250,  
+  userId: 250,  
   like: 1  
 }  
   
@@ -433,36 +404,32 @@ Met à jour les informations concernant les likes du commentaire donné dans la 
   * email  
   `* UNIQUE`  
   `* NOT NULL`    
-  * first_name  
+  * firstName  
   `* NOT NULL`  
-  * last_name  
+  * lastName  
   `* NOT NULL`  
   * bio  
   * profilePicture  
-  INDEX(first_name, last_name)  
+  INDEX(firstName, lastName)  
   
 ### Topic  
   * id  
   `* PRIMARY_KEY`   
   `* AUTO_INCREMENT`  
-  * author_id  
-  `* FK(User.id)`  
   * name  
   `* UNIQUE`  
   `* IND`  
   `* NOT NULL`    
   * description  
   `* NOT NULL`    
+  * UserId  
+  `* FK(User.id)`  
   
 ### Post
   * id  
   `* PRIMARY_KEY`   
   `* AUTO_INCREMENT`    
-  * topic_id  
-  `* FK(Topic.id)`    
-  * author_id  
-  `* FK(User.id)`  
-  * date_publication  
+  * datePublication  
   `* NOT NULL`    
   * content  
   `* NOT NULL`   
@@ -472,28 +439,30 @@ Met à jour les informations concernant les likes du commentaire donné dans la 
   `* []`    
   * hasDisliked  
   `* []`    
-  * number_of_comments  
-  INDEX(topic_id, id)  
-  INDEX(likes, number_of_comments)  
+  * numberOfComments  
+  * TopicId  
+  `* FK(Topic.id)`    
+  * UserId  
+  `* FK(User.id)`  
+  INDEX(likes, numberOfComments)  
   
 ### Comment
   * id     
   `* PRIMARY_KEY`   
   `* AUTO_INCREMENT`  
-  * post_id  
-  `* FK(Post.id)`    
-  * author_id  
-  `* FK(User.id)`  
-  * date_publication  
+  * datePublication  
   `* NOT NULL`      
   * content  
   `* NOT NULL`    
   * likes  
   * dislikes  
-  * has_liked  
+  * hasLiked  
   `* []`    
-  * has_disliked  
-  `* []`    
-  INDEX(post_id, id)  
+  * hasDisliked  
+  `* []`   
+  * PostId  
+  `* FK(Post.id)`    
+  * UserId  
+  `* FK(User.id)`   
   
 </details>
