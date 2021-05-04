@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const fs = require('fs');
 require('dotenv').config();
+const { Op } = require('sequelize');
 const seq = require('../sequelize');
 const User = seq.user;
 
@@ -36,10 +37,11 @@ exports.login = (req, res, next) => {
         }
     })
         .then(user => {
+            console.log(process.env.TOKEN_KEY);
             if (!user) {
                 return res.status(401).json({ message: 'Utilisateur inexistant' });
             }
-            bcrypt.compare(req.body.password, user.password)
+            bcrypt.compare(req.body.password, user.dataValues.password)
                 .then(valid => {
                     if (!valid) {
                         return res.status(401).json({ message: 'Mot de passe incorrect'});
@@ -47,13 +49,13 @@ exports.login = (req, res, next) => {
                     res.status(200).json({
                         userId: user.id,
                         token: jwt.sign(
-                            { userId: user.id },
+                            { userId: user.dataValues.id },
                             process.env.TOKEN_KEY,
                             { expiresIn: '6h' }
                         )
                     });
                 })
-                .catch(error => res.status(500).json({ error }));
+                .catch(error => res.status(400).json({ error }));
         })
         .catch(error => res.status(500).json({ error }));
 };

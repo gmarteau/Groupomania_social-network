@@ -173,8 +173,7 @@ Supprime un topic de la base de données (possible seulement pour le créateur d
   message: 'Topic supprimé'  
 }  
 *erreurs possibles*:  
-`* 400 Bad Request: un champ contient des caractères non autorisés`  
-`* 400 Bad Request: un champ requis n'est pas rempli`  
+`* 401 Unauthorized: vous n'avez pas les droits nécessaires à la suppression de ce topic`  
   
 ### Post
 * **POST** /topics/:id/posts  
