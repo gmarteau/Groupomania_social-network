@@ -62,7 +62,7 @@ exports.login = (req, res, next) => {
 
 exports.getUserProfile = (req, res, next) => {
     User.findOne({
-        attributes: [['id', 'user_id'], 'username', 'first_name', 'last_name', 'bio', 'profile_picture'],
+        attributes: [['id', 'userId'], 'username', 'firstName', 'lastName', 'bio', 'profilePicture'],
         where: {
             id: req.params.id
         }

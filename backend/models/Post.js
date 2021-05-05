@@ -24,11 +24,11 @@ module.exports = (sequelize, type) => {
         },
         hasLiked: {
             type: type.TEXT,
-            defaultValue: '[]'
+            defaultValue: '0'
         },
         hasDisliked: {
             type: type.TEXT,
-            defaultValue: '[]'
+            defaultValue: '0'
         },
         numberOfComments: {
             type: type.INTEGER.UNSIGNED,
