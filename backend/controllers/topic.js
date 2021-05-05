@@ -1,3 +1,4 @@
+const { Op } = require('sequelize');
 const seq = require('../sequelize');
 const Topic = seq.topic;
 const User = seq.user;
@@ -25,14 +26,29 @@ exports.createTopic = (req, res, next) => {
 };
 
 exports.getTopicsNamesList = (req, res, next) => {
-    Topic.findAll({
-        attributes: ['name'],
-        order: [
-            ['name', 'ASC']
-        ]
-    })
-        .then(topics => res.status(200).json(topics))
-        .catch(error => res.status(400).json({ error }));
+    if (req.query.name) {
+        Topic.findAll({
+            attributes: ['name'],
+            where: {
+                name: {
+                    [Op.substring]: req.query.name
+                }
+            }
+        })
+            .then(topics => res.status(200).json(topics))
+            .catch(error => {
+                console.log(error);
+                res.status(400).json({ error });});
+    } else {
+        Topic.findAll({
+            attributes: ['name'],
+            order: [
+                ['name', 'ASC']
+            ]
+        })
+            .then(topics => res.status(200).json(topics))
+            .catch(error => res.status(400).json({ error }));    
+    }
 };
 
 exports.getTopicById = (req, res, next) => {

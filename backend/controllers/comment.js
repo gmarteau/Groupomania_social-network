@@ -1,54 +1,74 @@
 const { Op } = require('sequelize');
 const seq = require('../sequelize');
-const Post = seq.post;
+const Comment = seq.comment;
 const User = seq.user;
+const Post = seq.post;
 
-exports.createPost = (req, res, next) => {
-    Post.create({
-        TopicId: req.topic.dataValues.id,
+exports.createComment = (req, res, next) => {
+    Comment.create({
+        PostId: req.post.dataValues.id,
         UserId: req.body.userId,
         content: req.body.content
     })
-        .then(() => res.status(201).json({ message: 'Post créé' }))
-        .catch(error => res.status(400).json({ error }));
+        .then(() => {
+            Post.findOne({
+                where: {
+                    id: req.post.dataValues.id
+                }
+            })
+                .then(post => {
+                    post.dataValues.numberOfComments++;
+                    Post.update({
+                        numberOfComments: post.dataValues.numberOfComments
+                    }, {
+                        where: {
+                            id: req.post.dataValues.id
+                        }
+                    })
+                        .then(res.status(201).json({ message: 'Commentaire créé' }))
+                        .catch(error => res.status(500).json({ error }));
+                })
+                .catch(error => res.status(400).json({ error }));
+        })
+        .catch(error => res.status(400).json({ error }));
 };
 
-exports.getPosts = (req, res, next) => {
+exports.getComments = (req, res, next) => {
     if (req.query.order == 'recent') {
-        Post.findAll({
+        Comment.findAll({
             include: {
                 model: User,
                 attributes: ['username', 'firstName', 'lastName', 'profilePicture']
             },
             where: {
-                TopicId: req.topic.dataValues.id
+                PostId: req.post.dataValues.id
             },
             order: [
-                ['datePublication', 'DESC']
+                ['datePublication', 'ASC']
             ]
         })
-            .then(posts => res.status(200).json(posts))
+            .then(comments => res.status(200).json(comments))
             .catch(error => res.status(400).json({ error }));    
     } else if (req.query.order == 'popular') {
-        Post.findAll({
+        Comment.findAll({
             include: {
                 model: User,
                 attributes: ['username', 'firstName', 'lastName', 'profilePicture']
             },
             where: {
-                TopicId: req.topic.dataValues.id
+                PostId: req.post.dataValues.id
             },
             order: [
-                ['likes', 'DESC']
+                ['likes', 'ASC']
             ]
         })
-            .then(posts => res.status(200).json(posts))
-            .catch(error => res.status(400).json({ error }));
+            .then(comments => res.status(200).json(comments))
+            .catch(error => res.status(400).json({ error }));    
     }
 };
 
-exports.getPostById = (req, res, next) => {
-    Post.findOne({
+exports.getCommentById = (req, res, next) => {
+    Comment.findOne({
         include: {
             model: User,
             attributes: ['username', 'firstName', 'lastName', 'profilePicture']
@@ -56,169 +76,188 @@ exports.getPostById = (req, res, next) => {
         where: {
             [Op.and]: [
                 { id: req.params.id },
-                { TopicId: req.topic.dataValues.id }
+                { PostId: req.post.dataValues.id }
             ]
         }
     })
-        .then(post => res.status(200).json(post))
+        .then(comment => res.status(200).json(comment))
         .catch(error => res.status(400).json({ error }));
 };
 
-exports.updatePost = (req, res, next) => {
-    Post.findOne({
+exports.updateComment = (req, res, next) => {
+    Comment.findOne({
         where: {
             [Op.and]: [
                 { id: req.params.id },
-                { TopicId: req.topic.dataValues.id }
+                { PostId: req.post.dataValues.id }
             ]
         }
     })
-        .then(post => {
-            if (post.UserId !== req.body.userId) {
-                return res.status(401).json({ error: 'Seul le créateur du post peut le modifier' });
+        .then(comment => {
+            if (comment.UserId !== req.body.userId) {
+                return res.status(401).json({ error: 'Seul le créateur du commentaire peut le modifier' });
             } else {
-                Post.update({
+                Comment.update({
                     content: req.body.content
                 }, {
                     where: {
                         [Op.and]: [
                             { id: req.params.id },
-                            { TopicId: req.topic.dataValues.id }
+                            { PostId: req.post.dataValues.id }
                         ]
                     }
                 })
-                    .then(() => res.status(200).json({ message: 'Post mis à jour' }))
+                    .then(() => res.status(200).json({ message: 'Commentaire mis à jour' }))
                     .catch(error => res.status(400).json({ error }));
             }
         })
         .catch(error => res.status(400).json({ error }));
 };
 
-exports.deletePost = (req, res, next) => {
-    Post.findOne({
+exports.deleteComment = (req, res, next) => {
+    Comment.findOne({
         where: {
             [Op.and]: [
                 { id: req.params.id },
-                { TopicId: req.topic.dataValues.id }
+                { PostId: req.post.dataValues.id }
             ]
         }
     })
-        .then(post => {
-            if (post.UserId !== req.body.userId) {
-                return res.status(401).json({ error: 'Seul le créateur du post peut le supprimer' });
+        .then(comment => {
+            if (comment.UserId !== req.body.userId) {
+                return res.status(401).json({ error: 'Seul l\'auteur du commentaire peut le supprimer' });
             } else {
-                Post.destroy({
+                Comment.destroy({
                     where: {
                         [Op.and]: [
                             { id: req.params.id },
-                            { TopicId: req.topic.dataValues.id }
+                            { PostId: req.post.dataValues.id }
                         ]
                     }
                 })
-                    .then(() => res.status(200).json({ message: 'Post supprimé' }))
+                    .then(() => {
+                        Post.findOne({
+                            where: {
+                                id: req.post.dataValues.id
+                            }
+                        })
+                            .then(post => {
+                                post.dataValues.numberOfComments--;
+                                Post.update({
+                                    numberOfComments: post.dataValues.numberOfComments
+                                }, {
+                                    where: {
+                                        id: req.post.dataValues.id
+                                    }
+                                })
+                                    .then(res.status(200).json({ message: 'Commentaire supprimé' }))
+                                    .catch(error => res.status(500).json({ error }));
+                            })
+                            .catch(error => res.status(400).json({ error }));            
+                    }) 
                     .catch(error => res.status(400).json({ error }));
             }
         })
         .catch(error => res.status(400).json({ error }));
 };
 
-exports.likePost = (req, res, next) => {
-    Post.findOne({
+exports.likeComment = (req, res, next) => {
+    Comment.findOne({
         where: {
             [Op.and]: [
                 { id: req.params.id },
-                { TopicId: req.topic.dataValues.id }
+                { PostId: req.post.dataValues.id }
             ]
         }
     })
-        .then(post => {
+        .then(comment => {
             const userId = req.body.userId.toString();
-            const hasLiked = Array.from(post.dataValues.hasLiked);
-            const hasDisliked = Array.from(post.dataValues.hasDisliked);
+            const hasLiked = Array.from(comment.dataValues.hasLiked);
+            const hasDisliked = Array.from(comment.dataValues.hasDisliked);
             const alreadyLiked = hasLiked.includes(userId);
             const alreadyDisliked = hasDisliked.includes(userId);
             switch (req.body.like) {
                 case 1:
                     if (alreadyLiked) {
-                        return res.status(401).json({ error: 'L\'utilisateur a déjà aimé le post' });
+                        return res.status(401).json({ error: 'L\'utilisateur a déjà aimé le commentaire' });
                     } else if (alreadyDisliked) {
                         const index = hasDisliked.indexOf(userId);
                         hasDisliked.splice(index, 1);
-                        post.dataValues.dislikes--;
+                        comment.dataValues.dislikes--;
                         hasLiked.push(userId);
-                        post.dataValues.likes++;
-                        Post.update({
+                        comment.dataValues.likes++;
+                        Comment.update({
                             hasDisliked: hasDisliked.toString(),
                             hasLiked: hasLiked.toString(),
-                            dislikes: post.dataValues.dislikes,
-                            likes: post.dataValues.likes
+                            dislikes: comment.dataValues.dislikes,
+                            likes: comment.dataValues.likes
                         }, {
                             where: {
                                 [Op.and]: [
                                     { id: req.params.id },
-                                    { TopicId: req.topic.dataValues.id }
+                                    { PostId: req.post.dataValues.id }
                                 ]
                             }
                         })
-                            .then(res.status(200).json({ message: 'Post mis à jour avec le nouveau like' }))
+                            .then(res.status(200).json({ message: 'Commentaire mis à jour avec le nouveau like' }))
                             .catch(error => res.status(400).json({ error }));
                     } else if(!alreadyLiked && !alreadyDisliked) {
                         hasLiked.push(userId);
-                        post.dataValues.likes++;
-                        Post.update({
+                        comment.dataValues.likes++;
+                        Comment.update({
                             hasLiked: hasLiked.toString(),
-                            likes: post.dataValues.likes
+                            likes: comment.dataValues.likes
                         }, {
                             where: {
                                 [Op.and]: [
                                     { id: req.params.id },
-                                    { TopicId: req.topic.dataValues.id }
+                                    { PostId: req.post.dataValues.id }
                                 ]
                             }
                         })
-                            .then(res.status(200).json({ message: 'Post mis à jour avec le nouveau like' }))
+                            .then(res.status(200).json({ message: 'Commentaire mis à jour avec le nouveau like' }))
                             .catch(error => res.status(400).json({ error }));
                     }
                     break;
                 case -1:
                     if (alreadyDisliked) {
-                        return res.status(401).json({ error: 'L\'utilisateur a déjà disliké le post' });
+                        return res.status(401).json({ error: 'L\'utilisateur a déjà disliké le commentaire' });
                     } else if (alreadyLiked) {
                         const index = hasLiked.indexOf(userId);
                         hasLiked.splice(index, 1);
-                        post.dataValues.likes--;
+                        comment.dataValues.likes--;
                         hasDisliked.push(userId);
-                        post.dataValues.dislikes++;
-                        Post.update({
+                        comment.dataValues.dislikes++;
+                        Comment.update({
                             hasDisliked: hasDisliked.toString(),
                             hasLiked: hasLiked.toString(),
-                            dislikes: post.dataValues.dislikes,
-                            likes: post.dataValues.likes
+                            dislikes: comment.dataValues.dislikes,
+                            likes: comment.dataValues.likes
                         }, {
                             where: {
                                 [Op.and]: [
                                     { id: req.params.id },
-                                    { TopicId: req.topic.dataValues.id }
+                                    { PostId: req.post.dataValues.id }
                                 ]
                             }
                         })
-                            .then(res.status(200).json({ message: 'Post mis à jour avec le nouveau dislike' }))
+                            .then(res.status(200).json({ message: 'Commentaire mis à jour avec le nouveau dislike' }))
                             .catch(error => res.status(400).json({ error }));
                         } else if(!alreadyLiked && !alreadyDisliked) {
                         hasDisliked.push(userId);
-                        post.dataValues.dislikes++;
-                        Post.update({
+                        comment.dataValues.dislikes++;
+                        Comment.update({
                             hasDisliked: hasDisliked.toString(),
-                            dislikes: post.dataValues.dislikes
+                            dislikes: comment.dataValues.dislikes
                         }, {
                             where: {
                                 [Op.and]: [
                                     { id: req.params.id },
-                                    { TopicId: req.topic.dataValues.id }
+                                    { PostId: req.post.dataValues.id }
                                 ]
                             }
                         })
-                            .then(res.status(200).json({ message: 'Post mis à jour avec le nouveau dislike' }))
+                            .then(res.status(200).json({ message: 'Commentaire mis à jour avec le nouveau dislike' }))
                             .catch(error => res.status(400).json({ error }));
                     }
                     break;
@@ -226,36 +265,36 @@ exports.likePost = (req, res, next) => {
                     if (alreadyLiked) {
                         const index = hasLiked.indexOf(userId);
                         hasLiked.splice(index, 1);
-                        post.dataValues.likes--;
-                        Post.update({
+                        comment.dataValues.likes--;
+                        Comment.update({
                             hasLiked: hasLiked.toString(),
-                            likes: post.dataValues.likes
+                            likes: comment.dataValues.likes
                         }, {
                             where: {
                                 [Op.and]: [
                                     { id: req.params.id },
-                                    { TopicId: req.topic.dataValues.id }
+                                    { PostId: req.post.dataValues.id }
                                 ]
                             }
                         })
-                            .then(res.status(200).json({ message: 'Le like pour ce post a bien été retiré' }))
+                            .then(res.status(200).json({ message: 'Le like pour ce commentaire a bien été retiré' }))
                             .catch(error => res.status(400).json({ error }));
                     } else if (alreadyDisliked) {
                         const index = hasDisliked.indexOf(userId);
                         hasDisliked.splice(index, 1);
-                        post.dataValues.dislikes--;
-                        Post.update({
+                        comment.dataValues.dislikes--;
+                        Comment.update({
                             hasDisliked: hasDisliked.toString(),
-                            dislikes: post.dataValues.dislikes
+                            dislikes: comment.dataValues.dislikes
                         }, {
                             where: {
                                 [Op.and]: [
                                     { id: req.params.id },
-                                    { TopicId: req.topic.dataValues.id }
+                                    { PostId: req.post.dataValues.id }
                                 ]
                             }
                         })
-                            .then(res.status(200).json({ message: 'Le dislike pour ce post a bien été retiré' }))
+                            .then(res.status(200).json({ message: 'Le dislike pour ce commentaire a bien été retiré' }))
                             .catch(error => res.status(400).json({ error }));
                     } else if(!alreadyLiked && !alreadyDisliked) {
                         return res.status(400).json({ error: 'Aucune réaction à retirer' });

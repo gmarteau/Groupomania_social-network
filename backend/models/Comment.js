@@ -15,16 +15,20 @@ module.exports = (sequelize, type) => {
             allowNull: false
         },
         likes: {
-            type: type.INTEGER.UNSIGNED
+            type: type.INTEGER.UNSIGNED,
+            defaultValue: 0
         },
         dislikes: {
-            type: type.INTEGER.UNSIGNED
+            type: type.INTEGER.UNSIGNED,
+            defaultValue: 0
         },
         hasLiked: {
-            type: type.TEXT
+            type: type.TEXT,
+            defaultValue: '0'
         },
         hasDisliked: {
-            type: type.TEXT
+            type: type.TEXT,
+            defaultValue: '0'
         }
     }, {
         indexes: [
