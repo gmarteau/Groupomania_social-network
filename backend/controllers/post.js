@@ -134,22 +134,24 @@ exports.likePost = (req, res, next) => {
         .then(post => {
             const userId = req.body.userId.toString();
             const hasLiked = Array.from(post.dataValues.hasLiked);
+            const hasLikedFiltered = hasLiked.filter(char => char !== ',');
             const hasDisliked = Array.from(post.dataValues.hasDisliked);
-            const alreadyLiked = hasLiked.includes(userId);
-            const alreadyDisliked = hasDisliked.includes(userId);
+            const hasDislikedFiltered = hasDisliked.filter(char => char !== ',');
+            const alreadyLiked = hasLikedFiltered.includes(userId);
+            const alreadyDisliked = hasDislikedFiltered.includes(userId);
             switch (req.body.like) {
                 case 1:
                     if (alreadyLiked) {
                         return res.status(401).json({ error: 'L\'utilisateur a déjà aimé le post' });
                     } else if (alreadyDisliked) {
-                        const index = hasDisliked.indexOf(userId);
-                        hasDisliked.splice(index, 1);
+                        const index = hasDislikedFiltered.indexOf(userId);
+                        hasDislikedFiltered.splice(index, 1);
                         post.dataValues.dislikes--;
-                        hasLiked.push(userId);
+                        hasLikedFiltered.push(userId);
                         post.dataValues.likes++;
                         Post.update({
-                            hasDisliked: hasDisliked.toString(),
-                            hasLiked: hasLiked.toString(),
+                            hasDisliked: hasDislikedFiltered.toString(),
+                            hasLiked: hasLikedFiltered.toString(),
                             dislikes: post.dataValues.dislikes,
                             likes: post.dataValues.likes
                         }, {
@@ -160,13 +162,13 @@ exports.likePost = (req, res, next) => {
                                 ]
                             }
                         })
-                            .then(res.status(200).json({ message: 'Post mis à jour avec le nouveau like' }))
+                            .then(() => res.status(200).json({ message: 'Post mis à jour avec le nouveau like' }))
                             .catch(error => res.status(400).json({ error }));
                     } else if(!alreadyLiked && !alreadyDisliked) {
-                        hasLiked.push(userId);
+                        hasLikedFiltered.push(userId);
                         post.dataValues.likes++;
                         Post.update({
-                            hasLiked: hasLiked.toString(),
+                            hasLiked: hasLikedFiltered.toString(),
                             likes: post.dataValues.likes
                         }, {
                             where: {
@@ -176,7 +178,7 @@ exports.likePost = (req, res, next) => {
                                 ]
                             }
                         })
-                            .then(res.status(200).json({ message: 'Post mis à jour avec le nouveau like' }))
+                            .then(() => res.status(200).json({ message: 'Post mis à jour avec le nouveau like' }))
                             .catch(error => res.status(400).json({ error }));
                     }
                     break;
@@ -184,14 +186,14 @@ exports.likePost = (req, res, next) => {
                     if (alreadyDisliked) {
                         return res.status(401).json({ error: 'L\'utilisateur a déjà disliké le post' });
                     } else if (alreadyLiked) {
-                        const index = hasLiked.indexOf(userId);
-                        hasLiked.splice(index, 1);
+                        const index = hasLikedFiltered.indexOf(userId);
+                        hasLikedFiltered.splice(index, 1);
                         post.dataValues.likes--;
-                        hasDisliked.push(userId);
+                        hasDislikedFiltered.push(userId);
                         post.dataValues.dislikes++;
                         Post.update({
-                            hasDisliked: hasDisliked.toString(),
-                            hasLiked: hasLiked.toString(),
+                            hasDisliked: hasDislikedFiltered.toString(),
+                            hasLiked: hasLikedFiltered.toString(),
                             dislikes: post.dataValues.dislikes,
                             likes: post.dataValues.likes
                         }, {
@@ -202,13 +204,13 @@ exports.likePost = (req, res, next) => {
                                 ]
                             }
                         })
-                            .then(res.status(200).json({ message: 'Post mis à jour avec le nouveau dislike' }))
+                            .then(() => res.status(200).json({ message: 'Post mis à jour avec le nouveau dislike' }))
                             .catch(error => res.status(400).json({ error }));
-                        } else if(!alreadyLiked && !alreadyDisliked) {
-                        hasDisliked.push(userId);
+                    } else if(!alreadyLiked && !alreadyDisliked) {
+                        hasDislikedFiltered.push(userId);
                         post.dataValues.dislikes++;
                         Post.update({
-                            hasDisliked: hasDisliked.toString(),
+                            hasDisliked: hasDislikedFiltered.toString(),
                             dislikes: post.dataValues.dislikes
                         }, {
                             where: {
@@ -218,17 +220,17 @@ exports.likePost = (req, res, next) => {
                                 ]
                             }
                         })
-                            .then(res.status(200).json({ message: 'Post mis à jour avec le nouveau dislike' }))
+                            .then(() => res.status(200).json({ message: 'Post mis à jour avec le nouveau dislike' }))
                             .catch(error => res.status(400).json({ error }));
                     }
                     break;
                 case 0:
                     if (alreadyLiked) {
-                        const index = hasLiked.indexOf(userId);
-                        hasLiked.splice(index, 1);
+                        const index = hasLikedFiltered.indexOf(userId);
+                        hasLikedFiltered.splice(index, 1);
                         post.dataValues.likes--;
                         Post.update({
-                            hasLiked: hasLiked.toString(),
+                            hasLiked: hasLikedFiltered.toString(),
                             likes: post.dataValues.likes
                         }, {
                             where: {
@@ -238,14 +240,14 @@ exports.likePost = (req, res, next) => {
                                 ]
                             }
                         })
-                            .then(res.status(200).json({ message: 'Le like pour ce post a bien été retiré' }))
+                            .then(() => res.status(200).json({ message: 'Le like pour ce post a bien été retiré' }))
                             .catch(error => res.status(400).json({ error }));
                     } else if (alreadyDisliked) {
-                        const index = hasDisliked.indexOf(userId);
-                        hasDisliked.splice(index, 1);
+                        const index = hasDislikedFiltered.indexOf(userId);
+                        hasDislikedFiltered.splice(index, 1);
                         post.dataValues.dislikes--;
                         Post.update({
-                            hasDisliked: hasDisliked.toString(),
+                            hasDisliked: hasDislikedFiltered.toString(),
                             dislikes: post.dataValues.dislikes
                         }, {
                             where: {
@@ -255,7 +257,7 @@ exports.likePost = (req, res, next) => {
                                 ]
                             }
                         })
-                            .then(res.status(200).json({ message: 'Le dislike pour ce post a bien été retiré' }))
+                            .then(() => res.status(200).json({ message: 'Le dislike pour ce post a bien été retiré' }))
                             .catch(error => res.status(400).json({ error }));
                     } else if(!alreadyLiked && !alreadyDisliked) {
                         return res.status(400).json({ error: 'Aucune réaction à retirer' });

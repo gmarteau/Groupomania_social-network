@@ -173,22 +173,24 @@ exports.likeComment = (req, res, next) => {
         .then(comment => {
             const userId = req.body.userId.toString();
             const hasLiked = Array.from(comment.dataValues.hasLiked);
+            const hasLikedFiltered = hasLiked.filter(char => char !== ',');
             const hasDisliked = Array.from(comment.dataValues.hasDisliked);
-            const alreadyLiked = hasLiked.includes(userId);
-            const alreadyDisliked = hasDisliked.includes(userId);
+            const hasDislikedFiltered = hasDisliked.filter(char => char !== ',');
+            const alreadyLiked = hasLikedFiltered.includes(userId);
+            const alreadyDisliked = hasDislikedFiltered.includes(userId);
             switch (req.body.like) {
                 case 1:
                     if (alreadyLiked) {
                         return res.status(401).json({ error: 'L\'utilisateur a déjà aimé le commentaire' });
                     } else if (alreadyDisliked) {
-                        const index = hasDisliked.indexOf(userId);
-                        hasDisliked.splice(index, 1);
+                        const index = hasDislikedFiltered.indexOf(userId);
+                        hasDislikedFiltered.splice(index, 1);
                         comment.dataValues.dislikes--;
-                        hasLiked.push(userId);
+                        hasLikedFiltered.push(userId);
                         comment.dataValues.likes++;
                         Comment.update({
-                            hasDisliked: hasDisliked.toString(),
-                            hasLiked: hasLiked.toString(),
+                            hasDisliked: hasDislikedFiltered.toString(),
+                            hasLiked: hasLikedFiltered.toString(),
                             dislikes: comment.dataValues.dislikes,
                             likes: comment.dataValues.likes
                         }, {
@@ -199,13 +201,13 @@ exports.likeComment = (req, res, next) => {
                                 ]
                             }
                         })
-                            .then(res.status(200).json({ message: 'Commentaire mis à jour avec le nouveau like' }))
+                            .then(() => res.status(200).json({ message: 'Commentaire mis à jour avec le nouveau like' }))
                             .catch(error => res.status(400).json({ error }));
                     } else if(!alreadyLiked && !alreadyDisliked) {
-                        hasLiked.push(userId);
+                        hasLikedFiltered.push(userId);
                         comment.dataValues.likes++;
                         Comment.update({
-                            hasLiked: hasLiked.toString(),
+                            hasLiked: hasLikedFiltered.toString(),
                             likes: comment.dataValues.likes
                         }, {
                             where: {
@@ -215,7 +217,7 @@ exports.likeComment = (req, res, next) => {
                                 ]
                             }
                         })
-                            .then(res.status(200).json({ message: 'Commentaire mis à jour avec le nouveau like' }))
+                            .then(() => res.status(200).json({ message: 'Commentaire mis à jour avec le nouveau like' }))
                             .catch(error => res.status(400).json({ error }));
                     }
                     break;
@@ -223,14 +225,14 @@ exports.likeComment = (req, res, next) => {
                     if (alreadyDisliked) {
                         return res.status(401).json({ error: 'L\'utilisateur a déjà disliké le commentaire' });
                     } else if (alreadyLiked) {
-                        const index = hasLiked.indexOf(userId);
-                        hasLiked.splice(index, 1);
+                        const index = hasLikedFiltered.indexOf(userId);
+                        hasLikedFiltered.splice(index, 1);
                         comment.dataValues.likes--;
-                        hasDisliked.push(userId);
+                        hasDislikedFiltered.push(userId);
                         comment.dataValues.dislikes++;
                         Comment.update({
-                            hasDisliked: hasDisliked.toString(),
-                            hasLiked: hasLiked.toString(),
+                            hasDisliked: hasDislikedFiltered.toString(),
+                            hasLiked: hasLikedFiltered.toString(),
                             dislikes: comment.dataValues.dislikes,
                             likes: comment.dataValues.likes
                         }, {
@@ -241,13 +243,13 @@ exports.likeComment = (req, res, next) => {
                                 ]
                             }
                         })
-                            .then(res.status(200).json({ message: 'Commentaire mis à jour avec le nouveau dislike' }))
+                            .then(() => res.status(200).json({ message: 'Commentaire mis à jour avec le nouveau dislike' }))
                             .catch(error => res.status(400).json({ error }));
-                        } else if(!alreadyLiked && !alreadyDisliked) {
-                        hasDisliked.push(userId);
+                    } else if(!alreadyLiked && !alreadyDisliked) {
+                        hasDislikedFiltered.push(userId);
                         comment.dataValues.dislikes++;
                         Comment.update({
-                            hasDisliked: hasDisliked.toString(),
+                            hasDisliked: hasDislikedFiltered.toString(),
                             dislikes: comment.dataValues.dislikes
                         }, {
                             where: {
@@ -257,17 +259,17 @@ exports.likeComment = (req, res, next) => {
                                 ]
                             }
                         })
-                            .then(res.status(200).json({ message: 'Commentaire mis à jour avec le nouveau dislike' }))
+                            .then(() => res.status(200).json({ message: 'Commentaire mis à jour avec le nouveau dislike' }))
                             .catch(error => res.status(400).json({ error }));
                     }
                     break;
                 case 0:
                     if (alreadyLiked) {
-                        const index = hasLiked.indexOf(userId);
-                        hasLiked.splice(index, 1);
+                        const index = hasLikedFiltered.indexOf(userId);
+                        hasLikedFiltered.splice(index, 1);
                         comment.dataValues.likes--;
                         Comment.update({
-                            hasLiked: hasLiked.toString(),
+                            hasLiked: hasLikedFiltered.toString(),
                             likes: comment.dataValues.likes
                         }, {
                             where: {
@@ -277,14 +279,14 @@ exports.likeComment = (req, res, next) => {
                                 ]
                             }
                         })
-                            .then(res.status(200).json({ message: 'Le like pour ce commentaire a bien été retiré' }))
+                            .then(() => res.status(200).json({ message: 'Le like pour ce commentaire a bien été retiré' }))
                             .catch(error => res.status(400).json({ error }));
                     } else if (alreadyDisliked) {
-                        const index = hasDisliked.indexOf(userId);
-                        hasDisliked.splice(index, 1);
+                        const index = hasDislikedFiltered.indexOf(userId);
+                        hasDislikedFiltered.splice(index, 1);
                         comment.dataValues.dislikes--;
                         Comment.update({
-                            hasDisliked: hasDisliked.toString(),
+                            hasDisliked: hasDislikedFiltered.toString(),
                             dislikes: comment.dataValues.dislikes
                         }, {
                             where: {
@@ -294,7 +296,7 @@ exports.likeComment = (req, res, next) => {
                                 ]
                             }
                         })
-                            .then(res.status(200).json({ message: 'Le dislike pour ce commentaire a bien été retiré' }))
+                            .then(() => res.status(200).json({ message: 'Le dislike pour ce commentaire a bien été retiré' }))
                             .catch(error => res.status(400).json({ error }));
                     } else if(!alreadyLiked && !alreadyDisliked) {
                         return res.status(400).json({ error: 'Aucune réaction à retirer' });

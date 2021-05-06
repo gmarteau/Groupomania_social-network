@@ -16,7 +16,8 @@ exports.createTopic = (req, res, next) => {
                 Topic.create({
                     UserId: req.body.userId,
                     name: req.body.name,
-                    description: req.body.description
+                    description: req.body.description,
+                    imageUrl: req.body.imageUrl
                 })
                     .then(() => res.status(201).json({ message: 'Topic créé' }))
                     .catch(error => res.status(400).json({ error }));
@@ -25,10 +26,9 @@ exports.createTopic = (req, res, next) => {
         .catch(error => res.status(500).json({ error }));
 };
 
-exports.getTopicsNamesList = (req, res, next) => {
+exports.getTopics = (req, res, next) => {
     if (req.query.name) {
         Topic.findAll({
-            attributes: ['name'],
             where: {
                 name: {
                     [Op.substring]: req.query.name
@@ -39,9 +39,39 @@ exports.getTopicsNamesList = (req, res, next) => {
             .catch(error => {
                 console.log(error);
                 res.status(400).json({ error });});
-    } else {
+    }
+    if (req.query.order == 'recent') {
         Topic.findAll({
-            attributes: ['name'],
+            order: [
+                ['dateCreation', 'DESC']
+            ]
+        })
+            .then(topics => res.status(200).json(topics))
+            .catch(error => res.status(400).json({ error }));    
+    } else if (req.query.order == 'popular') {
+        Topic.findAll({
+            order: [
+                ['numberOfFollowers', 'DESC']
+            ]
+        })
+            .then(topics => res.status(200).json(topics))
+            .catch(error => res.status(400).json({ error }));    
+    } else if (req.query.order == 'followed') {
+        const userId = req.body.userId.toString();
+        Topic.findAll({
+            where: {
+                [Op.or]: [
+                    {
+                        hasFollowed: {
+                            [Op.substring]: `,${userId},`
+                        }        
+                    }, {
+                        hasFollowed: {
+                            [Op.endsWith]: `,${userId}`
+                        }
+                    }
+                ]
+            },
             order: [
                 ['name', 'ASC']
             ]
@@ -85,4 +115,60 @@ exports.deleteTopic = (req, res, next) => {
             }
         })
         .catch(error => res.status(400).json({ error }));
+};
+
+exports.followTopic = (req, res, next) => {
+    Topic.findOne({
+        where: {
+            id: req.params.id
+        }
+    })
+        .then(topic => {
+            const userId = req.body.userId.toString();
+            const hasFollowed = Array.from(topic.dataValues.hasFollowed);
+            const hasFollowedFiltered = hasFollowed.filter(char => char !== ',');
+            const alreadyFollowed = hasFollowedFiltered.includes(userId);
+            switch (req.body.follow) {
+                case 1:
+                    if (alreadyFollowed) {
+                        return res.status(401).json({ error: 'L\'utilisateur suit déjà ce topic' });
+                    } else {
+                        hasFollowedFiltered.push(userId);
+                        topic.dataValues.numberOfFollowers++;
+                        Topic.update({
+                            hasFollowed: hasFollowedFiltered.toString(),
+                            numberOfFollowers: topic.dataValues.numberOfFollowers
+                        }, {
+                            where: {
+                                id: req.params.id
+                            }
+                        })
+                            .then(() => res.status(200).json({ message: 'Topic suivi' }))
+                            .catch(error => res.status(400).json({ error }))
+                    }
+                    break;
+                case 0:
+                    if (!alreadyFollowed) {
+                        return res.status(401).json({ error: 'L\'utilisateur ne peut pas unfollow un topic qu\'il ne follow pas' });
+                    } else {
+                        const index = hasFollowedFiltered.indexOf(userId);
+                        hasFollowedFiltered.splice(index, 1);
+                        topic.dataValues.numberOfFollowers--;
+                        Topic.update({
+                            hasFollowed: hasFollowedFiltered.toString(),
+                            numberOfFollowers: topic.dataValues.numberOfFollowers
+                        }, {
+                            where: {
+                                id: req.params.id
+                            }
+                        })
+                            .then(() => res.status(200).json({ message: 'Le topic n\'est plus suivi' }))
+                            .catch(error => res.status(400).json({ error }));
+                    }
+                    break;
+                default:
+                    return res.status(400).json({ error: 'follow ne peut avoir une autre valeur que 0 ou 1' });
+            }
+        })
+        .catch(error => res.status(400).json({ error }));
 };

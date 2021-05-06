@@ -27,7 +27,7 @@ Crée un nouvel utilisateur et l'ajoute à la table Users
   bio: 'Moi c'est Alain, responsable de la manutention chez Groupomania!'  
 }
   
-**res**: **200 OK** {  
+**res**: **201 CREATED** {  
   message: 'Utilisateur créé'  
 }  
 *erreurs possibles*:  
@@ -113,10 +113,15 @@ Supprime l'utilisateur de la base de données
 `* 401 Unauthorized: mot de passe erroné`  
   
 ### Topic
-* **GET** /topics  
+* **GET** /topics/?order={recent|popular|followed}    
 Récupère la liste de tous les objets Topic de la base de données  
   
-**req**: -  
+**req**: {  
+  userId: number  
+}  
+*exemple*: {  
+  userId: 123  
+}
   
 **res**: **200 OK** [  
   {topic1},  
@@ -151,7 +156,7 @@ Crée un nouveau topic et l'ajoute à la table Topics
   description: 'Ce forum concerne les animaux'  
 }  
   
-**res**: **200 OK** {  
+**res**: **201 CREATED** {  
   message: 'Topic créé'  
 }  
 *erreurs possibles*:  
@@ -174,6 +179,25 @@ Supprime un topic de la base de données (possible seulement pour le créateur d
 *erreurs possibles*:  
 `* 401 Unauthorized: vous n'avez pas les droits nécessaires à la suppression de ce topic`  
   
+* **POST** /topics/:id/follow  
+Met à jour les informations concernant les followers du topic donné dans la base de données  
+*Le paramètre follow prend 2 valeurs possibles: 1 (follow), 0 (unfollow)*  
+  
+**req**: {  
+  userId: number,  
+  follow: number  
+}  
+*exemple*: {  
+  userId: 123,  
+  follow: 1  
+}  
+  
+**res**: **200 OK** {  
+  message: 'Topic suivi'  
+}  
+*erreurs possibles*:  
+`* 401 Unauthorized: l'utilisateur suit déjà ce topic`  
+  
 ### Post
 * **POST** /topics/:topicId/posts  
 Crée un nouveau post et l'ajoute à la table Posts  
@@ -189,7 +213,7 @@ Crée un nouveau post et l'ajoute à la table Posts
   content: "J'adore mon chien"  
 }  
   
-**res**: **200 OK** {  
+**res**: **201 CREATED** {  
   message: 'Post créé'  
 }  
 *erreurs possibles*:  
@@ -295,7 +319,7 @@ Crée un nouveau commentaire pour le post et l'ajoute à la table Comments
   content: "Comment s'appelle ton chien?"  
 }  
   
-**res**: **200 OK** {  
+**res**: **201 CREATED** {  
   message: 'Commentaire créé'  
 }  
 *erreurs possibles*:  
@@ -422,6 +446,10 @@ Met à jour les informations concernant les likes du commentaire donné dans la 
   `* NOT NULL`    
   * description  
   `* NOT NULL`    
+  * numberOfFollowers  
+  `* IND`   
+  * hasFollowed  
+  `* []`  
   * UserId  
   `* FK(User.id)`  
   
