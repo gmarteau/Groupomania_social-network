@@ -1,7 +1,10 @@
 <template>
   <div id="app">
     <HeaderNav />
-    <router-view></router-view>
+
+    <main class="py-5">
+      <router-view />
+    </main>
   </div>
 </template>
 
@@ -15,8 +18,3 @@ export default {
   }
 }
 </script>
-
-
-<style lang="scss">
-
-</style>
