@@ -15,7 +15,7 @@ export default new Vuex.Store({
     },
     loggedIn: true,
     currentUser: {
-      id: 0,
+      id: 1,
       token: ''
     }
   },

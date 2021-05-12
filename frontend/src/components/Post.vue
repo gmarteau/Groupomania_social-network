@@ -1,5 +1,5 @@
 <template>
-    <div class="post container px-2 py-1 my-2">
+    <div class="post container px-2 pb-1 my-2">
         <div class="post__header row">
             <div class="post__header__pic col-1">
                 <div class="post__header__pic__circle">
@@ -7,7 +7,7 @@
                 </div>
             </div>
             <div class="post__header__txt col p-0">
-                <p class="post__header__txt__username mb-0 mr-3">{{ firstName }} {{ lastName }}</p>
+                <p class="post__header__txt__username font-weight-bold mb-0 mr-3">{{ firstName }} {{ lastName }}</p>
                 <p class="post__header__txt__topic mb-0">@{{ topic }}</p>
             </div>
         </div>
@@ -48,15 +48,17 @@ export default {
     border-radius: .3rem;
     margin: 0;
     min-width: 100%;
+    overflow: hidden;
     &__header {
         height: 50px;
+        background-color: #FFD7D7;
         &__pic {
             display: flex;
             justify-content: center;
             align-items: center;
             &__circle {
+                border: solid 2px #fff;
                 border-radius: 50%;
-                background-color: #d3d3d3;
                 width: 35px;
                 height: 35px;
                 overflow: hidden;
@@ -76,6 +78,7 @@ export default {
         height: 50px;
         display: flex;
         align-items: center;
+        border-top: solid 1px #d3d3d3;
         &__likes {
             display: flex;
             justify-content: center;

@@ -26,15 +26,15 @@
 
             <div class="collapse navbar-collapse" id="navbarContentLoggedIn">
                 <ul class="navbar-nav ml-auto">
-                    <li class="nav-item dropdown mx-3">
-                        <a class="nav-link dropdown-toggle" href="javascript:void(0);" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fas fa-user-circle"></i>
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <router-link to="/profile" class="dropdown-item">Mon profil</router-link>
-                            <div class="dropdown-divider"></div>
-                            <a href="javascript:void(0);" class="dropdown-item text-dark font-weight-bold" @click="logout">Se déconnecter</a>
-                        </div>
+                    <li class="nav-item">
+                        <b-dropdown class="dropdown" toggle-class="text-decoration-none" size="lg" dropleft no-caret>
+                            <template #button-content>
+                                <i class="fas fa-user-circle fa-lg"></i>
+                            </template>
+                            <b-dropdown-item><router-link to="/profile" class="text-dark">Mon profil</router-link></b-dropdown-item>
+                            <b-dropdown-divider></b-dropdown-divider>
+                            <b-dropdown-item><a href="javascript:void(0);" class="text-dark" @click="logout">Se déconnecter</a></b-dropdown-item>
+                        </b-dropdown>
                     </li>
                 </ul>
             </div> 
@@ -92,4 +92,13 @@ i {
     }
 }
 
+.dropdown {
+    width: 40px;
+    height: 40px;
+    .btn {
+        background-color: #fff;
+        color: #FD3C13;
+        border: none;
+    }
+}
 </style>

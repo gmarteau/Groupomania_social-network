@@ -41,43 +41,89 @@ exports.getTopics = (req, res, next) => {
                 res.status(400).json({ error });});
     }
     if (req.query.order == 'recent') {
-        Topic.findAll({
-            order: [
-                ['dateCreation', 'DESC']
-            ]
-        })
-            .then(topics => res.status(200).json(topics))
-            .catch(error => res.status(400).json({ error }));    
-    } else if (req.query.order == 'popular') {
-        Topic.findAll({
-            order: [
-                ['numberOfFollowers', 'DESC']
-            ]
-        })
-            .then(topics => res.status(200).json(topics))
-            .catch(error => res.status(400).json({ error }));    
-    } else if (req.query.order == 'followed') {
-        const userId = req.body.userId.toString();
-        Topic.findAll({
-            where: {
-                [Op.or]: [
-                    {
-                        hasFollowed: {
-                            [Op.substring]: `,${userId},`
-                        }        
-                    }, {
-                        hasFollowed: {
-                            [Op.endsWith]: `,${userId}`
-                        }
-                    }
+        if (req.query.limit) {
+            Topic.findAll({
+                limit: parseInt(req.query.limit),
+                order: [
+                    ['dateCreation', 'DESC']
                 ]
-            },
-            order: [
-                ['name', 'ASC']
-            ]
-        })
-            .then(topics => res.status(200).json(topics))
-            .catch(error => res.status(400).json({ error }));    
+            })
+                .then(topics => res.status(200).json(topics))
+                .catch(error => res.status(400).json({ error }));        
+        } else {
+            Topic.findAll({
+                order: [
+                    ['dateCreation', 'DESC']
+                ]
+            })
+                .then(topics => res.status(200).json(topics))
+                .catch(error => res.status(400).json({ error }));        
+        }
+    } else if (req.query.order == 'popular') {
+        if (req.query.limit) {
+            Topic.findAll({
+                limit: parseInt(req.query.limit),
+                order: [
+                    ['numberOfFollowers', 'DESC']
+                ]
+            })
+                .then(topics => res.status(200).json(topics))
+                .catch(error => res.status(400).json({ error }));        
+        } else {
+            Topic.findAll({
+                order: [
+                    ['numberOfFollowers', 'DESC']
+                ]
+            })
+                .then(topics => res.status(200).json(topics))
+                .catch(error => res.status(400).json({ error }));        
+        }
+    } else if (req.query.order == 'followed') {
+        const userId = req.query.userId.toString();
+        if (req.query.limit) {
+            Topic.findAll({
+                limit: parseInt(req.query.limit),
+                where: {
+                    [Op.or]: [
+                        {
+                            hasFollowed: {
+                                [Op.substring]: `,${userId},`
+                            }        
+                        }, {
+                            hasFollowed: {
+                                [Op.endsWith]: `,${userId}`
+                            }
+                        }
+                    ]
+                },
+                order: [
+                    ['name', 'ASC']
+                ]
+            })
+                .then(topics => res.status(200).json(topics))
+                .catch(error => res.status(400).json({ error }));    
+        } else {
+            Topic.findAll({
+                where: {
+                    [Op.or]: [
+                        {
+                            hasFollowed: {
+                                [Op.substring]: `,${userId},`
+                            }        
+                        }, {
+                            hasFollowed: {
+                                [Op.endsWith]: `,${userId}`
+                            }
+                        }
+                    ]
+                },
+                order: [
+                    ['name', 'ASC']
+                ]
+            })
+                .then(topics => res.status(200).json(topics))
+                .catch(error => res.status(400).json({ error }));    
+        }
     }
 };
 

@@ -9,14 +9,14 @@
     </div>
 
     <div class="home--loggedIn row" v-if="loggedIn">
-      <section class="col-8">
+      <section class="col-9 pr-5">
         <div class="feed row">
-          <div class="searchbar col-12">
+          <div class="searchbar col-12 mb-3">
             <input type="search" class="searchbar__bar form-control" id="searchbar" aria-label="Search topics" placeholder="Rechercher" />
-            <button type="submit" class="searchbar__btn btn"><i class="fas fa-search"></i></button>
+            <button type="submit" class="searchbar__btn btn"><i class="fas fa-search fa-lg"></i></button>
           </div>
           
-          <h1 class="col-12">Fil d'actualité</h1>
+          <h1 class="col-12 my-3">Fil d'actualité</h1>
           <Post
             v-for="post in posts"
             :key="post.id"
@@ -32,8 +32,10 @@
         </div>
       </section>
 
-      <aside class="aside col-4">
-
+      <aside class="aside col-3">
+        <TopicsList listName="popular" />
+        <TopicsList listName="recent" />
+        <TopicsList listName="followed" />
       </aside>
     </div>
   </div>
@@ -45,25 +47,31 @@ import axios from 'axios'
 import { mapState } from 'vuex'
 import { mapGetters } from 'vuex'
 import Post from '../components/Post'
+import TopicsList from '../components/TopicsList'
 
 export default {
   name: 'Home',
   data() {
     return {
       posts: [],
+      popularTopics: [],
+      recentTopics: [],
+      followedTopics: []
     }
   },
   computed: {
     ...mapState(['logoVertical']),
     ...mapGetters(['loggedIn'])
   },
-  async beforeCreate() {
-    const response = await axios.get('/posts/?order=recent');
-    console.log(response.data);
-    this.posts = response.data;
+  async beforeMount() {
+    if (this.loggedIn) {
+      const response = await axios.get('/posts/?order=recent');
+      this.posts = response.data;
+    }
   },
   components: {
-    Post
+    Post,
+    TopicsList
   }
 }
 </script>
@@ -97,6 +105,12 @@ export default {
   }
   &__btn {
     flex: 1;
+    color: #fff;
+    background-color: #FD3C13;
+    &:hover {
+      background-color: #FFD7D7;
+      color: #FD3C13;
+    }
   }
 }
 

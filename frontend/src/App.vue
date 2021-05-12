@@ -5,16 +5,24 @@
     <main class="container py-5">
       <router-view />
     </main>
+
+    <Footer v-if="loggedIn" />
   </div>
 </template>
 
 <script>
 import HeaderNav from './components/HeaderNav'
+import Footer from './components/Footer'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'App',
-    components: {
-    HeaderNav
+  components: {
+    HeaderNav,
+    Footer
+  },
+  computed: {
+    ...mapGetters(['loggedIn'])
   }
 }
 </script>
