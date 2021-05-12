@@ -59,8 +59,6 @@ export default {
 <style lang="scss">
 
 .login {
-    width: 90%;
-    margin: auto;
     &__logo {
         &__img {
             height: 100%;

@@ -26,8 +26,15 @@
 
             <div class="collapse navbar-collapse" id="navbarContentLoggedIn">
                 <ul class="navbar-nav ml-auto">
-                    <li class="nav-item mx-3">
-                        <a href="javascript:void(0);" class="nav-link text-dark font-weight-bold" @click="logout">Se déconnecter</a>
+                    <li class="nav-item dropdown mx-3">
+                        <a class="nav-link dropdown-toggle" href="javascript:void(0);" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-user-circle"></i>
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <router-link to="/profile" class="dropdown-item">Mon profil</router-link>
+                            <div class="dropdown-divider"></div>
+                            <a href="javascript:void(0);" class="dropdown-item text-dark font-weight-bold" @click="logout">Se déconnecter</a>
+                        </div>
                     </li>
                 </ul>
             </div> 

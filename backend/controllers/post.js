@@ -2,6 +2,7 @@ const { Op } = require('sequelize');
 const seq = require('../sequelize');
 const Post = seq.post;
 const User = seq.user;
+const Topic = seq.topic;
 
 exports.createPost = (req, res, next) => {
     Post.create({
@@ -11,6 +12,44 @@ exports.createPost = (req, res, next) => {
     })
         .then(() => res.status(201).json({ message: 'Post créé' }))
         .catch(error => res.status(400).json({ error }));
+};
+
+exports.getAllPosts = (req, res, next) => {
+    if (req.query.order == 'recent') {
+        Post.findAll({
+            include: [
+                {
+                    model: User,
+                    attributes: ['username', 'firstName', 'lastName', 'profilePicture']
+                }, {
+                    model: Topic,
+                    attributes: ['name']
+                }
+            ],
+            order: [
+                ['datePublication', 'DESC']
+            ]
+        })
+            .then(posts => res.status(200).json(posts))
+            .catch(error => res.status(400).json({ error }));        
+    } else if (req.query.order == 'popular') {
+        Post.findAll({
+            include: [
+                {
+                    model: User,
+                    attributes: ['username', 'firstName', 'lastName', 'profilePicture']
+                }, {
+                    model: Topic,
+                    attributes: ['name']
+                }
+            ],
+            order: [
+                ['likes', 'DESC']
+            ]
+        })
+            .then(posts => res.status(200).json(posts))
+            .catch(error => res.status(400).json({ error }));    
+    }
 };
 
 exports.getPosts = (req, res, next) => {

@@ -7,6 +7,7 @@ const urlParamPostId = require('./middleware/urlParamPostId');
 
 const userRoutes = require('./routes/user');
 const topicRoutes = require('./routes/topic');
+const allPostsRoutes = require('./routes/allPosts');
 const postRoutes = require('./routes/post');
 const commentRoutes = require('./routes/comment');
 
@@ -30,6 +31,7 @@ app.param('postId', urlParamPostId);
 
 app.use('/api/users', userRoutes);
 app.use('/api/topics', topicRoutes);
+app.use('/api/posts', allPostsRoutes);
 app.use('/api/topics/:topicId/posts', postRoutes);
 app.use('/api/topics/:topicId/posts/:postId/comments', commentRoutes);
 
