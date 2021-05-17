@@ -31,9 +31,9 @@
                             <template #button-content>
                                 <i class="fas fa-user-circle fa-lg"></i>
                             </template>
-                            <b-dropdown-item><router-link to="/profile" class="text-dark">Mon profil</router-link></b-dropdown-item>
+                            <b-dropdown-item><router-link to="/profile" class="dropdown__item text-dark">Mon profil</router-link></b-dropdown-item>
                             <b-dropdown-divider></b-dropdown-divider>
-                            <b-dropdown-item><a href="javascript:void(0);" class="text-dark" @click="logout">Se déconnecter</a></b-dropdown-item>
+                            <b-dropdown-item><a href="javascript:void(0);" class="dropdown__item text-dark" @click="logout">Se déconnecter</a></b-dropdown-item>
                         </b-dropdown>
                     </li>
                 </ul>
@@ -68,6 +68,8 @@ export default {
 
 header {
     box-shadow: 0px 2px 10px #D7FFFF;
+    z-index: 100000;
+    background-color: #fff;
 }
 
 .navbar {

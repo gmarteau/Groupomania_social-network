@@ -168,3 +168,32 @@ exports.deleteUser = (req, res, next) => {
         })
         .catch(error => res.status(500).json({ error }));
 };
+
+exports.getUsersByIds = (req, res, next) => {
+    const index = req.query.followers.indexOf('0');
+    req.query.followers.splice(index, 1);
+    if (req.query.limit) {
+        User.findAll({
+            attributes: ['username', 'firstName', 'lastName'],
+            where: {
+                id: {
+                    [Op.in]: req.query.followers
+                }
+            },
+            limit: parseInt(req.query.limit)
+        })
+            .then(users => res.status(200).json(users))
+            .catch(error => res.status(400).json({ error }));    
+    } else {
+        User.findAll({
+            attributes: ['username', 'firstName', 'lastName'],
+            where: {
+                id: {
+                    [Op.in]: req.query.followers
+                }
+            }
+        })
+            .then(users => res.status(200).json(users))
+            .catch(error => res.status(400).json({ error }));    
+    }
+}

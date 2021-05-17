@@ -1,5 +1,5 @@
 <template>
-    <footer class="footer mt-5">
+    <footer class="footer">
         <div class="container">
             <div class="row">
                 <p class="col m-0 text-center"><i class="far fa-copyright"></i>Groupomania</p>
@@ -17,7 +17,7 @@ export default {
 <style lang="scss">
 
 .footer {
-    height: 100px;
+    height: 130px;
     background-color: #FFD7D7;
     color: #fff;
     display: flex;

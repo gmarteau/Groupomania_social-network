@@ -12,8 +12,8 @@
       <section class="col-9 pr-5">
         <div class="feed row">
           <div class="searchbar col-12 mb-3">
-            <input type="search" class="searchbar__bar form-control" id="searchbar" aria-label="Search topics" placeholder="Rechercher" />
-            <button type="submit" class="searchbar__btn btn"><i class="fas fa-search fa-lg"></i></button>
+            <input type="search" class="searchbar__bar form-control" id="searchbar" aria-label="Search topics" placeholder="Rechercher" v-model="search" />
+            <button type="submit" class="searchbar__btn btn" @click="makeResearch"><i class="fas fa-search fa-lg"></i></button>
           </div>
           
           <h1 class="col-12 my-3">Fil d'actualité</h1>
@@ -23,7 +23,9 @@
             :imageUrl="post.User.profilePicture"
             :firstName="post.User.firstName"
             :lastName="post.User.lastName"
+            :username="post.User.username"
             :topic="post.Topic.name"
+            :topicId="post.TopicId"
             :content="post.content"
             :numberOfLikes="post.likes"
             :numberOfDislikes="post.dislikes"
@@ -56,12 +58,18 @@ export default {
       posts: [],
       popularTopics: [],
       recentTopics: [],
-      followedTopics: []
+      followedTopics: [],
+      search: ''
     }
   },
   computed: {
     ...mapState(['logoVertical']),
     ...mapGetters(['loggedIn'])
+  },
+  methods: {
+    makeResearch() {
+      this.$router.push({ path: '/topics', query: { name: this.search } });
+    }
   },
   async beforeMount() {
     if (this.loggedIn) {

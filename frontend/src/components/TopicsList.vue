@@ -1,11 +1,12 @@
 <template>
     <div class="topicsList row p-3 my-4">
-        <h2 class="topicsList__title col-12">{{ title }}</h2>
+        <router-link :to="href" class="topicsList__title col-12 h2">{{ title }}</router-link>
         <ul class="topicsList__list list-group col-12 px-0">
             <TopicsListItem
                 v-for="topic in topics"
                 :key="topic.name"
                 :topicName="topic.name"
+                :topicId="topic.id"
             />
         </ul>
     </div>
@@ -26,6 +27,12 @@ export default {
     data() {
         return {
             title: '',
+            href: {
+                path: '/topics',
+                query: {
+                    order: this.listName
+                }
+            },
             topics: []
         }
     },
@@ -36,6 +43,7 @@ export default {
         if (this.listName == 'popular') {
             this.title = 'Les + populaires';
             const response = await axios.get('/topics/?order=popular&limit=5');
+            console.log(response.data);
             this.topics = response.data;
         } else if (this.listName == 'recent') {
             this.title = 'Les + récents';
@@ -60,5 +68,13 @@ export default {
     background-color: #FD3C13;
     color: #fff;
     border-radius: .3rem;
+    &__title {
+        text-decoration: none;
+        color: #fff;
+        &:hover {
+            text-decoration: none;
+            color: #fff;
+        }
+    }
 }
 </style>

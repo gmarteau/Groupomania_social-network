@@ -2,7 +2,7 @@
   <div id="app">
     <HeaderNav />
 
-    <main class="container py-5">
+    <main class="main container py-5">
       <router-view />
     </main>
 
@@ -33,6 +33,10 @@ export default {
   width: 90%;
   max-width: 90%;
   margin: auto;
+}
+
+.main {
+  min-height: 800px;
 }
 
 .form-control {

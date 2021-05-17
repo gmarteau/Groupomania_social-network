@@ -1,5 +1,5 @@
 <template>
-    <div class="post container px-2 pb-1 my-2">
+    <div class="post container px-2 pb-1">
         <div class="post__header row">
             <div class="post__header__pic col-1">
                 <div class="post__header__pic__circle">
@@ -7,8 +7,8 @@
                 </div>
             </div>
             <div class="post__header__txt col p-0">
-                <p class="post__header__txt__username font-weight-bold mb-0 mr-3">{{ firstName }} {{ lastName }}</p>
-                <p class="post__header__txt__topic mb-0">@{{ topic }}</p>
+                <p class="post__header__txt__username font-weight-bold mb-0 mr-3">{{ firstName }} {{ lastName }} <span class="font-weight-normal">/{{ username }}</span></p>
+                <p class="post__header__txt__topic mb-0" v-if="topic">@<router-link :to="href" class="text-dark">{{ topic }}</router-link></p>
             </div>
         </div>
         <div class="post__body row m-0">
@@ -36,7 +36,17 @@
 
 export default {
     name: 'Post',
-    props: ['imageUrl', 'firstName', 'lastName', 'topic', 'content', 'numberOfLikes', 'numberOfDislikes', 'numberOfComments']
+    props: ['imageUrl', 'firstName', 'lastName', 'username', 'topic', 'topicId', 'content', 'numberOfLikes', 'numberOfDislikes', 'numberOfComments'],
+    data() {
+        return {
+            href: {
+                path: '/topic',
+                query: {
+                    id: this.topicId
+                }
+            }
+        }
+    }
 }
 </script>
 
@@ -49,6 +59,8 @@ export default {
     margin: 0;
     min-width: 100%;
     overflow: hidden;
+    margin-top: 15px;
+    margin-bottom: 15px;
     &__header {
         height: 50px;
         background-color: #FFD7D7;
