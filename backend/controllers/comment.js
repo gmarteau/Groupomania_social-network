@@ -44,7 +44,7 @@ exports.getComments = (req, res, next) => {
                 PostId: req.post.dataValues.id
             },
             order: [
-                ['datePublication', 'ASC']
+                ['datePublication', 'DESC']
             ]
         })
             .then(comments => res.status(200).json(comments))
@@ -59,7 +59,7 @@ exports.getComments = (req, res, next) => {
                 PostId: req.post.dataValues.id
             },
             order: [
-                ['likes', 'ASC']
+                ['likes', 'DESC']
             ]
         })
             .then(comments => res.status(200).json(comments))
