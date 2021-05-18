@@ -36,6 +36,7 @@
                     <Post 
                         v-for="post in posts"
                         :key="post.id"
+                        :id="post.id"
                         :imageUrl="post.User.profilePicture"
                         :firstName="post.User.firstName"
                         :lastName="post.User.lastName"

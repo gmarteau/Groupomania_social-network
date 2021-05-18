@@ -88,10 +88,15 @@ exports.getPosts = (req, res, next) => {
 
 exports.getPostById = (req, res, next) => {
     Post.findOne({
-        include: {
-            model: User,
-            attributes: ['username', 'firstName', 'lastName', 'profilePicture']
-        },
+        include: [
+            {
+                model: User,
+                attributes: ['username', 'firstName', 'lastName', 'profilePicture']
+            }, {
+                model: Topic,
+                attributes: ['name']
+            }
+        ],
         where: {
             [Op.and]: [
                 { id: req.params.id },

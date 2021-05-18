@@ -1,5 +1,5 @@
 <template>
-    <div class="post container px-2 pb-1">
+    <router-link :to="postDetails" class="post container px-2 pb-1">
         <div class="post__header row">
             <div class="post__header__pic col-1">
                 <div class="post__header__pic__circle">
@@ -29,20 +29,27 @@
                 <p class="post__footer__comments mb-0 ml-3">{{ numberOfComments }} commentaires</p>
             </div>
         </div>
-    </div>
+    </router-link>
 </template>
 
 <script>
 
 export default {
     name: 'Post',
-    props: ['imageUrl', 'firstName', 'lastName', 'username', 'topic', 'topicId', 'content', 'numberOfLikes', 'numberOfDislikes', 'numberOfComments'],
+    props: ['id', 'imageUrl', 'firstName', 'lastName', 'username', 'topic', 'topicId', 'content', 'numberOfLikes', 'numberOfDislikes', 'numberOfComments'],
     data() {
         return {
             href: {
                 path: '/topic',
                 query: {
                     id: this.topicId
+                }
+            },
+            postDetails: {
+                path: '/post',
+                query: {
+                    topic: this.topicId,
+                    id: this.id
                 }
             }
         }
@@ -61,6 +68,11 @@ export default {
     overflow: hidden;
     margin-top: 15px;
     margin-bottom: 15px;
+    color: #000;
+    &:hover {
+        color: #000;
+        text-decoration: none;
+    }
     &__header {
         height: 50px;
         background-color: #FFD7D7;

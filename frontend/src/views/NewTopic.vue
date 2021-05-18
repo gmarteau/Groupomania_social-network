@@ -15,8 +15,8 @@
                 </div>
 
                 <div class="form-group mb-4">
-                    <label for="topicImage" class="h4 mb-3">Ajoutez une image</label>
-                    <input type="file" id="topicImage" name="topicImage" accept="image/png, image/jpg, image/jpeg" @change="getUserImage" />
+                    <label for="image" class="h4 mb-3">Ajoutez une image</label>
+                    <input type="file" id="image" name="image" accept="image/png, image/jpg, image/jpeg" @change="getUserImage" />
                 </div>
 
                 <div class="newTopic__form__submit my-5 text-center">
@@ -37,7 +37,7 @@ export default {
         return {
             name: '',
             description: '',
-            filename: ''
+            image: ''
         }
     },
     computed: {
@@ -45,15 +45,15 @@ export default {
     },
     methods: {
         getUserImage() {
-            this.filename = document.getElementById('topicImage').files[0].name;
+            this.image = document.getElementById('image').files[0];
         },
         async createNewTopic() {
-            const response = await axios.post('/topics', {
-                userId: this.currentUser.id,
-                name: this.name,
-                description: this.description,
-                imageUrl: this.filename
-            });
+            const formData = new FormData();
+            formData.append('userId', this.currentUser.id);
+            formData.append('name', this.name);
+            formData.append('description', this.description);
+            formData.append('image', this.image);
+            const response = await axios.post('/topics', formData);
             const newTopicUrl = '/topic?id=' + response.data.topicId;
             this.$router.push(newTopicUrl);
         }

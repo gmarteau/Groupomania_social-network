@@ -13,11 +13,12 @@ exports.createTopic = (req, res, next) => {
             if (topic) {
                 return res.status(400).json({ error: 'Un topic porte déjà ce nom' });
             } else {
+                const path = 'http://localhost:3000/' + req.file.path;
                 Topic.create({
                     UserId: req.body.userId,
                     name: req.body.name,
                     description: req.body.description,
-                    imageUrl: req.body.imageUrl
+                    imageUrl: path
                 })
                     .then(newTopic => res.status(201).json({ message: 'Topic créé', topicId: newTopic.id }))
                     .catch(error => res.status(400).json({ error }));

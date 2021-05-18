@@ -1,6 +1,5 @@
 <template>
-    
-    <router-link :to="href" class="topicCard col-3 mx-5 px-2 py-3">
+    <router-link :to="href" class="topicCard col-3 mx-5 mb-5 px-2 py-3">
         <div class="topicCard__pic mx-3">
             <div class="topicCard__pic__circle">
                 <img class="topicCard__pic__circle__img" :src="imageUrl" :alt="alt" />
@@ -68,6 +67,11 @@ export default {
             border: solid 2px #FFD7D7;
             border-radius: 50%;
             overflow: hidden;
+            &__img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
         }
     }
     &__txt {

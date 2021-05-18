@@ -1,5 +1,5 @@
 <template>
-    <div class="topics row">
+    <div class="topics row pl-5 ml-5">
         <p class="topics__noresults" v-if="noResults">Désolé, aucun résultat ne correspond à votre recherche...</p>
 
         <TopicCard
@@ -62,8 +62,4 @@ export default {
 
 <style lang="scss">
 
-.topics {
-    display: flex;
-    justify-content: space-evenly;
-}
 </style>

@@ -11,15 +11,16 @@
     <div class="home--loggedIn row" v-if="loggedIn">
       <section class="col-9 pr-5">
         <div class="feed row">
-          <div class="searchbar col-12 mb-3">
+          <!-- <div class="searchbar col-12 mb-3">
             <input type="search" class="searchbar__bar form-control" id="searchbar" aria-label="Search topics" placeholder="Rechercher" v-model="search" />
             <button type="submit" class="searchbar__btn btn" @click="makeResearch"><i class="fas fa-search fa-lg"></i></button>
-          </div>
+          </div> -->
           
-          <h1 class="col-12 my-3">Fil d'actualité</h1>
+          <h1 class="col-12 mb-4">Fil d'actualité</h1>
           <Post
             v-for="post in posts"
             :key="post.id"
+            :id="post.id"
             :imageUrl="post.User.profilePicture"
             :firstName="post.User.firstName"
             :lastName="post.User.lastName"
@@ -35,8 +36,16 @@
       </section>
 
       <aside class="aside col-3">
-        <h2 class="aside__title mb-4 h1">Topics</h2>
-        <router-link to="/newtopic" class="aside__newTopic btn px-3 py-1 mb-2"><i class="fas fa-plus mr-1"></i> Créer un topic</router-link>
+        <div class="aside__header mb-3">
+          <h2 class="aside__header__title mr-3">Topics</h2>
+          <router-link to="/newtopic" class="aside__header__newTopic btn px-3 py-1"><i class="fas fa-plus mr-1"></i> Créer un topic</router-link>
+        </div>
+
+        <div class="searchbar mb-4">
+            <input type="search" class="searchbar__bar form-control" id="searchbar" aria-label="Search topics" placeholder="Rechercher" v-model="search" />
+            <button type="submit" class="searchbar__btn btn" @click="makeResearch"><i class="fas fa-search fa-lg"></i></button>
+        </div>
+
         <TopicsList listName="popular" />
         <TopicsList listName="recent" />
         <TopicsList listName="followed" />
@@ -111,7 +120,7 @@ export default {
 .searchbar {
   display: flex;
   &__bar {
-    flex: 15;
+    flex: 5;
   }
   &__btn {
     flex: 1;
@@ -129,13 +138,18 @@ export default {
 }
 
 .aside {
-  &__newTopic {
-    background-color: #FD3C13;
-    color: #fff;
-    font-weight: bold;
-    &:hover {
-      background-color: #FFD7D7;
-      color: #FD3C13;
+  &__header {
+    display: flex;
+    align-items: center;
+    &__newTopic {
+      height: min-content;
+      background-color: #FD3C13;
+      color: #fff;
+      font-weight: bold;
+      &:hover {
+        background-color: #FFD7D7;
+        color: #FD3C13;
+      }
     }
   }
 }
