@@ -14,8 +14,18 @@
 
         <div class="topic__body row">
             <section class="topic__body__feed col-9 pr-5">
-                <div class="topic__body__feed__publish">
-
+                <div class="topic__body__feed__publish pb-3 mb-2">
+                    <form id="publishNewPostForm" @submit.prevent="publishNewPost">
+                        <div class="form-group mb-2">
+                            <label for="newPost" class="h3">Exprimez-vous!</label>
+                            <textarea class="topic__body__feed__publish__content form-control" type="text" id="newPost" name="newPost" v-model="newPost" placeholder="Publiez quelque chose..."></textarea>
+                        </div>
+                        <div class="topic__body__feed__publish__submit">
+                            <button type="submit" class="topic__body__feed__publish__submit__btn btn px-3 py-1">
+                                Publier
+                            </button>
+                        </div>
+                    </form>
                 </div>
 
                 <div class="topic__body__feed__posts">
@@ -68,11 +78,29 @@ export default {
             topic: '',
             posts: [],
             noPosts: false,
-            followed: false
+            followed: false,
+            newPost: ''
         }
     },
     computed: {
         ...mapGetters(['currentUser']),
+    },
+    methods: {
+        async publishNewPost() {
+            const url = window.location.search;
+            const searchUrl = new URLSearchParams(url);
+            const topicId = searchUrl.get('id');
+            const reqUrlPost = '/topics/' + topicId + '/posts';
+            const createPost = await axios.post(reqUrlPost, {
+                userId: this.currentUser.id,
+                content: this.newPost
+            });
+            console.log(createPost.data);
+            const reqUrlGet = reqUrlPost + '/?order=recent' 
+            const postsRefreshed = await axios.get(reqUrlGet);
+            this.posts = postsRefreshed.data;
+            document.getElementById('newPost').value = '';
+        }
     },
     async beforeMount() {
         const url = window.location.search;
@@ -103,6 +131,34 @@ export default {
         &__feed {
             &__posts {
                 padding: inherit;
+            }
+            &__publish {
+                padding: inherit;
+                position: relative;
+                &::after {
+                    content: '';
+                    height: 2px;
+                    background-color: #FFD7D7;
+                    position: absolute;
+                    bottom: 0;
+                    width: 95%;
+                }
+                &__content {
+                    min-height: 100px;
+                }
+                &__submit {
+                    display: flex;
+                    justify-content: flex-end;
+                    &__btn {
+                        background-color: #FD3C13;
+                        color: #fff;
+                        font-weight: bold;
+                        &:hover {
+                            background-color: #FFD7D7;
+                            color: #FD3C13;
+                        }
+                    }
+                }
             }
         }
     }

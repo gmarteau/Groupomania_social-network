@@ -35,6 +35,8 @@
       </section>
 
       <aside class="aside col-3">
+        <h2 class="aside__title mb-4 h1">Topics</h2>
+        <router-link to="/newtopic" class="aside__newTopic btn px-3 py-1 mb-2"><i class="fas fa-plus mr-1"></i> Créer un topic</router-link>
         <TopicsList listName="popular" />
         <TopicsList listName="recent" />
         <TopicsList listName="followed" />
@@ -124,5 +126,17 @@ export default {
 
 .feed {
   padding: inherit;
+}
+
+.aside {
+  &__newTopic {
+    background-color: #FD3C13;
+    color: #fff;
+    font-weight: bold;
+    &:hover {
+      background-color: #FFD7D7;
+      color: #FD3C13;
+    }
+  }
 }
 </style>

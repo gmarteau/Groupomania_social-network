@@ -19,7 +19,7 @@ exports.createTopic = (req, res, next) => {
                     description: req.body.description,
                     imageUrl: req.body.imageUrl
                 })
-                    .then(() => res.status(201).json({ message: 'Topic créé' }))
+                    .then(newTopic => res.status(201).json({ message: 'Topic créé', topicId: newTopic.id }))
                     .catch(error => res.status(400).json({ error }));
             }
         })
