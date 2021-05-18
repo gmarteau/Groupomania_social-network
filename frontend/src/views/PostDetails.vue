@@ -86,6 +86,8 @@ export default {
             const reqUrlGet = reqUrlPost + '/?order=recent';
             const commentsRefreshed = await axios.get(reqUrlGet);
             this.comments = commentsRefreshed.data;
+            document.getElementById('newComment').value = '';
+            this.newComment = '';
         }
     },
     async beforeMount() {

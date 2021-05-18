@@ -13,9 +13,9 @@ export default new Vuex.Store({
       src: '/images/logo-vertical.png',
       alt: 'Logo de Groupomania en version verticale'
     },
-    loggedIn: true,
+    loggedIn: false,
     currentUser: {
-      id: 1,
+      id: 0,
       token: ''
     }
   },

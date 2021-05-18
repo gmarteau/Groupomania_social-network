@@ -15,7 +15,7 @@
 </template>
 
 <script>
-
+import { mapGetters } from 'vuex'
 import axios from 'axios'
 import TopicCard from '../components/TopicCard'
 
@@ -30,6 +30,9 @@ export default {
             noResults: false
         }
     },
+    computed: {
+        ...mapGetters(['currentUser'])
+    },
     async beforeMount() {
         const url = window.location.search;
         const searchUrl = new URLSearchParams(url);
@@ -42,7 +45,11 @@ export default {
                 const response = await axios.get('/topics/?order=recent');
                 this.topics = response.data;                
             } else if (urlQuery == 'followed') {
-                const response = await axios.get('/topics/?order=followed');
+                const response = await axios.get('/topics/?order=followed', {
+                    params: {
+                        userId: this.currentUser.id
+                    }
+                });
                 this.topics = response.data;
             }
         }

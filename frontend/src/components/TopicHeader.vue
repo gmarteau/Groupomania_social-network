@@ -45,6 +45,7 @@ export default {
             });
             console.log(response.data);
             this.followed = true;
+            this.followers++;
         },
         async unfollowTopic() {
             const reqUrl = '/topics/' + this.topicId + '/follow';
@@ -54,6 +55,7 @@ export default {
             });
             console.log(response.data);
             this.followed = false;
+            this.followers--;
         }
     }
 }

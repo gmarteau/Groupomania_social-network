@@ -14,7 +14,7 @@
 
         <div class="topic__body row">
             <section class="topic__body__feed col-9 pr-5">
-                <div class="topic__body__feed__publish pb-3 mb-2">
+                <div class="topic__body__feed__publish pb-3 pr-5 mb-2">
                     <form id="publishNewPostForm" @submit.prevent="publishNewPost">
                         <div class="form-group mb-2">
                             <label for="newPost" class="h3">Exprimez-vous!</label>
@@ -28,7 +28,7 @@
                     </form>
                 </div>
 
-                <div class="topic__body__feed__posts">
+                <div class="topic__body__feed__posts row">
                     <p class="topic__body__feed__posts__empty text-center h5 mt-5" v-if="noPosts">
                         Soyez le premier à publier quelque chose à propos de ce sujet!
                     </p>
@@ -101,6 +101,10 @@ export default {
             const postsRefreshed = await axios.get(reqUrlGet);
             this.posts = postsRefreshed.data;
             document.getElementById('newPost').value = '';
+            this.newPost = '';
+            if (this.noPosts) {
+                this.noPosts = false;
+            }
         }
     },
     async beforeMount() {
@@ -134,7 +138,6 @@ export default {
                 padding: inherit;
             }
             &__publish {
-                padding: inherit;
                 position: relative;
                 &::after {
                     content: '';
