@@ -27,7 +27,7 @@
             <div class="collapse navbar-collapse" id="navbarContentLoggedIn">
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item">
-                        <b-dropdown class="dropdown" toggle-class="text-decoration-none" size="lg" dropleft no-caret>
+                        <b-dropdown class="dropdown nav__dropdown" toggle-class="text-decoration-none" size="lg" dropleft no-caret>
                             <template #button-content>
                                 <i class="fas fa-user-circle fa-lg"></i>
                             </template>
@@ -94,7 +94,7 @@ i {
     }
 }
 
-.dropdown {
+.nav__dropdown {
     width: 40px;
     height: 40px;
     .btn {

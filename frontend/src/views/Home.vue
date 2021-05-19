@@ -21,6 +21,7 @@
             v-for="post in posts"
             :key="post.id"
             :id="post.id"
+            :authorId="post.UserId"
             :imageUrl="post.User.profilePicture"
             :firstName="post.User.firstName"
             :lastName="post.User.lastName"
@@ -31,6 +32,7 @@
             :numberOfLikes="post.likes"
             :numberOfDislikes="post.dislikes"
             :numberOfComments="post.numberOfComments"
+            @post-deleted="refreshPosts"
           />
         </div>
       </section>
@@ -80,6 +82,10 @@ export default {
   methods: {
     makeResearch() {
       this.$router.push({ path: '/topics', query: { name: this.search } });
+    },
+    async refreshPosts() {
+      const response = await axios.get('/posts/?order=recent');
+      this.posts = response.data;
     }
   },
   async beforeMount() {

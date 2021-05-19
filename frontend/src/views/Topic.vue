@@ -29,7 +29,7 @@
                 </div>
 
                 <div class="topic__body__feed__posts row">
-                    <p class="topic__body__feed__posts__empty text-center h5 mt-5" v-if="noPosts">
+                    <p class="topic__body__feed__posts__empty col text-center h5 mt-5" v-if="noPosts">
                         Soyez le premier à publier quelque chose à propos de ce sujet!
                     </p>
                     
@@ -37,6 +37,7 @@
                         v-for="post in posts"
                         :key="post.id"
                         :id="post.id"
+                        :authorId="post.UserId"
                         :imageUrl="post.User.profilePicture"
                         :firstName="post.User.firstName"
                         :lastName="post.User.lastName"
@@ -46,6 +47,7 @@
                         :numberOfLikes="post.likes"
                         :numberOfDislikes="post.dislikes"
                         :numberOfComments="post.numberOfComments"
+                        @post-deleted="refreshPosts"
                     />
                 </div>
             </section>
@@ -104,6 +106,18 @@ export default {
             this.newPost = '';
             if (this.noPosts) {
                 this.noPosts = false;
+            }
+        },
+        async refreshPosts() {
+            const url = window.location.search;
+            const searchUrl = new URLSearchParams(url);
+            const topicId = searchUrl.get('id');
+            const reqUrl = '/topics/' + topicId + '/posts/?order=recent';
+            const postsRefreshed = await axios.get(reqUrl);
+            if (postsRefreshed.data.length == 0) {
+                this.noPosts = true;
+            } else {
+                this.posts = postsRefreshed.data;
             }
         }
     },

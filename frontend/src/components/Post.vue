@@ -6,9 +6,19 @@
                     <img class="post__header__pic__img" :src="imageUrl" alt="Photo de profil de l'utilisateur" />
                 </div>
             </div>
-            <div class="post__header__txt col p-0">
+            <div class="post__header__txt col-10 p-0">
                 <p class="post__header__txt__username font-weight-bold mb-0 mr-3">{{ firstName }} {{ lastName }} <span class="font-weight-normal">/{{ username }}</span></p>
                 <p class="post__header__txt__topic mb-0" v-if="topic">@<router-link :to="href" class="text-dark">{{ topic }}</router-link></p>
+            </div>
+            <div class="post__header__modify col-1" v-if="currentUser.id == authorId">
+                <b-dropdown class="post__header__modify__button dropdown" toggle-class="text-decoration-none" size="lg" dropleft no-caret>
+                    <template #button-content>
+                        <i class="fas fa-ellipsis-h"></i>
+                    </template>
+                    <b-dropdown-item>Modifier</b-dropdown-item>
+                    <b-dropdown-divider></b-dropdown-divider>
+                    <b-dropdown-item @click="deletePost">Supprimer</b-dropdown-item>
+                </b-dropdown>
             </div>
         </div>
         <div class="post__body row m-0">
@@ -33,10 +43,12 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+import axios from 'axios'
 
 export default {
     name: 'Post',
-    props: ['id', 'imageUrl', 'firstName', 'lastName', 'username', 'topic', 'topicId', 'content', 'numberOfLikes', 'numberOfDislikes', 'numberOfComments'],
+    props: ['id', 'authorId', 'imageUrl', 'firstName', 'lastName', 'username', 'topic', 'topicId', 'content', 'numberOfLikes', 'numberOfDislikes', 'numberOfComments'],
     data() {
         return {
             href: {
@@ -52,6 +64,21 @@ export default {
                     id: this.id
                 }
             }
+        }
+    },
+    computed: {
+        ...mapGetters(['currentUser'])
+    },
+    methods: {
+        async deletePost() {
+            const reqUrl = '/topics/' + this.topicId + '/posts/' + this.id;
+            const response = await axios.delete(reqUrl, {
+                data: {
+                    userId: this.authorId
+                }
+            });
+            console.log(response.data);
+            this.$emit('post-deleted');
         }
     }
 }
@@ -96,6 +123,20 @@ export default {
         &__txt {
             display: flex;
             align-items: center;
+        }
+        &__modify {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            &__button {
+                width: 30px;
+                height: 30px;
+                .btn {
+                    background-color: #FFD7D7;
+                    color: #fff;
+                    border: none;
+                }
+            }
         }
     }
     &__footer {

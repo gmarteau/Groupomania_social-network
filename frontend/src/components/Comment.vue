@@ -6,11 +6,21 @@
                     <img class="comment__body__pic__circle__img" :src="imageUrl" alt="Photo de profil de l'utilisateur" />
                 </div>
             </div>
-            <div class="comment__body__txt col p-0">
+            <div class="comment__body__txt col-10 p-0">
                 <p class="comment__body__txt__user mb-0 mr-4"><span class="font-weight-bold">{{ firstName }} {{ lastName }}</span> /{{ username }} :</p>
                 <p class="comment__body__txt__content mb-0">
                     {{ content }}
                 </p>
+            </div>
+            <div class="comment__body__modify col-1" v-if="currentUser.id == authorId">
+                <b-dropdown class="comment__body__modify__button dropdown" toggle-class="text-decoration-none" dropleft no-caret>
+                    <template #button-content>
+                        <i class="fas fa-ellipsis-h"></i>
+                    </template>
+                    <b-dropdown-item>Modifier</b-dropdown-item>
+                    <b-dropdown-divider></b-dropdown-divider>
+                    <b-dropdown-item @click="deleteComment">Supprimer</b-dropdown-item>
+                </b-dropdown>
             </div>
         </div>
 
@@ -30,9 +40,31 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+import axios from 'axios'
+
 export default {
     name: 'Comment',
-    props: ['imageUrl', 'firstName', 'lastName', 'username', 'content', 'numberOfLikes', 'numberOfDislikes']
+    props: ['id', 'authorId', 'imageUrl', 'firstName', 'lastName', 'username', 'content', 'numberOfLikes', 'numberOfDislikes'],
+    computed: {
+        ...mapGetters(['currentUser'])
+    },
+    methods: {
+        async deleteComment() {
+            const url = window.location.search;
+            const searchUrl = new URLSearchParams(url);
+            const topicId = searchUrl.get('topic');
+            const postId = searchUrl.get('id');
+            const reqUrl = '/topics/' + topicId + '/posts/' + postId + '/comments/' + this.id;
+            const response = await axios.delete(reqUrl, {
+                data: {
+                    userId: this.authorId
+                }
+            });
+            console.log(response.data);
+            this.$emit('comment-deleted');
+        }
+    }
 }
 </script>
 
@@ -61,6 +93,20 @@ export default {
         &__txt {
             display: flex;
             align-items: center;
+        }
+        &__modify {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            &__button {
+                width: 25px;
+                height: 25px;
+                .btn {
+                    background-color: #fff;
+                    color: #d3d3d3;
+                    border: none;
+                }
+            }
         }
     }
     &__footer {

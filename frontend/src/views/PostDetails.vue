@@ -3,6 +3,7 @@
         <section class="postDetails__post row">
             <Post 
                 :id="post.id"
+                :authorId="post.UserId"
                 :imageUrl="post.User.profilePicture"
                 :firstName="post.User.firstName"
                 :lastName="post.User.lastName"
@@ -13,6 +14,7 @@
                 :numberOfLikes="post.likes"
                 :numberOfDislikes="post.dislikes"
                 :numberOfComments="post.numberOfComments"
+                @post-deleted="redirectToTopicPage"
             />
         </section>
 
@@ -36,6 +38,8 @@
                 <Comment
                     v-for="comment in comments"
                     :key="comment.id"
+                    :id="comment.id"
+                    :authorId="comment.UserId"
                     :imageUrl="comment.User.profilePicture"
                     :firstName="comment.User.firstName"
                     :lastName="comment.User.lastName"
@@ -43,6 +47,7 @@
                     :content="comment.content"
                     :numberOfLikes="comment.likes"
                     :numberOfDislikes="comment.dislikes"
+                    @comment-deleted="refreshComments"
                 />
             </div>
         </section>
@@ -88,6 +93,18 @@ export default {
             this.comments = commentsRefreshed.data;
             document.getElementById('newComment').value = '';
             this.newComment = '';
+        },
+        redirectToTopicPage() {
+            this.$router.push({ path: '/topic', query: { id: this.post.TopicId } });
+        },
+        async refreshComments() {
+            const url = window.location.search;
+            const searchUrl = new URLSearchParams(url);
+            const topicId = searchUrl.get('topic');
+            const postId = searchUrl.get('id');
+            const reqUrl = '/topics/' + topicId + '/posts/' + postId + '/comments/?order=recent';
+            const commentsRefreshed = await axios.get(reqUrl);
+            this.comments = commentsRefreshed.data;
         }
     },
     async beforeMount() {
@@ -101,7 +118,6 @@ export default {
         const reqUrlComments = reqUrlPost + '/comments/?order=recent';
         const comments = await axios.get(reqUrlComments);
         this.comments = comments.data;
-        console.log(this.comments);
     }
 }
 </script>
