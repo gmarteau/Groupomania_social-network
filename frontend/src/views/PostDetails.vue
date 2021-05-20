@@ -15,6 +15,7 @@
                 :numberOfDislikes="post.dislikes"
                 :numberOfComments="post.numberOfComments"
                 @post-deleted="redirectToTopicPage"
+                @post-updated="refreshPost"
             />
         </section>
 
@@ -48,6 +49,7 @@
                     :numberOfLikes="comment.likes"
                     :numberOfDislikes="comment.dislikes"
                     @comment-deleted="refreshComments"
+                    @comment-updated="refreshComments"
                 />
             </div>
         </section>
@@ -105,6 +107,15 @@ export default {
             const reqUrl = '/topics/' + topicId + '/posts/' + postId + '/comments/?order=recent';
             const commentsRefreshed = await axios.get(reqUrl);
             this.comments = commentsRefreshed.data;
+        },
+        async refreshPost() {
+            const url = window.location.search;
+            const searchUrl = new URLSearchParams(url);
+            const topicId = searchUrl.get('topic');
+            const postId = searchUrl.get('id');
+            const reqUrl = '/topics/' + topicId + '/posts/' + postId;
+            const postRefreshed = await axios.get(reqUrl);
+            this.post = postRefreshed.data;
         }
     },
     async beforeMount() {

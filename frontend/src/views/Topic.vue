@@ -48,6 +48,7 @@
                         :numberOfDislikes="post.dislikes"
                         :numberOfComments="post.numberOfComments"
                         @post-deleted="refreshPosts"
+                        @post-updated="refreshPosts"
                     />
                 </div>
             </section>

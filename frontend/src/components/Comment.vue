@@ -8,16 +8,25 @@
             </div>
             <div class="comment__body__txt col-10 p-0">
                 <p class="comment__body__txt__user mb-0 mr-4"><span class="font-weight-bold">{{ firstName }} {{ lastName }}</span> /{{ username }} :</p>
-                <p class="comment__body__txt__content mb-0">
+                <p class="comment__body__txt__content mb-0" v-if="!updating">
                     {{ content }}
                 </p>
+
+                <form id="updateComment" class="comment__body__txt__update col-9 py-0" @submit.prevent="updateComment" v-if="updating">
+                    <textarea class="comment__body__txt__update__content form-control mr-3" type="text" id="updatedComment" name="updatedComment" v-model="content"></textarea>
+                    <div class="comment__body__txt__update__submit">
+                        <button type="submit" class="comment__body__txt__update__submit__btn btn px-3 py-1">
+                            Publier
+                        </button>
+                    </div>
+                </form>
             </div>
             <div class="comment__body__modify col-1" v-if="currentUser.id == authorId">
                 <b-dropdown class="comment__body__modify__button dropdown" toggle-class="text-decoration-none" dropleft no-caret>
                     <template #button-content>
                         <i class="fas fa-ellipsis-h"></i>
                     </template>
-                    <b-dropdown-item>Modifier</b-dropdown-item>
+                    <b-dropdown-item @click="startUpdatingComment">Modifier</b-dropdown-item>
                     <b-dropdown-divider></b-dropdown-divider>
                     <b-dropdown-item @click="deleteComment">Supprimer</b-dropdown-item>
                 </b-dropdown>
@@ -46,6 +55,11 @@ import axios from 'axios'
 export default {
     name: 'Comment',
     props: ['id', 'authorId', 'imageUrl', 'firstName', 'lastName', 'username', 'content', 'numberOfLikes', 'numberOfDislikes'],
+    data() {
+        return {
+            updating: false
+        }
+    },
     computed: {
         ...mapGetters(['currentUser'])
     },
@@ -63,6 +77,23 @@ export default {
             });
             console.log(response.data);
             this.$emit('comment-deleted');
+        },
+        startUpdatingComment() {
+            this.updating = true;
+        },
+        async updateComment() {
+            const url = window.location.search;
+            const searchUrl = new URLSearchParams(url);
+            const topicId = searchUrl.get('topic');
+            const postId = searchUrl.get('id');
+            const reqUrl = '/topics/' + topicId + '/posts/' + postId + '/comments/' + this.id;
+            const response = await axios.put(reqUrl, {
+                userId: this.authorId,
+                content: this.content
+            });
+            console.log(response.data);
+            this.updating = false;
+            this.$emit('comment-updated');
         }
     }
 }
@@ -93,6 +124,21 @@ export default {
         &__txt {
             display: flex;
             align-items: center;
+            &__update {
+                display: flex;
+                align-items: center;
+                &__submit {
+                    &__btn {
+                        background-color: #FD3C13;
+                        color: #fff;
+                        font-weight: bold;
+                        &:hover {
+                            background-color: #FFD7D7;
+                            color: #FD3C13;
+                        }
+                    }
+                }
+            }
         }
         &__modify {
             display: flex;

@@ -1,6 +1,6 @@
 <template>
-    <router-link :to="postDetails" class="post container px-2 pb-1">
-        <div class="post__header row">
+    <div class="post container px-2 pb-1">
+        <router-link :to="postDetails" class="post__header row">
             <div class="post__header__pic col-1">
                 <div class="post__header__pic__circle">
                     <img class="post__header__pic__img" :src="imageUrl" alt="Photo de profil de l'utilisateur" />
@@ -15,16 +15,25 @@
                     <template #button-content>
                         <i class="fas fa-ellipsis-h"></i>
                     </template>
-                    <b-dropdown-item>Modifier</b-dropdown-item>
+                    <b-dropdown-item @click="startUpdatingPost">Modifier</b-dropdown-item>
                     <b-dropdown-divider></b-dropdown-divider>
                     <b-dropdown-item @click="deletePost">Supprimer</b-dropdown-item>
                 </b-dropdown>
             </div>
-        </div>
+        </router-link>
         <div class="post__body row m-0">
-            <p class="post__body__content col-12 pt-3">
+            <p class="post__body__content col-12 pt-3" v-if="!updating">
                 {{ content }}
             </p>
+
+            <form id="updatePost" class="post__body__update col-12 py-3" @submit.prevent="updatePost" v-if="updating">
+                <textarea class="post__body__update__content form-control" type="text" id="updatedPost" name="updatedPost" v-model="content"></textarea>
+                <div class="post__body__update__submit">
+                    <button type="submit" class="post__body__update__submit__btn btn px-3 py-1 ml-3">
+                        Publier
+                    </button>
+                </div>
+            </form>
         </div>
         <div class="row m-0">
             <div class="post__footer col px-0">
@@ -39,7 +48,7 @@
                 <p class="post__footer__comments mb-0 ml-3">{{ numberOfComments }} commentaires</p>
             </div>
         </div>
-    </router-link>
+    </div>
 </template>
 
 <script>
@@ -63,7 +72,8 @@ export default {
                     topic: this.topicId,
                     id: this.id
                 }
-            }
+            },
+            updating: false
         }
     },
     computed: {
@@ -79,6 +89,19 @@ export default {
             });
             console.log(response.data);
             this.$emit('post-deleted');
+        },
+        startUpdatingPost() {
+            this.updating = true;
+        },
+        async updatePost() {
+            const reqUrl = '/topics/' + this.topicId + '/posts/' + this.id;
+            const response = await axios.put(reqUrl, {
+                userId: this.authorId,
+                content: this.content  
+            });
+            console.log(response.data);
+            this.updating = false;
+            this.$emit('post-updated');
         }
     }
 }
@@ -95,14 +118,14 @@ export default {
     overflow: hidden;
     margin-top: 15px;
     margin-bottom: 15px;
-    color: #000;
-    &:hover {
-        color: #000;
-        text-decoration: none;
-    }
     &__header {
         height: 50px;
         background-color: #FFD7D7;
+        color: #000;
+        &:hover {
+            color: #000;
+            text-decoration: none;
+        }
         &__pic {
             display: flex;
             justify-content: center;
@@ -135,6 +158,23 @@ export default {
                     background-color: #FFD7D7;
                     color: #fff;
                     border: none;
+                }
+            }
+        }
+    }
+    &__body {
+        &__update {
+            display: flex;
+            align-items: center;
+            &__submit {
+                &__btn {
+                    background-color: #FD3C13;
+                    color: #fff;
+                    font-weight: bold;
+                    &:hover {
+                        background-color: #FFD7D7;
+                        color: #FD3C13;
+                    }
                 }
             }
         }
