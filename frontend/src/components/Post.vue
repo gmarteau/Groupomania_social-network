@@ -7,7 +7,7 @@
                 </div>
             </div>
             <div class="post__header__txt col-10 p-0">
-                <p class="post__header__txt__username font-weight-bold mb-0 mr-3">{{ firstName }} {{ lastName }} <span class="font-weight-normal">/{{ username }}</span></p>
+                <router-link :to="userProfile" class="post__header__txt__username font-weight-bold mb-0 mr-3">{{ firstName }} {{ lastName }} <span class="font-weight-normal">/{{ username }}</span></router-link>
                 <p class="post__header__txt__topic mb-0" v-if="topic">@<router-link :to="href" class="text-dark">{{ topic }}</router-link></p>
             </div>
             <div class="post__header__modify col-1" v-if="currentUser.id == authorId">
@@ -71,6 +71,12 @@ export default {
                 query: {
                     topic: this.topicId,
                     id: this.id
+                }
+            },
+            userProfile: {
+                path: '/user',
+                query: {
+                    id: this.authorId
                 }
             },
             updating: false
@@ -146,6 +152,12 @@ export default {
         &__txt {
             display: flex;
             align-items: center;
+            &__username {
+                color: #000;
+                &:hover {
+                    color: #000;
+                }
+            }
         }
         &__modify {
             display: flex;

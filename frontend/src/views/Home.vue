@@ -51,7 +51,7 @@
 
         <TopicsList listName="popular" />
         <TopicsList listName="recent" />
-        <TopicsList listName="followed" />
+        <TopicsList listName="followed" :userId="currentUser.id" />
       </aside>
     </div>
   </div>
@@ -78,7 +78,7 @@ export default {
   },
   computed: {
     ...mapState(['logoVertical']),
-    ...mapGetters(['loggedIn'])
+    ...mapGetters(['loggedIn', 'currentUser'])
   },
   methods: {
     makeResearch() {

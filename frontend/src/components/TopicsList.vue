@@ -16,11 +16,10 @@
 
 import axios from 'axios'
 import TopicsListItem from './TopicsListItem'
-import { mapGetters } from 'vuex'
 
 export default {
     name: 'TopicsList',
-    props: ['listName'],
+    props: ['listName', 'userId'],
     components: {
         TopicsListItem
     },
@@ -36,9 +35,6 @@ export default {
             topics: []
         }
     },
-    computed: {
-        ...mapGetters(['currentUser'])
-    },
     async beforeMount() {
         if (this.listName == 'popular') {
             this.title = 'Les + populaires';
@@ -53,7 +49,7 @@ export default {
             this.title = 'Suivis';
             const response = await axios.get('/topics/?order=followed&limit=5', {
                 params: {
-                    userId: this.currentUser.id
+                    userId: this.userId
                 }
             });
             this.topics = response.data;

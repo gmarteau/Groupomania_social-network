@@ -31,7 +31,7 @@
                             <template #button-content>
                                 <i class="fas fa-user-circle fa-lg"></i>
                             </template>
-                            <b-dropdown-item><router-link to="/profile" class="dropdown__item text-dark">Mon profil</router-link></b-dropdown-item>
+                            <b-dropdown-item><a href="javascript:void(0);" class="dropdown__item text-dark" @click="toProfile">Mon profil</a></b-dropdown-item>
                             <b-dropdown-divider></b-dropdown-divider>
                             <b-dropdown-item><a href="javascript:void(0);" class="dropdown__item text-dark" @click="logout">Se déconnecter</a></b-dropdown-item>
                         </b-dropdown>
@@ -59,6 +59,9 @@ export default {
             this.currentUser.token = '';
             this.$store.dispatch('changeLoginState');
             // this.$router.push('/');
+        },
+        toProfile() {
+            this.$router.push({ path: '/user', query: { id: this.currentUser.id } });
         }
     }
 }
