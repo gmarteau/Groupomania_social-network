@@ -13,9 +13,13 @@
                 :content="post.content"
                 :numberOfLikes="post.likes"
                 :numberOfDislikes="post.dislikes"
+                :hasLiked="post.hasLiked"
+                :hasDisliked="post.hasDisliked"
                 :numberOfComments="post.numberOfComments"
                 @post-deleted="redirectToTopicPage"
                 @post-updated="refreshPost"
+                @post-liked="refreshPost"
+                @post-disliked="refreshPost"
             />
         </section>
 
@@ -48,8 +52,12 @@
                     :content="comment.content"
                     :numberOfLikes="comment.likes"
                     :numberOfDislikes="comment.dislikes"
+                    :hasLiked="comment.hasLiked"
+                    :hasDisliked="comment.hasDisliked"
                     @comment-deleted="refreshComments"
                     @comment-updated="refreshComments"
+                    @comment-liked="refreshComments"
+                    @comment-disliked="refreshComments"
                 />
             </div>
         </section>

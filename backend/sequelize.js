@@ -29,9 +29,13 @@ const Comment = CommentModel(sequelize, Sequelize);
 
 User.hasMany(Topic);
 Topic.belongsTo(User);
-User.hasMany(Post);
+User.hasMany(Post, {
+    onDelete: 'cascade'
+});
 Post.belongsTo(User);
-User.hasMany(Comment);
+User.hasMany(Comment, {
+    onDelete: 'cascade'
+});
 Comment.belongsTo(User);
 
 Topic.hasMany(Post);

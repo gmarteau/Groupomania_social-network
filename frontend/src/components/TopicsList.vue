@@ -39,7 +39,6 @@ export default {
         if (this.listName == 'popular') {
             this.title = 'Les + populaires';
             const response = await axios.get('/topics/?order=popular&limit=5');
-            console.log(response.data);
             this.topics = response.data;
         } else if (this.listName == 'recent') {
             this.title = 'Les + récents';

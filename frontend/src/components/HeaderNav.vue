@@ -58,7 +58,7 @@ export default {
             this.currentUser.id = 0;
             this.currentUser.token = '';
             this.$store.dispatch('changeLoginState');
-            // this.$router.push('/');
+            this.$router.push('/');
         },
         toProfile() {
             this.$router.push({ path: '/user', query: { id: this.currentUser.id } });

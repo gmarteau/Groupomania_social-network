@@ -36,11 +36,17 @@
         <div class="row m-0">
             <div class="comment__footer col">
                 <div class="comment__footer__likes mx-2">
-                    <button class="comment__footer__likes__btn btn px-1"><i class="far fa-thumbs-up"></i></button>
+                    <button class="comment__footer__likes__btn btn px-1" @click="likeComment">
+                        <i class="far fa-thumbs-up comment__footer__likes__btn--null" v-if="!userHasLiked"></i>
+                        <i class="far fa-thumbs-up comment__footer__likes__btn--active" v-if="userHasLiked"></i>
+                    </button>
                     <p class="comment__footer__likes__number mb-0">{{ numberOfLikes }}</p>
                 </div>
                 <div class="comment__footer__dislikes mx-2">
-                    <button class="comment__footer__dislikes__btn btn px-1"><i class="far fa-thumbs-down"></i></button>
+                    <button class="comment__footer__dislikes__btn btn px-1" @click="dislikeComment">
+                        <i class="far fa-thumbs-down comment__footer__dislikes__btn--null" v-if="!userHasDisliked"></i>
+                        <i class="far fa-thumbs-down comment__footer__dislikes__btn--active" v-if="userHasDisliked"></i>
+                    </button>
                     <p class="comment__footer__dislikes__number mb-0">{{ numberOfDislikes }}</p>
                 </div>
             </div>
@@ -54,10 +60,12 @@ import axios from 'axios'
 
 export default {
     name: 'Comment',
-    props: ['id', 'authorId', 'imageUrl', 'firstName', 'lastName', 'username', 'content', 'numberOfLikes', 'numberOfDislikes'],
+    props: ['id', 'authorId', 'imageUrl', 'firstName', 'lastName', 'username', 'content', 'numberOfLikes', 'numberOfDislikes', 'hasLiked', 'hasDisliked'],
     data() {
         return {
-            updating: false
+            updating: false,
+            userHasLiked: false,
+            userHasDisliked: false
         }
     },
     computed: {
@@ -94,6 +102,62 @@ export default {
             console.log(response.data);
             this.updating = false;
             this.$emit('comment-updated');
+        },
+        async likeComment() {
+            const url = window.location.search;
+            const searchUrl = new URLSearchParams(url);
+            const topicId = searchUrl.get('topic');
+            const postId = searchUrl.get('id');
+            const reqUrl = '/topics/' + topicId + '/posts/' + postId + '/comments/' + this.id;
+            if (this.userHasLiked) {
+                const response = await axios.post(reqUrl, {
+                    userId: this.currentUser.id,
+                    like: 0
+                });
+                console.log(response.data);
+                this.userHasLiked = false;
+                this.numberOfLikes--;
+            } else {
+                const response = await axios.post(reqUrl, {
+                    userId: this.currentUser.id,
+                    like: 1
+                });
+                console.log(response.data);
+                this.userHasLiked = true;
+                this.numberOfLikes++;
+                if (this.userHasDisliked) {
+                    this.userHasDisliked = false;
+                }
+            }
+            this.$emit('comment-liked');
+        },
+        async dislikePost() {
+            const url = window.location.search;
+            const searchUrl = new URLSearchParams(url);
+            const topicId = searchUrl.get('topic');
+            const postId = searchUrl.get('id');
+            const reqUrl = '/topics/' + topicId + '/posts/' + postId + '/comments/' + this.id + '/like';
+            if (this.userHasDisliked) {
+                const response = await axios.post(reqUrl, {
+                    userId: this.currentUser.id,
+                    like: 0
+                });
+                console.log(response.data);
+                this.userHasDisliked = false;
+                this.numberOfDislikes--;
+            } else {
+                const response = await axios.post(reqUrl, {
+                    userId: this.currentUser.id,
+                    like: -1
+                });
+                console.log(response.data);
+                this.userHasDisliked = true;
+                this.numberOfDislikes++;
+                if (this.userHasLiked) {
+                    this.userHasLiked = false;
+                }
+            }
+            this.$emit('comment-disliked');
         }
     }
 }
@@ -161,10 +225,26 @@ export default {
         &__likes {
             display: flex;
             align-items: center;
+            &__btn {
+                &--null {
+                    color: #000;
+                }
+                &--active {
+                    color: #FFD7D7;
+                }
+            }
         }
         &__dislikes {
             display: flex;
             align-items: center;
+            &__btn {
+                &--null {
+                    color: #000;
+                }
+                &--active {
+                    color: #FD3C13;
+                }
+            }
         }
     }
 }

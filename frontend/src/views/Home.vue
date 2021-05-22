@@ -17,6 +17,8 @@
           </div> -->
           
           <h1 class="col-12 mb-4">Fil d'actualité</h1>
+          <p class="noPosts col-12 text-center h4 my-5 py-5" v-if="noPosts">Rien à afficher...</p>
+
           <Post
             v-for="post in posts"
             :key="post.id"
@@ -31,9 +33,13 @@
             :content="post.content"
             :numberOfLikes="post.likes"
             :numberOfDislikes="post.dislikes"
+            :hasLiked="post.hasLiked"
+            :hasDisliked="post.hasDisliked"
             :numberOfComments="post.numberOfComments"
             @post-deleted="refreshPosts"
             @post-updated="refreshPosts"
+            @post-liked="refreshPosts"
+            @post-disliked="refreshPosts"
           />
         </div>
       </section>
@@ -73,7 +79,8 @@ export default {
       popularTopics: [],
       recentTopics: [],
       followedTopics: [],
-      search: ''
+      search: '',
+      noPosts: false
     }
   },
   computed: {
@@ -93,6 +100,9 @@ export default {
     if (this.loggedIn) {
       const response = await axios.get('/posts/?order=recent');
       this.posts = response.data;
+      if (this.posts.length == 0) {
+        this.noPosts = true;
+      }
     }
   },
   components: {

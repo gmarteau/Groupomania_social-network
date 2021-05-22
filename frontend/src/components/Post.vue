@@ -38,11 +38,17 @@
         <div class="row m-0">
             <div class="post__footer col px-0">
                 <div class="post__footer__likes mx-2">
-                    <button class="post__footer__likes__btn btn px-1"><i class="far fa-thumbs-up"></i></button>
+                    <button class="post__footer__likes__btn btn px-1" @click="likePost">
+                        <i class="far fa-thumbs-up post__footer__likes__btn--null" v-if="!userHasLiked"></i>
+                        <i class="far fa-thumbs-up post__footer__likes__btn--active" v-if="userHasLiked"></i>
+                    </button>
                     <p class="post__footer__likes__number mb-0">{{ numberOfLikes }}</p>
                 </div>
                 <div class="post__footer__dislikes mx-2">
-                    <button class="post__footer__dislikes__btn btn px-1"><i class="far fa-thumbs-down"></i></button>
+                    <button class="post__footer__dislikes__btn btn px-1" @click="dislikePost">
+                        <i class="far fa-thumbs-down post__footer__dislikes__btn--null" v-if="!userHasDisliked"></i>
+                        <i class="far fa-thumbs-down post__footer__dislikes__btn--active" v-if="userHasDisliked"></i>
+                    </button>
                     <p class="post__footer__dislikes__number mb-0">{{ numberOfDislikes }}</p>
                 </div>
                 <p class="post__footer__comments mb-0 ml-3">{{ numberOfComments }} commentaires</p>
@@ -57,7 +63,7 @@ import axios from 'axios'
 
 export default {
     name: 'Post',
-    props: ['id', 'authorId', 'imageUrl', 'firstName', 'lastName', 'username', 'topic', 'topicId', 'content', 'numberOfLikes', 'numberOfDislikes', 'numberOfComments'],
+    props: ['id', 'authorId', 'imageUrl', 'firstName', 'lastName', 'username', 'topic', 'topicId', 'content', 'numberOfLikes', 'numberOfDislikes', 'hasLiked', 'hasDisliked', 'numberOfComments'],
     data() {
         return {
             href: {
@@ -79,7 +85,9 @@ export default {
                     id: this.authorId
                 }
             },
-            updating: false
+            updating: false,
+            userHasLiked: false,
+            userHasDisliked: false
         }
     },
     computed: {
@@ -108,6 +116,63 @@ export default {
             console.log(response.data);
             this.updating = false;
             this.$emit('post-updated');
+        },
+        async likePost() {
+            const reqUrl = '/topics/' + this.topicId + '/posts/' + this.id + '/like';
+            if (this.userHasLiked) {
+                const response = await axios.post(reqUrl, {
+                    userId: this.currentUser.id,
+                    like: 0
+                });
+                console.log(response.data);
+                this.userHasLiked = false;
+                this.numberOfLikes--;
+            } else {
+                const response = await axios.post(reqUrl, {
+                    userId: this.currentUser.id,
+                    like: 1
+                });
+                console.log(response.data);
+                this.userHasLiked = true;
+                this.numberOfLikes++;
+                if (this.userHasDisliked) {
+                    this.userHasDisliked = false;
+                }
+            }
+            this.$emit('post-liked');
+        },
+        async dislikePost() {
+            const reqUrl = '/topics/' + this.topicId + '/posts/' + this.id + '/like';
+            if (this.userHasDisliked) {
+                const response = await axios.post(reqUrl, {
+                    userId: this.currentUser.id,
+                    like: 0
+                });
+                console.log(response.data);
+                this.userHasDisliked = false;
+                this.numberOfDislikes--;
+            } else {
+                const response = await axios.post(reqUrl, {
+                    userId: this.currentUser.id,
+                    like: -1
+                });
+                console.log(response.data);
+                this.userHasDisliked = true;
+                this.numberOfDislikes++;
+                if (this.userHasLiked) {
+                    this.userHasLiked = false;
+                }
+            }
+            this.$emit('post-disliked');
+        }
+    },
+    beforeMount() {
+        const hasLikedArray = Array.from(this.hasLiked).filter(char => char !== ',');
+        const hasDislikedArray = Array.from(this.hasDisliked).filter(char => char !== ',');
+        if (hasLikedArray.includes(this.currentUser.id.toString())) {
+            this.userHasLiked = true;
+        } else if (hasDislikedArray.includes(this.currentUser.id.toString())) {
+            this.userHasDisliked = true;
         }
     }
 }
@@ -200,11 +265,27 @@ export default {
             display: flex;
             justify-content: center;
             align-items: center;
+            &__btn {
+                &--null {
+                    color: #000;
+                }
+                &--active {
+                    color: #FFD7D7;
+                }
+            }
         }
         &__dislikes {
             display: flex;
             justify-content: center;
             align-items: center;
+            &__btn {
+                &--null {
+                    color: #000;
+                }
+                &--active {
+                    color: #FD3C13;
+                }
+            }
         }
     }
 }

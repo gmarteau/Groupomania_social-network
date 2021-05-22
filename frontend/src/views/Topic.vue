@@ -46,9 +46,13 @@
                         :content="post.content"
                         :numberOfLikes="post.likes"
                         :numberOfDislikes="post.dislikes"
+                        :hasLiked="post.hasLiked"
+                        :hasDisliked="post.hasDisliked"
                         :numberOfComments="post.numberOfComments"
                         @post-deleted="refreshPosts"
                         @post-updated="refreshPosts"
+                        @post-liked="refreshPosts"
+                        @post-disliked="refreshPosts"
                     />
                 </div>
             </section>

@@ -79,7 +79,7 @@ exports.updateUserProfile = (req, res, next) => {
             }
         })
             .then(user => {
-                const defaultAvatar = 'http://localhost:3000/images/default_avatar.png';
+                const defaultAvatarUrl = 'http://localhost:3000/images/default_avatar.png';
                 if (user.profilePicture !== defaultAvatarUrl) {
                     const filename = user.profile_picture.split('/images/')[1];
                     fs.unlink(`images/${filename}`, () => {
