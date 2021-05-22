@@ -6,15 +6,10 @@ const { Op } = require('sequelize');
 const seq = require('../sequelize');
 const User = seq.user;
 
-const defaultAvatarUrl = (req) => {
-    return `${req.protocol}://${req.get('host')}/images/default_avatar.png`;
-};
-
-
 exports.signup = (req, res, next) => {
     bcrypt.hash(req.body.password, 10)
         .then(hash => {
-            const defaultAvatar = defaultAvatarUrl(req);
+            const defaultAvatar = 'http://localhost:3000/images/default_avatar.png';
             User.create({
                 username: req.body.username,
                 password: hash,
@@ -80,35 +75,37 @@ exports.updateUserProfile = (req, res, next) => {
     if (req.file) {
         User.findOne({
             where: {
-                id: req.body.user.user_id
+                id: req.params.id
             }
         })
             .then(user => {
-                if (user.profile_picture !== defaultAvatarUrl(req)) {
+                const defaultAvatar = 'http://localhost:3000/images/default_avatar.png';
+                if (user.profilePicture !== defaultAvatarUrl) {
                     const filename = user.profile_picture.split('/images/')[1];
                     fs.unlink(`images/${filename}`, () => {
                         User.update({
-                            firstName: req.body.user.firstName,
-                            lastName: req.body.user.lastName,
-                            bio: req.body.user.bio,
-                            profilePicture: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+                            firstName: req.body.firstName,
+                            lastName: req.body.lastName,
+                            bio: req.body.bio,
+                            profilePicture: `http://localhost:3000/images/${req.file.filename}`
                         }, {
                             where: {
-                                id: req.body.user.userId
+                                id: req.params.id
                             }
                         })
                             .then(() => res.status(200).json({ message: 'Informations mises à jour' }))
                             .catch(error => res.status(400).json({ error }));
                     });
                 } else {
+                    console.log("la");
                     User.update({
-                        firstName: req.body.user.firstName,
-                        lastName: req.body.user.lastName,
-                        bio: req.body.user.bio,
-                        profilePicture: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+                        firstName: req.body.firstName,
+                        lastName: req.body.lastName,
+                        bio: req.body.bio,
+                        profilePicture: `http://localhost:3000/images/${req.file.filename}`
                     }, {
                         where: {
-                            id: req.body.user.userId
+                            id: req.params.id
                         }
                     })
                         .then(() => res.status(200).json({ message: 'Informations mises à jour' }))
@@ -123,7 +120,7 @@ exports.updateUserProfile = (req, res, next) => {
             bio: req.body.bio
         }, {
             where: {
-                id: req.body.userId
+                id: req.params.id
             }
         })
         .then(() => res.status(200).json({ message: 'Informations mises à jour' }))
@@ -134,7 +131,7 @@ exports.updateUserProfile = (req, res, next) => {
 exports.deleteUser = (req, res, next) => {
     User.findOne({
         where: {
-            id: req.body.userId
+            id: req.params.id
         }
     })
         .then(user => {
@@ -143,7 +140,7 @@ exports.deleteUser = (req, res, next) => {
                     if (!valid) {
                         return res.status(401).json({ message: 'Mot de passe erroné' });
                     }
-                    const defaultAvatar = defaultAvatarUrl(req);
+                    const defaultAvatar = 'http://localhost:3000/images/default_avatar.png';
                     if (user.profilePicture !== defaultAvatar) {
                         const filename = user.profilePicture.split('/images/')[1];
                         fs.unlink(`images/${filename}`, () => {
