@@ -108,7 +108,7 @@ export default {
             const searchUrl = new URLSearchParams(url);
             const topicId = searchUrl.get('topic');
             const postId = searchUrl.get('id');
-            const reqUrl = '/topics/' + topicId + '/posts/' + postId + '/comments/' + this.id;
+            const reqUrl = '/topics/' + topicId + '/posts/' + postId + '/comments/' + this.id + '/like';
             if (this.userHasLiked) {
                 const response = await axios.post(reqUrl, {
                     userId: this.currentUser.id,
@@ -131,7 +131,7 @@ export default {
             }
             this.$emit('comment-liked');
         },
-        async dislikePost() {
+        async dislikeComment() {
             const url = window.location.search;
             const searchUrl = new URLSearchParams(url);
             const topicId = searchUrl.get('topic');
@@ -158,6 +158,15 @@ export default {
                 }
             }
             this.$emit('comment-disliked');
+        }
+    },
+    beforeMount() {
+        const hasLikedArray = Array.from(this.hasLiked).filter(char => char !== ',');
+        const hasDislikedArray = Array.from(this.hasDisliked).filter(char => char !== ',');
+        if (hasLikedArray.includes(this.currentUser.id.toString())) {
+            this.userHasLiked = true;
+        } else if (hasDislikedArray.includes(this.currentUser.id.toString())) {
+            this.userHasDisliked = true;
         }
     }
 }
