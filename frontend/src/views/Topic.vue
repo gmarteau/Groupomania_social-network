@@ -15,17 +15,18 @@
         <div class="topic__body row">
             <section class="topic__body__feed col-9 pr-5">
                 <div class="topic__body__feed__publish pb-3 pr-5 mb-2">
-                    <form id="publishNewPostForm" @submit.prevent="publishNewPost">
-                        <div class="form-group mb-2">
-                            <label for="newPost" class="h3">Exprimez-vous!</label>
-                            <textarea class="topic__body__feed__publish__content form-control" type="text" id="newPost" name="newPost" v-model="newPost" placeholder="Publiez quelque chose..."></textarea>
-                        </div>
+                    <b-form id="publishNewPostForm" @submit.stop.prevent="publishNewPost" novalidate>
+                        <b-form-group id="newPostGroup" label="Exprimez-vous!" class="h3" label-for="newPostInput">
+                            <b-form-textarea id="newPostInput" name="newPostInput" v-model="$v.form.newPost.$model" :state="validateState('newPost')" aria-describedby="newPostInputFeedback" type="text" rows="3" placeholder="Publiez quelque chose..." required></b-form-textarea>
+                            <b-form-invalid-feedback id="newPostInputFeedback" :state="validateState('newPost')">Écrivez du contenu pour pouvoir le publier</b-form-invalid-feedback>
+                        </b-form-group>
+
                         <div class="topic__body__feed__publish__submit">
                             <button type="submit" class="topic__body__feed__publish__submit__btn btn px-3 py-1">
                                 Publier
                             </button>
                         </div>
-                    </form>
+                    </b-form>
                 </div>
 
                 <div class="topic__body__feed__posts row">
@@ -73,9 +74,12 @@ import TopicHeader from '../components/TopicHeader'
 import Post from '../components/Post'
 import { mapGetters } from 'vuex'
 import TopicFollowers from '../components/TopicFollowers'
+import { validationMixin } from 'vuelidate'
+import { required } from 'vuelidate/lib/validators'
 
 export default {
     name: 'Topic',
+    mixins: [validationMixin],
     components: {
         TopicHeader,
         Post,
@@ -87,28 +91,44 @@ export default {
             posts: [],
             noPosts: false,
             followed: false,
-            newPost: ''
+            form: {
+                newPost: ''
+            }
+        }
+    },
+    validations: {
+        form: {
+            newPost: {
+                required
+            }
         }
     },
     computed: {
-        ...mapGetters(['currentUser']),
+        ...mapGetters(['currentUser', 'loggedIn']),
     },
     methods: {
+        validateState(field) {
+            const { $dirty, $error } = this.$v.form[field];
+            return $dirty ? !$error : null;
+        },
         async publishNewPost() {
+            this.$v.form.$touch();
+            if (this.$v.form.$anyError) {
+                return;
+            }
             const url = window.location.search;
             const searchUrl = new URLSearchParams(url);
             const topicId = searchUrl.get('id');
             const reqUrlPost = '/topics/' + topicId + '/posts';
             const createPost = await axios.post(reqUrlPost, {
                 userId: this.currentUser.id,
-                content: this.newPost
+                content: this.form.newPost
             });
             console.log(createPost.data);
             const reqUrlGet = reqUrlPost + '/?order=recent' 
             const postsRefreshed = await axios.get(reqUrlGet);
             this.posts = postsRefreshed.data;
-            document.getElementById('newPost').value = '';
-            this.newPost = '';
+            this.form.newPost = '';
             if (this.noPosts) {
                 this.noPosts = false;
             }
@@ -127,6 +147,9 @@ export default {
         }
     },
     async beforeMount() {
+        if (!this.loggedIn) {
+            this.$router.push('/');
+        }
         const url = window.location.search;
         const searchUrl = new URLSearchParams(url);
         const topicId = searchUrl.get('id');

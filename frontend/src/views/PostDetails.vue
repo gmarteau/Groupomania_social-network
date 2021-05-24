@@ -28,16 +28,20 @@
 
             <div class="postDetails__comments__body row">
                 <div class="postDetails__comments__publish container py-3">
-                    <form id="publishNewCommentForm" class="row" @submit.prevent="publishNewComment">
-                        <div class="form-group col-10 mb-0">
+                    <b-form id="publishNewCommentForm" class="row" @submit.stop.prevent="publishNewComment" novalidate>
+                        <b-form-group id="newCommentGroup" class="col-10 mb-0">
+                            <b-form-textarea id="newCommentInput" name="newCommentInput" v-model="$v.form.newComment.$model" :state="validateState('newComment')" aria-describedby="newCommentInputFeedback" type="text" rows="2" placeholder="Ecrivez un commentaire..." required></b-form-textarea>
+                            <b-form-invalid-feedback id="newCommentInputFeedback" :state="validateState('newComment')">Votre commentaire ne peut pas être vide</b-form-invalid-feedback>
+                        </b-form-group>
+                        <!-- <div class="form-group col-10 mb-0">
                             <textarea class="postDetails__comments__publish__content form-control" type="text" id="newComment" name="newComment" v-model="newComment" placeholder="Ecrivez un commentaire..."></textarea>
-                        </div>
+                        </div> -->
                         <div class="postDetails__comments__publish__submit col-2">
                             <button type="submit" class="postDetails__comments__publish__submit__btn btn px-3 py-1">
                                 Commenter
                             </button>
                         </div>
-                    </form>
+                    </b-form>
                 </div>
 
                 <Comment
@@ -69,9 +73,12 @@ import axios from 'axios'
 import Post from '../components/Post'
 import Comment from '../components/Comment'
 import { mapGetters } from 'vuex'
+import { validationMixin } from 'vuelidate'
+import { required } from 'vuelidate/lib/validators'
 
 export default {
     name: 'PostDetails',
+    mixins: [validationMixin],
     components: {
         Post,
         Comment
@@ -80,14 +87,31 @@ export default {
         return {
             post: '',
             comments: [],
-            newComment: ''
+            form: {
+                newComment: ''
+            }
+        }
+    },
+    validations: {
+        form: {
+            newComment: {
+                required
+            }
         }
     },
     computed: {
-        ...mapGetters(['currentUser'])
+        ...mapGetters(['currentUser', 'loggedIn'])
     },
     methods: {
+        validateState(field) {
+            const { $dirty, $error } = this.$v.form[field];
+            return $dirty ? !$error : null;
+        },
         async publishNewComment() {
+            this.$v.form.$touch();
+            if (this.$v.form.$anyError) {
+                return;
+            }
             const url = window.location.search;
             const searchUrl = new URLSearchParams(url);
             const topicId = searchUrl.get('topic');
@@ -95,14 +119,13 @@ export default {
             const reqUrlPost = '/topics/' + topicId + '/posts/' + postId + '/comments';
             const createComment = await axios.post(reqUrlPost, {
                 userId: this.currentUser.id,
-                content: this.newComment
+                content: this.form.newComment
             });
             console.log(createComment.data);
             const reqUrlGet = reqUrlPost + '/?order=recent';
             const commentsRefreshed = await axios.get(reqUrlGet);
             this.comments = commentsRefreshed.data;
-            document.getElementById('newComment').value = '';
-            this.newComment = '';
+            this.form.newComment = '';
         },
         redirectToTopicPage() {
             this.$router.push({ path: '/topic', query: { id: this.post.TopicId } });
@@ -127,6 +150,9 @@ export default {
         }
     },
     async beforeMount() {
+        if (!this.loggedIn) {
+            this.$router.push('/');
+        }
         const url = window.location.search;
         const searchUrl = new URLSearchParams(url);
         const topicId = searchUrl.get('topic');

@@ -21,6 +21,8 @@
                 <div class="login__form__submit my-3">
                     <button type="submit" class="login__form__submit__btn btn px-3 py-1">Se connecter</button>
                 </div>
+                
+                <p class="login__form__invalid text-center font-weight-bold mb-0 text-danger" v-if="invalidIds">Mauvais identifiants</p>
             </b-form>
         </div>
     </div>
@@ -40,7 +42,8 @@ export default {
             form: {
                 username: '',
                 password: ''
-            }
+            },
+            invalidIds: false,
         }
     },
     validations: {
@@ -61,18 +64,26 @@ export default {
             const { $dirty, $error } = this.$v.form[field];
             return $dirty ? !$error : null;
         },
-        async loginSubmit() {
+        loginSubmit() {
             this.$v.form.$touch();
             if (this.$v.form.$anyError) {
                 return;
             }
-            const response = await axios.post('/users/login', {
+            axios.post('/users/login', {
                 username: this.form.username,
                 password: this.form.password
-            });
-            this.$store.dispatch('storeUserAuthInfo', response.data);
-            this.$store.dispatch('changeLoginState');
-            this.$router.push('/');
+            })
+                .then(response => {
+                    this.$store.dispatch('storeUserAuthInfo', response.data);
+                    this.$store.dispatch('changeLoginState');
+                    this.$router.push('/');
+                })
+                .catch(error => {
+                    console.log(error);
+                    this.invalidIds = true;
+                    this.form.username = '';
+                    this.form.password = '';
+                })
         }
     }
 }

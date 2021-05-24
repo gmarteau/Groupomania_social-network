@@ -22,17 +22,17 @@
                 </div>
 
                 <b-modal ref="delete-profile-modal" class="profile__modal" title="Confirmer la suppression du compte" hide-footer>
-                    <form class="profile__modal__form" @submit.prevent="deleteProfile">
-                        <div class="form-group profile__modal__form__password">
-                            <label for="password" class="font-weight-bold mb-1">Mot de passe</label>
-                            <input class="form-control" type="password" id="password" name="password" v-model="password" placeholder="Mot de passe" required />
-                        </div>
+                    <b-form class="profile__modal__form" @submit.stop.prevent="deleteProfile" novalidate>
+                        <b-form-group id="passwordGroup" label="Mot de passe" class="h6" label-for="passwordInput">
+                            <b-form-input id="passwordInput" name="passwordInput" v-model="$v.deleteForm.password.$model" :state="validateStateDelete('password')" aria-describedby="passwordInputFeedback" type="password" placeholder="Mot de passe" required></b-form-input>
+                            <b-form-invalid-feedback id="passwordInputFeedback" :state="validateStateDelete('password')">Veuillez renseigner votre mot de passe</b-form-invalid-feedback>
+                        </b-form-group>
 
                         <div class="profile__modal__form__submit">
                             <button type="button" class="profile__modal__form__submit__cancel btn py-1 px-3" @click="cancelDeleteProfile">Annuler</button>
                             <button type="submit" class="profile__modal__form__submit__confirm btn py-1 px-3 ml-2">Confirmer</button>
                         </div>
-                    </form>
+                    </b-form>
                 </b-modal>
 
                 <p class="profile__info__date text-center">Membre depuis le {{ dateCreation }}</p>
@@ -47,31 +47,33 @@
         <div class="profile__updating col-12" v-if="updating">
             <h1 class="profile__updating__title text-center my-5">Modifier mes informations</h1>
 
-            <form class="profile__updating__form" @submit.prevent="updateUserProfile">
-                <div class="profile__updating__form__pic form-group mb-4">
-                    <label for="image" class="h4 mb-3">Changer la photo de profil</label>
-                    <input type="file" id="image" name="image" accept="image/png, image/jpg, image/jpeg" @change="changeProfilePicture" />
-                </div>
+            <b-form class="profile__updating__form" @submit.stop.prevent="updateUserProfile" novalidate>
+                <b-form-group id="imageGroup" label="Changer la photo de profil" class="h4" label-for="imageInput">
+                    <b-form-file id="imageInput" name="imageInput" class="h6" v-model="$v.updateForm.image.$model" :state="validateState('image')" @change="changeProfilePicture" aria-describedby="imageInputFeedback" type="file" accept="image/png, image/jpg, image/jpeg" placeholder="Choisir une image ou la glisser ici..." drop-placeholder="Faire glisser l'image ici..."></b-form-file>
+                    <b-form-invalid-feedback id="imageInputFeedback" :state="validateState('image')">L'ajout d'une image est requis</b-form-invalid-feedback>
+                </b-form-group>
 
-                <div class="form-group mb-4">
-                    <label for="firstName" class="h4 mb-3">Prénom</label>
-                    <input type="text" class="form-control" name="firstName" id="firstName" v-model="firstName" required />
-                </div>
+                <b-form-group id="firstNameGroup" label="Prénom" class="h4" label-for="firstNameInput">
+                    <b-form-input id="firstNameInput" name="firstNameInput" v-model="$v.updateForm.firstName.$model" :state="validateState('firstName')" aria-describedby="firstNameInputFeedback" type="text" required></b-form-input>
+                    <b-form-invalid-feedback id="firstNameInputFeedback" :state="validateState('firstName')">Ce champ est requis et ne doit contenir aucun chiffre ou caractère spécial</b-form-invalid-feedback>
+                </b-form-group>
 
-                <div class="form-group mb-4">
-                    <label for="lastName" class="h4 mb-3">Nom</label>
-                    <input class="form-control" type="text" id="lastName" name="lastName" v-model="lastName" required />
-                </div>
+                <b-form-group id="lastNameGroup" label="Nom" class="h4" label-for="lastNameInput">
+                    <b-form-input id="lastNameInput" name="lastNameInput" v-model="$v.updateForm.lastName.$model" :state="validateState('lastName')" aria-describedby="lastNameInputFeedback" type="text" required></b-form-input>
+                    <b-form-invalid-feedback id="lastNameInputFeedback" :state="validateState('lastName')">Ce champ est requis et ne doit contenir aucun chiffre ou caractère spécial</b-form-invalid-feedback>
+                </b-form-group>
 
-                <div class="form-group mb-4">
-                    <label for="username" class="h4 mb-3">Username</label>
-                    <input class="form-control" type="text" id="username" name="username" v-model="username" disabled />
-                </div>
+                <b-form-group id="usernameGroup" label="Username" class="h4" label-for="usernameInput">
+                    <b-form-input id="usernameInput" name="usernameInput" v-model="username" :state="true" type="text" disabled></b-form-input>
+                </b-form-group>
 
-                <div class="form-group mb-4">
-                    <label for="bio" class="h4 mb-3">Bio</label>
-                    <textarea class="form-control" type="text" id="bio" name="bio" v-model="bio" required></textarea>
-                </div>
+                <b-form-group id="emailGroup" label="Email" class="h4" label-for="emailInput">
+                    <b-form-input id="emailInput" name="emailInput" v-model="email" :state="true" type="email" disabled></b-form-input>
+                </b-form-group>
+
+                <b-form-group id="bioGroup" label="Bio" class="h4" label-for="bioInput">
+                    <b-form-textarea id="bioInput" name="bioInput" v-model="updateForm.bio" type="text"></b-form-textarea>
+                </b-form-group>
 
                 <div class="profile__updating__form__submit">
                     <div class="profile__updating__form__submit__cancel my-5 mx-3 text-center">
@@ -82,7 +84,7 @@
                         <button type="submit" class="profile__updating__form__submit__save__btn btn py-1 px-3">Enregistrer</button>
                     </div>
                 </div>
-            </form>
+            </b-form>
         </div>
     </div>
 </template>
@@ -91,9 +93,12 @@
 import TopicsList from '../components/TopicsList'
 import axios from 'axios'
 import { mapGetters } from 'vuex'
+import { validationMixin } from 'vuelidate'
+import { required, alpha } from 'vuelidate/lib/validators'
 
 export default {
     name: 'Profile',
+    mixins: [validationMixin],
     components: {
         TopicsList
     },
@@ -102,13 +107,38 @@ export default {
             userId: 0,
             user: '',
             updating: false,
-            firstName: '',
-            lastName: '',
             username: '',
-            bio: '',
-            image: '',
+            email: '',
             changePicture: false,
-            password: ''
+            updateForm: {
+                firstName: '',
+                lastName: '',
+                bio: '',
+                image: '',
+            },
+            deleteForm: {
+                password: ''
+            }
+        }
+    },
+    validations: {
+        updateForm: {
+            firstName: {
+                required,
+                alpha
+            },
+            lastName: {
+                required,
+                alpha
+            },
+            image: {
+                required
+            }
+        },
+        deleteForm: {
+            password: {
+                required
+            }
         }
     },
     computed: {
@@ -118,7 +148,7 @@ export default {
         dateCreation() {
             return this.user.createdAt.split('T')[0];
         },
-        ...mapGetters(['currentUser'])
+        ...mapGetters(['currentUser', 'loggedIn'])
     },
     methods: {
         startUpdatingProfile() {
@@ -126,33 +156,44 @@ export default {
         },
         changeProfilePicture() {
             this.changePicture = true;
-            this.image = document.getElementById('image').files[0];
         },
         cancelUpdate() {
             this.updating = false;
         },
+        validateState(field) {
+            const { $dirty, $error } = this.$v.updateForm[field];
+            return $dirty ? !$error : null;
+        },
+        validateStateDelete(field) {
+            const { $dirty, $error } = this.$v.deleteForm[field];
+            return $dirty ? !$error : null;
+        },
         async updateUserProfile() {
+            this.$v.updateForm.$touch();
+            if (this.$v.updateForm.$anyError) {
+                return;
+            }
             const url = window.location.search;
             const searchUrl = new URLSearchParams(url);
             const userId = searchUrl.get('id');
             const reqUrl = '/users/' + userId;
             if (this.changePicture) {
+                console.log('leasd');
                 const formData = new FormData();
-                formData.append('firstName', this.firstName);
-                formData.append('lastName', this.lastName);
-                formData.append('bio', this.bio);
-                formData.append('image', this.image);
+                formData.append('firstName', this.updateForm.firstName);
+                formData.append('lastName', this.updateForm.lastName);
+                formData.append('bio', this.updateForm.bio);
+                formData.append('image', this.updateForm.image);
                 const putResponse = await axios.put(reqUrl, formData);
                 console.log(putResponse.data);
             } else {
                 const putResponse = await axios.put(reqUrl, {
-                    firstName: this.firstName,
-                    lastName: this.lastName,
-                    bio: this.bio
+                    firstName: this.updateForm.firstName,
+                    lastName: this.updateForm.lastName,
+                    bio: this.updateForm.bio
                 });
                 console.log(putResponse.data);
             }
-            console.log('la');
             const profileRefreshed = await axios.get(reqUrl);
             this.user = profileRefreshed.data;
             this.updating = false;
@@ -165,13 +206,17 @@ export default {
             this.password = '';
         },
         async deleteProfile() {
+            this.$v.deleteForm.$touch();
+            if (this.$v.deleteForm.$anyError) {
+                return;
+            }
             const url = window.location.search;
             const searchUrl = new URLSearchParams(url);
             const userId = searchUrl.get('id');
             const reqUrl = '/users/' + userId;
             const deleteResponse = await axios.delete(reqUrl, {
                 data: {
-                    password: this.password
+                    password: this.deleteForm.password
                 }
             });
             console.log(deleteResponse.data);
@@ -182,6 +227,9 @@ export default {
         }
     },
     async beforeMount() {
+        if (!this.loggedIn) {
+            this.$router.push('/');
+        }
         const url = window.location.search;
         const searchUrl = new URLSearchParams(url);
         const userId = searchUrl.get('id');
@@ -189,11 +237,12 @@ export default {
         const reqUrl = '/users/' + userId;
         const response = await axios.get(reqUrl);
         this.user = response.data;
-        this.firstName = this.user.firstName;
-        this.lastName = this.user.lastName;
+        this.updateForm.firstName = this.user.firstName;
+        this.updateForm.lastName = this.user.lastName;
         this.username = this.user.username;
-        this.bio = this.user.bio;
-        this.image = this.user.profilePicture;
+        this.email = this.user.email;
+        this.updateForm.bio = this.user.bio;
+        this.updateForm.image = this.user.profilePicture;
     }
 }
 </script>
@@ -255,10 +304,6 @@ export default {
         align-items: center;
         &__form {
             width: 50%;
-            &__pic {
-                display: flex;
-                flex-direction: column;
-            }
             &__submit {
                 display: flex;
                 justify-content: center;

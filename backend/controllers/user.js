@@ -7,22 +7,37 @@ const seq = require('../sequelize');
 const User = seq.user;
 
 exports.signup = (req, res, next) => {
-    bcrypt.hash(req.body.password, 10)
-        .then(hash => {
-            const defaultAvatar = 'http://localhost:3000/images/default_avatar.png';
-            User.create({
-                username: req.body.username,
-                password: hash,
-                email: req.body.email,
-                firstName: req.body.firstName,
-                lastName: req.body.lastName,
-                bio: req.body.bio,
-                profilePicture: defaultAvatar
-            })
-                .then(() => res.status(201).json({ message: 'Utilisateur créé' }))
-                .catch(error => res.status(400).json({ error }));
+    User.findOne({
+        where: {
+            [Op.or]: [{ username: req.body.username }, { email: req.body.email }]
+        }
+    })
+        .then(userAlreadyExists => {
+            console.log('sfsfagsrs');
+            if (!userAlreadyExists) {
+                console.log('ici');
+                bcrypt.hash(req.body.password, 10)
+                .then(hash => {
+                    const defaultAvatar = 'http://localhost:3000/images/default_avatar.png';
+                    User.create({
+                        username: req.body.username,
+                        password: hash,
+                        email: req.body.email,
+                        firstName: req.body.firstName,
+                        lastName: req.body.lastName,
+                        bio: req.body.bio,
+                        profilePicture: defaultAvatar
+                    })
+                        .then(() => res.status(201).json({ message: 'Utilisateur créé' }))
+                        .catch(error => res.status(400).json({ error }));
+                })
+                .catch(error => res.status(500).json({ error }));                    
+            } else {
+                console.log('la');
+                return res.status(401).json({ error: new Error('Username ou email déjà existant')});
+            }
         })
-        .catch(error => res.status(500).json({ error }));
+        .catch(error => res.status(400).json({ error }));
 };
 
 exports.login = (req, res, next) => {
@@ -32,7 +47,6 @@ exports.login = (req, res, next) => {
         }
     })
         .then(user => {
-            console.log(process.env.TOKEN_KEY);
             if (!user) {
                 return res.status(401).json({ message: 'Utilisateur inexistant' });
             }
@@ -57,7 +71,7 @@ exports.login = (req, res, next) => {
 
 exports.getUserProfile = (req, res, next) => {
     User.findOne({
-        attributes: [['id', 'userId'], 'username', 'firstName', 'lastName', 'bio', 'profilePicture', 'createdAt'],
+        attributes: [['id', 'userId'], 'username', 'email', 'firstName', 'lastName', 'bio', 'profilePicture', 'createdAt'],
         where: {
             id: req.params.id
         }
@@ -81,7 +95,7 @@ exports.updateUserProfile = (req, res, next) => {
             .then(user => {
                 const defaultAvatarUrl = 'http://localhost:3000/images/default_avatar.png';
                 if (user.profilePicture !== defaultAvatarUrl) {
-                    const filename = user.profile_picture.split('/images/')[1];
+                    const filename = user.profilePicture.split('/images/')[1];
                     fs.unlink(`images/${filename}`, () => {
                         User.update({
                             firstName: req.body.firstName,

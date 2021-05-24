@@ -26,14 +26,17 @@
                 {{ content }}
             </p>
 
-            <form id="updatePost" class="post__body__update col-12 py-3" @submit.prevent="updatePost" v-if="updating">
-                <textarea class="post__body__update__content form-control" type="text" id="updatedPost" name="updatedPost" v-model="content"></textarea>
+            <b-form id="updatePostForm" class="post__body__update col-12 py-3" @submit.stop.prevent="updatePost" v-if="updating" novalidate>
+                <b-form-group id="updatePostGroup">
+                    <b-form-textarea id="updatePostInput" name="updatePostInput" v-model="$v.content.$model" :state="validateState()" aria-describedby="updatePostInputFeedback" type="text" required></b-form-textarea>
+                    <b-form-invalid-feedback id="updatePostInputFeedback" :state="validateState()">Écrivez du contenu pour pouvoir le publier</b-form-invalid-feedback>
+                </b-form-group>
                 <div class="post__body__update__submit">
                     <button type="submit" class="post__body__update__submit__btn btn px-3 py-1 ml-3">
                         Publier
                     </button>
                 </div>
-            </form>
+            </b-form>
         </div>
         <div class="row m-0">
             <div class="post__footer col px-0">
@@ -51,7 +54,7 @@
                     </button>
                     <p class="post__footer__dislikes__number mb-0">{{ numberOfDislikes }}</p>
                 </div>
-                <p class="post__footer__comments mb-0 ml-3">{{ numberOfComments }} commentaires</p>
+                <router-link :to="postDetails" class="post__footer__comments mb-0 ml-3">{{ numberOfComments }} commentaires</router-link>
             </div>
         </div>
     </div>
@@ -60,9 +63,12 @@
 <script>
 import { mapGetters } from 'vuex'
 import axios from 'axios'
+import { validationMixin } from 'vuelidate'
+import { required } from 'vuelidate/lib/validators'
 
 export default {
     name: 'Post',
+    mixins: [validationMixin],
     props: ['id', 'authorId', 'imageUrl', 'firstName', 'lastName', 'username', 'topic', 'topicId', 'content', 'numberOfLikes', 'numberOfDislikes', 'hasLiked', 'hasDisliked', 'numberOfComments'],
     data() {
         return {
@@ -90,10 +96,19 @@ export default {
             userHasDisliked: false
         }
     },
+    validations: {
+        content: {
+            required
+        }
+    },
     computed: {
         ...mapGetters(['currentUser'])
     },
     methods: {
+        validateState() {
+            const { $dirty, $error } = this.$v.content;
+            return $dirty ? !$error : null;
+        },
         async deletePost() {
             const reqUrl = '/topics/' + this.topicId + '/posts/' + this.id;
             const response = await axios.delete(reqUrl, {
@@ -108,6 +123,10 @@ export default {
             this.updating = true;
         },
         async updatePost() {
+            this.$v.$touch();
+            if (this.$v.$anyError) {
+                return;
+            }
             const reqUrl = '/topics/' + this.topicId + '/posts/' + this.id;
             const response = await axios.put(reqUrl, {
                 userId: this.authorId,
@@ -241,8 +260,13 @@ export default {
     }
     &__body {
         &__update {
+            min-width: 100%;
             display: flex;
             align-items: center;
+            .form-group {
+                margin: 0;
+                width: 90%;
+            }
             &__submit {
                 &__btn {
                     background-color: #FD3C13;
@@ -285,6 +309,12 @@ export default {
                 &--active {
                     color: #FD3C13;
                 }
+            }
+        }
+        &__comments {
+            color: #000;
+            &:hover {
+                color: #000;
             }
         }
     }

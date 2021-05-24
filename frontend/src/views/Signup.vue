@@ -12,45 +12,25 @@
                     <b-form-input id="firstNameInput" name="firstNameInput" v-model="$v.form.firstName.$model" :state="validateState('firstName')" aria-describedby="firstNameInputFeedback" type="text" placeholder="Marine" required></b-form-input>
                     <b-form-invalid-feedback id="firstNameInputFeedback" :state="validateState('firstName')">Ce champ est requis et ne doit contenir aucun chiffre ou caractère spécial</b-form-invalid-feedback>
                 </b-form-group>
-                <!-- <div class="form-group signup__form__field">
-                    <label for="firstName">Prénom*</label>
-                    <input class="form-control" type="text" id="firstName" name="firstName" v-model="firstName" placeholder="Marine" required />
-                </div> -->
 
                 <b-form-group id="lastNameGroup" label="Nom*" label-for="lastNameInput">
                     <b-form-input id="lastNameInput" name="lastNameInput" v-model="$v.form.lastName.$model" :state="validateState('lastName')" aria-describedby="lastNameInputFeedback" type="text" placeholder="Deschamps" required></b-form-input>
                     <b-form-invalid-feedback id="lastNameInputFeedback" :state="validateState('lastName')">Ce champ est requis et ne doit contenir aucun chiffre ou caractère spécial</b-form-invalid-feedback>
                 </b-form-group>
-                <!-- <div class="form-group signup__form__field">
-                    <label for="lastName">Nom*</label>
-                    <input class="form-control" type="text" id="lastName" name="lastName" v-model="lastName" placeholder="Deschamps" required />
-                </div> -->
 
                 <b-form-group id="bioGroup" label="Parle-nous de toi!" label-for="bioInput">
                     <b-form-textarea id="bioInput" name="bioInput" v-model="form.bio" type="text" placeholder="Salut, moi c'est Marine, je travaille dans la section manutention. Hâte de vous rencontrer!"></b-form-textarea>
                 </b-form-group>
-                <!-- <div class="form-group signup__form__field">
-                    <label for="bio">Parle-nous de toi!</label>
-                    <textarea class="form-control" type="text" id="bio" name="bio" v-model="bio" placeholder="Salut, moi c'est Marine, je travaille dans la section manutention. Hâte de vous rencontrer!"></textarea>
-                </div>                    -->
 
                 <b-form-group id="usernameGroup" label="Username*" label-for="usernameInput">
                     <b-form-input id="usernameInput" name="usernameInput" v-model="$v.form.username.$model" :state="validateState('username')" aria-describedby="usernameInputFeedback" type="text" placeholder="mar.desc56" required></b-form-input>
                     <b-form-invalid-feedback id="usernameInputFeedback" :state="validateState('username')">Ce champ est requis</b-form-invalid-feedback>
                 </b-form-group>
-                <!-- <div class="form-group signup__form__field">
-                    <label for="username">Username*</label>
-                    <input class="form-control" type="text" id="username" name="username" v-model="username" placeholder="mar.desc56" required />
-                </div>                         -->
 
                 <b-form-group id="emailGroup" label="Email*" label-for="emailInput">
                     <b-form-input id="emailInput" name="emailInput" v-model="$v.form.email.$model" :state="validateState('email')" aria-describedby="emailInputFeedback" type="email" placeholder="marine.deschamps@gmail.com" required></b-form-input>
                     <b-form-invalid-feedback id="emailInputFeedback" :state="validateState('email')">Ce champ est requis et doit respecter le format email (*****@****.**)</b-form-invalid-feedback>
                 </b-form-group>
-                <!-- <div class="form-group signup__form__field">
-                    <label for="email">Email*</label>
-                    <input class="form-control" type="email" id="email" name="email" v-model="email" placeholder="marine.deschamps@gmail.com" required />
-                </div> -->
 
                 <b-form-group id="passwordGroup" label="Mot de passe*" label-for="passwordInput">
                     <b-form-input id="passwordInput" name="passwordInput" v-model="$v.form.password.$model" :state="validateState('password')" aria-describedby="passwordInstructions" type="password" placeholder="ex: g12DfeJs/dj" required></b-form-input>
@@ -65,28 +45,11 @@
                         </ul>
                     </small>
                 </b-form-group>
-                <!-- <div class="form-group signup__form__field">
-                    <label for="password">Mot de passe*</label>
-                    <input class="form-control" type="password" id="password" name="password" v-model="password" aria-describedby="passwordInstructions" placeholder="ex: g12DfeJs/dj" required />
-                    <small id="passwordInstructions" class="form-text text-muted">
-                        Le mot de passe doit contenir: <br />
-                        <ul>
-                            <li>au moins 8 caractères,</li>
-                            <li>au moins un caractère en majuscule,</li>
-                            <li>au moins un chiffre,</li>
-                            <li>au moins un caractère spécial.</li>
-                        </ul>
-                    </small>
-                </div> -->
 
                 <b-form-group id="confirmPasswordGroup" label="Confirmer le mot de passe*" label-for="confirmPasswordInput">
                     <b-form-input id="confirmPasswordInput" name="confirmPasswordInput" v-model="$v.form.confirmPassword.$model" :state="validateState('confirmPassword')" aria-describedby="confirmPasswordInputFeedback" type="password" placeholder="g12DfeJs/dj" required></b-form-input>
                     <b-form-invalid-feedback id="confirmPasswordInputFeedback" :state="validateState('confirmPassword')">Ce champ est requis et doit être identique au champ 'Mot de passe' précédent</b-form-invalid-feedback>
                 </b-form-group>
-                <!-- <div class="form-group signup__form__field">
-                    <label for="confirmPassword">Confirmer mot de passe*</label>
-                    <input class="form-control" type="password" id="confirmPassword" name="confirmPassword" v-model="confirmPassword" placeholder="g12DfeJs/dj" required />
-                </div> -->
 
                 <div class="signup__form__submit my-3">
                     <button type="submit" class="btn px-3 py-1">S'inscrire</button>
@@ -168,21 +131,26 @@ export default {
             const { $dirty, $error } = this.$v.form[field];
             return $dirty ? !$error : null;
         },
-        async signupSubmit() {
+        signupSubmit() {
             this.$v.form.$touch();
             if (this.$v.form.$anyError) {
                 return;
             }
-            const response = await axios.post('/users/signup', {
-                username: this.username,
-                password: this.password,
-                email: this.email,
-                firstName: this.firstName,
-                lastName: this.lastName,
-                bio: this.bio
-            });
-            console.log(response);
-            this.$router.push('/login');
+            axios.post('/users/signup', {
+                username: this.form.username,
+                password: this.form.password,
+                email: this.form.email,
+                firstName: this.form.firstName,
+                lastName: this.form.lastName,
+                bio: this.form.bio
+            })
+                .then(response => {
+                    console.log(response);
+                    this.$router.push('/login');
+                })
+                .catch(error => {
+                    console.log(error)
+                });
         }
     }
 }

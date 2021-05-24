@@ -31,9 +31,12 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['currentUser'])
+        ...mapGetters(['currentUser', 'loggedIn'])
     },
     async beforeMount() {
+        if (!this.loggedIn) {
+            this.$router.push('/');
+        }
         const url = window.location.search;
         const searchUrl = new URLSearchParams(url);
         if (searchUrl.has('order')) {

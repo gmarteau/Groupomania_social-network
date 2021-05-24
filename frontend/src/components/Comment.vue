@@ -12,14 +12,17 @@
                     {{ content }}
                 </p>
 
-                <form id="updateComment" class="comment__body__txt__update col-9 py-0" @submit.prevent="updateComment" v-if="updating">
-                    <textarea class="comment__body__txt__update__content form-control mr-3" type="text" id="updatedComment" name="updatedComment" v-model="content"></textarea>
+                <b-form id="updateCommentForm" class="comment__body__txt__update col-9 py-0" @submit.stop.prevent="updateComment" v-if="updating" novalidate>
+                    <b-form-group id="updateCommentGroup">
+                        <b-form-textarea id="updateCommentInput" name="updateCommentInput" v-model="$v.content.$model" :state="validateState()" aria-describedby="updateCommentInputFeedback" type="text" required></b-form-textarea>
+                        <b-form-invalid-feedback id="updateCommentInputFeedback" :state="validateState()">Votre commentaire ne peut pas être vide</b-form-invalid-feedback>
+                    </b-form-group>
                     <div class="comment__body__txt__update__submit">
-                        <button type="submit" class="comment__body__txt__update__submit__btn btn px-3 py-1">
+                        <button type="submit" class="comment__body__txt__update__submit__btn btn px-3 py-1 ml-3">
                             Publier
                         </button>
                     </div>
-                </form>
+                </b-form>
             </div>
             <div class="comment__body__modify col-1" v-if="currentUser.id == authorId">
                 <b-dropdown class="comment__body__modify__button dropdown" toggle-class="text-decoration-none" dropleft no-caret>
@@ -57,9 +60,12 @@
 <script>
 import { mapGetters } from 'vuex'
 import axios from 'axios'
+import { validationMixin } from 'vuelidate'
+import { required } from 'vuelidate/lib/validators'
 
 export default {
     name: 'Comment',
+    mixins: [validationMixin],
     props: ['id', 'authorId', 'imageUrl', 'firstName', 'lastName', 'username', 'content', 'numberOfLikes', 'numberOfDislikes', 'hasLiked', 'hasDisliked'],
     data() {
         return {
@@ -68,10 +74,19 @@ export default {
             userHasDisliked: false
         }
     },
+    validations: {
+        content: {
+            required
+        }
+    },
     computed: {
         ...mapGetters(['currentUser'])
     },
     methods: {
+        validateState() {
+            const { $dirty, $error } = this.$v.content;
+            return $dirty ? !$error : null;
+        },
         async deleteComment() {
             const url = window.location.search;
             const searchUrl = new URLSearchParams(url);
@@ -90,6 +105,10 @@ export default {
             this.updating = true;
         },
         async updateComment() {
+            this.$v.$touch();
+            if (this.$v.$anyError) {
+                return;
+            }
             const url = window.location.search;
             const searchUrl = new URLSearchParams(url);
             const topicId = searchUrl.get('topic');
@@ -200,6 +219,10 @@ export default {
             &__update {
                 display: flex;
                 align-items: center;
+                .form-group {
+                    margin: 0;
+                    width: 90%;
+                }
                 &__submit {
                     &__btn {
                         background-color: #FD3C13;

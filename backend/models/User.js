@@ -36,8 +36,12 @@ module.exports = (sequelize, type) => {
     }, {
         indexes: [
             {
-                name: 'ind_firstName_lastName',
-                fields: ['firstName', 'lastName']
+                name: 'ind_username',
+                fields: ['username']
+            },
+            {
+                name: 'ind_email',
+                fields: ['email']
             }
         ],
         timestamps: true
