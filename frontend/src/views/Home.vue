@@ -5,7 +5,7 @@
         <img :src="logoVertical.src" :alt="logoVertical.alt" />
       </div>
 
-      <h1>Bienvenue chez Groupomania, <router-link to="/login">connectez-vous</router-link> ou bien <router-link to="/signup">inscrivez-vous</router-link>!</h1>
+      <h1>Bienvenue chez Groupomania, <router-link to="/login" class="home--notLogged__link">connectez-vous</router-link> ou bien <router-link to="/signup" class="home--notLogged__link">inscrivez-vous</router-link>!</h1>
     </div>
 
     <div class="home--loggedIn row" v-if="loggedIn">
@@ -129,6 +129,13 @@ export default {
         height: 100%;
         width: 100%;
         object-fit: cover;
+      }
+    }
+    &__link {
+      color: #FD3C13;
+      &:hover {
+        color: #FFD7D7;
+        text-decoration: none;
       }
     }
   }

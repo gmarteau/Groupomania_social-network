@@ -7,46 +7,68 @@
         <div class="login__form-cont col-6">
             <h1>Se connecter</h1>
 
-            <form class="login__form my-4" @submit.prevent="loginSubmit">
-                <div class="form-group login__form__field">
-                    <label for="username">Username / Email</label>
-                    <input class="form-control" type="text" id="username" name="username" v-model="username" placeholder="Username ou email" required />
-                </div>                        
+            <b-form class="login__form my-4" @submit.stop.prevent="loginSubmit" novalidate>
+                <b-form-group id="usernameGroup" label="Username / Email" label-for="usernameInput">
+                    <b-form-input id="usernameInput" name="usernameInput" v-model="$v.form.username.$model" :state="validateState('username')" aria-describedby="usernameInputFeedback" type="text" placeholder="Username ou email" required></b-form-input>
+                    <b-form-invalid-feedback id="usernameInputFeedback" :state="validateState('username')">Ce champ est requis</b-form-invalid-feedback>
+                </b-form-group>
 
-                <div class="form-group login__form__field">
-                    <label for="password">Mot de passe</label>
-                    <input class="form-control" type="password" id="password" name="password" v-model="password" placeholder="Mot de passe" required />
-                </div>
-
+                <b-form-group id="passwordGroup" label="Mot de passe" label-for="passwordInput">
+                    <b-form-input id="passwordInput" name="passwordInput" v-model="$v.form.password.$model" :state="validateState('password')" aria-describedby="passwordInputFeedback" type="password" placeholder="Mot de passe" required></b-form-input>
+                    <b-form-invalid-feedback id="passwordInputFeedback" :state="validateState('password')">Ce champ est requis</b-form-invalid-feedback>
+                </b-form-group>
+                
                 <div class="login__form__submit my-3">
-                    <button type="submit" class="btn">Se connecter</button>
+                    <button type="submit" class="login__form__submit__btn btn px-3 py-1">Se connecter</button>
                 </div>
-            </form>
+            </b-form>
         </div>
     </div>
 </template>
 
 <script>
-
 import { mapState } from 'vuex'
 import axios from 'axios'
+import { validationMixin } from 'vuelidate'
+import { required } from 'vuelidate/lib/validators'
 
 export default {
     name: 'Login',
+    mixins: [validationMixin],
     data() {
         return {
-            username: '',
-            password: ''
+            form: {
+                username: '',
+                password: ''
+            }
+        }
+    },
+    validations: {
+        form: {
+            username: {
+                required
+            },
+            password: {
+                required
+            }
         }
     },
     computed: {
         ...mapState(['logoVertical'])
     },
     methods: {
+        validateState(field) {
+            const { $dirty, $error } = this.$v.form[field];
+            return $dirty ? !$error : null;
+        },
         async loginSubmit() {
+            this.$v.form.$touch();
+            if (this.$v.form.$anyError) {
+                return;
+            }
             const response = await axios.post('/users/login', {
-                username: this.username,
-                password: this.password
+                username: this.form.username,
+                password: this.form.password
             });
             this.$store.dispatch('storeUserAuthInfo', response.data);
             this.$store.dispatch('changeLoginState');
@@ -90,7 +112,7 @@ export default {
             .btn {
                 background-color: #FD370D;
                 color: #fff;
-                width: 30%;
+                font-weight: bold;
             }
         }
     }
