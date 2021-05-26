@@ -57,15 +57,15 @@ export default {
             this.topics = response.data;
         } else if (this.listName == 'followed') {
             this.title = 'Suivis';
-            const response = await axios.get('/topics/?order=followed&limit=5', {
+            const config = {
+                headers: {
+                    'Authorization': 'Bearer ' + this.currentUser.token
+                },
                 params: {
                     userId: this.userId
                 }
-            }, {
-                headers: {
-                'Authorization': 'Bearer ' + this.currentUser.token
-                }
-            });
+            };
+            const response = await axios.get('/topics/?order=followed&limit=5', config);
             this.topics = response.data;
         }
     }

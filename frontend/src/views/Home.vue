@@ -92,7 +92,11 @@ export default {
       this.$router.push({ path: '/topics', query: { name: this.search } });
     },
     async refreshPosts() {
-      const response = await axios.get('/posts/?order=recent');
+      const response = await axios.get('/posts/?order=recent', {
+        headers: {
+          'Authorization': 'Bearer ' + this.currentUser.token
+        }
+      });
       this.posts = response.data;
     }
   },

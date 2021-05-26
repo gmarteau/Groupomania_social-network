@@ -10,6 +10,8 @@
             :userId="currentUser.id"
             :followed="followed"
             :followers="topic.numberOfFollowers"
+            @topic-followed="refreshFollowers"
+            @topic-unfollowed="refreshFollowers"
         />
 
         <div class="topic__body row">
@@ -62,6 +64,7 @@
                 <TopicFollowers 
                     :hasFollowed="topic.hasFollowed"
                     :numberOfFollowers="topic.numberOfFollowers"
+                    :followers="followers"
                 />
             </aside>
         </div>
@@ -91,6 +94,7 @@ export default {
             posts: [],
             noPosts: false,
             followed: false,
+            followers: [],
             form: {
                 newPost: ''
             }
@@ -156,6 +160,34 @@ export default {
             } else {
                 this.posts = postsRefreshed.data;
             }
+        }, 
+        async refreshFollowers() {
+            const url = window.location.search;
+            const searchUrl = new URLSearchParams(url);
+            const topicId = searchUrl.get('id');
+            const reqUrlInfo = '/topics/' + topicId;
+            const topicInfo = await axios.get(reqUrlInfo, {
+                headers: {
+                'Authorization': 'Bearer ' + this.currentUser.token
+                }
+            });
+            this.topic = topicInfo.data;
+            this.topic.hasFollowed = Array.from(this.topic.hasFollowed).filter(char => char !== ',');
+            if (this.topic.hasFollowed.includes(this.currentUser.id.toString())) {
+                this.followed = true;
+            } else {
+                this.followed = false;
+            }
+            const config = {
+                headers: {
+                    'Authorization': 'Bearer ' + this.currentUser.token
+                },
+                params: {
+                    followers: this.topic.hasFollowed,
+                }
+            };
+            const topicFollowers = await axios.get('/users/?limit=10', config);
+            this.followers = topicFollowers.data;
         }
     },
     async beforeMount() {
@@ -176,6 +208,16 @@ export default {
         if (this.topic.hasFollowed.includes(this.currentUser.id.toString())) {
             this.followed = true;
         }
+        const config = {
+            headers: {
+                'Authorization': 'Bearer ' + this.currentUser.token
+            },
+            params: {
+                followers: this.topic.hasFollowed,
+            }
+        };
+        const topicFollowers = await axios.get('/users/?limit=10', config);
+        this.followers = topicFollowers.data;
         const reqUrlPosts = reqUrlInfo + '/posts/?order=recent';
         const topicPosts = await axios.get(reqUrlPosts, {
             headers: {

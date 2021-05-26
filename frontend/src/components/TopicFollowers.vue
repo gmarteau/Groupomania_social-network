@@ -16,36 +16,17 @@
 </template>
 
 <script>
-import axios from 'axios'
 import TopicFollowersItem from './TopicFollowersItem'
 import { mapGetters } from 'vuex'
 
 export default {
     name: 'TopicFollowers',
-    props: ['hasFollowed', 'numberOfFollowers'],
+    props: ['hasFollowed', 'numberOfFollowers', 'followers'],
     components: {
         TopicFollowersItem
     },
-    data() {
-        return {
-            followers: []
-        }
-    },
     computed: {
         ...mapGetters(['currentUser'])
-    },
-    async beforeMount() {
-        console.log(this.hasFollowed);
-        const response = await axios.get('/users/?limit=10', {
-            params: {
-                followers: this.hasFollowed,
-            }
-        }, {
-            headers: {
-            'Authorization': 'Bearer ' + this.currentUser.token
-            }
-        });
-        this.followers = response.data;
     }
 }
 </script>

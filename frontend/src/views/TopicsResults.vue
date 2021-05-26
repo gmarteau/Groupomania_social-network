@@ -56,15 +56,15 @@ export default {
                 });
                 this.topics = response.data;                
             } else if (urlQuery == 'followed') {
-                const response = await axios.get('/topics/?order=followed', {
+                const config = {
+                    headers: {
+                        'Authorization': 'Bearer ' + this.currentUser.token
+                    },
                     params: {
                         userId: this.currentUser.id
                     }
-                }, {
-                    headers: {
-                    'Authorization': 'Bearer ' + this.currentUser.token
-                    }
-                });
+                };
+                const response = await axios.get('/topics/?order=followed', config);
                 this.topics = response.data;
             }
         }

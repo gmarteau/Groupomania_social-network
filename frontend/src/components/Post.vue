@@ -111,15 +111,15 @@ export default {
         },
         async deletePost() {
             const reqUrl = '/topics/' + this.topicId + '/posts/' + this.id;
-            const response = await axios.delete(reqUrl, {
+            const config = {
+                headers: {
+                'Authorization': 'Bearer ' + this.currentUser.token
+                },
                 data: {
                     userId: this.authorId
                 }
-            }, {
-                headers: {
-                'Authorization': 'Bearer ' + this.currentUser.token
-                }
-            });
+            }
+            const response = await axios.delete(reqUrl, config);
             console.log(response.data);
             this.$emit('post-deleted');
         },
