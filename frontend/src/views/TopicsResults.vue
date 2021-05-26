@@ -42,15 +42,27 @@ export default {
         if (searchUrl.has('order')) {
             const urlQuery = searchUrl.get('order');
             if (urlQuery == 'popular') {
-                const response = await axios.get('/topics/?order=popular');
+                const response = await axios.get('/topics/?order=popular', {
+                    headers: {
+                    'Authorization': 'Bearer ' + this.currentUser.token
+                    }
+                });
                 this.topics = response.data;
             } else if (urlQuery == 'recent') {
-                const response = await axios.get('/topics/?order=recent');
+                const response = await axios.get('/topics/?order=recent', {
+                    headers: {
+                    'Authorization': 'Bearer ' + this.currentUser.token
+                    }
+                });
                 this.topics = response.data;                
             } else if (urlQuery == 'followed') {
                 const response = await axios.get('/topics/?order=followed', {
                     params: {
                         userId: this.currentUser.id
+                    }
+                }, {
+                    headers: {
+                    'Authorization': 'Bearer ' + this.currentUser.token
                     }
                 });
                 this.topics = response.data;
@@ -59,7 +71,11 @@ export default {
         if (searchUrl.has('name')) {
             const urlQuery = searchUrl.get('name');
             const requestUrl = '/topics/?name=' + urlQuery;
-            const response = await axios.get(requestUrl);
+            const response = await axios.get(requestUrl, {
+                headers: {
+                'Authorization': 'Bearer ' + this.currentUser.token
+                }
+            });
             if (response.data.length == 0) {
                 this.noResults = true;
             } else {

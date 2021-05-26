@@ -82,7 +82,11 @@ export default {
             formData.append('name', this.form.name);
             formData.append('description', this.form.description);
             formData.append('image', this.form.image);
-            axios.post('/topics', formData)
+            axios.post('/topics', formData, {
+                headers: {
+                'Authorization': 'Bearer ' + this.currentUser.token
+                }
+            })
                 .then(response => {
                     const newTopicUrl = '/topic?id=' + response.data.topicId;
                     this.$router.push(newTopicUrl);

@@ -22,7 +22,7 @@
 </template>
 
 <script>
-
+import { mapGetters } from 'vuex'
 import axios from 'axios'
 
 export default {
@@ -34,7 +34,8 @@ export default {
         },
         dateCreation() {
             return this.createdAt.split('T')[0];
-        }
+        },
+        ...mapGetters(['currentUser'])
     },
     methods: {
         async followTopic() {
@@ -42,6 +43,10 @@ export default {
             const response = await axios.post(reqUrl, {
                 userId: this.userId,
                 follow: 1
+            }, {
+                headers: {
+                'Authorization': 'Bearer ' + this.currentUser.token
+                }
             });
             console.log(response.data);
             this.followed = true;
@@ -52,6 +57,10 @@ export default {
             const response = await axios.post(reqUrl, {
                 userId: this.userId,
                 follow: 0
+            }, {
+                headers: {
+                'Authorization': 'Bearer ' + this.currentUser.token
+                }
             });
             console.log(response.data);
             this.followed = false;

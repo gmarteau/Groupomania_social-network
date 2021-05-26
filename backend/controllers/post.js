@@ -3,12 +3,13 @@ const seq = require('../sequelize');
 const Post = seq.post;
 const User = seq.user;
 const Topic = seq.topic;
+const xss = require('xss');
 
 exports.createPost = (req, res, next) => {
     Post.create({
         TopicId: req.topic.dataValues.id,
         UserId: req.body.userId,
-        content: req.body.content
+        content: xss(req.body.content)
     })
         .then(() => res.status(201).json({ message: 'Post créé' }))
         .catch(error => res.status(400).json({ error }));
@@ -122,7 +123,7 @@ exports.updatePost = (req, res, next) => {
                 return res.status(401).json({ error: 'Seul le créateur du post peut le modifier' });
             } else {
                 Post.update({
-                    content: req.body.content
+                    content: xss(req.body.content)
                 }, {
                     where: {
                         [Op.and]: [

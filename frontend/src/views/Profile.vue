@@ -184,17 +184,29 @@ export default {
                 formData.append('lastName', this.updateForm.lastName);
                 formData.append('bio', this.updateForm.bio);
                 formData.append('image', this.updateForm.image);
-                const putResponse = await axios.put(reqUrl, formData);
+                const putResponse = await axios.put(reqUrl, formData, {
+                    headers: {
+                    'Authorization': 'Bearer ' + this.currentUser.token
+                    }
+                });
                 console.log(putResponse.data);
             } else {
                 const putResponse = await axios.put(reqUrl, {
                     firstName: this.updateForm.firstName,
                     lastName: this.updateForm.lastName,
                     bio: this.updateForm.bio
+                }, {
+                    headers: {
+                    'Authorization': 'Bearer ' + this.currentUser.token
+                    }
                 });
                 console.log(putResponse.data);
             }
-            const profileRefreshed = await axios.get(reqUrl);
+            const profileRefreshed = await axios.get(reqUrl, {
+                headers: {
+                'Authorization': 'Bearer ' + this.currentUser.token
+                }
+            });
             this.user = profileRefreshed.data;
             this.updating = false;
         },
@@ -218,6 +230,10 @@ export default {
                 data: {
                     password: this.deleteForm.password
                 }
+            }, {
+                headers: {
+                'Authorization': 'Bearer ' + this.currentUser.token
+                }
             });
             console.log(deleteResponse.data);
             this.currentUser.id = 0;
@@ -235,7 +251,11 @@ export default {
         const userId = searchUrl.get('id');
         this.userId = parseInt(userId);
         const reqUrl = '/users/' + userId;
-        const response = await axios.get(reqUrl);
+        const response = await axios.get(reqUrl, {
+            headers: {
+            'Authorization': 'Bearer ' + this.currentUser.token
+            }
+        });
         this.user = response.data;
         this.updateForm.firstName = this.user.firstName;
         this.updateForm.lastName = this.user.lastName;

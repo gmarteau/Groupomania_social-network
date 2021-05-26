@@ -2,6 +2,7 @@ const { Op } = require('sequelize');
 const seq = require('../sequelize');
 const Topic = seq.topic;
 const User = seq.user;
+const xss = require('xss');
 
 exports.createTopic = (req, res, next) => {
     Topic.findOne({
@@ -16,8 +17,8 @@ exports.createTopic = (req, res, next) => {
                 const path = 'http://localhost:3000/' + req.file.path;
                 Topic.create({
                     UserId: req.body.userId,
-                    name: req.body.name,
-                    description: req.body.description,
+                    name: xss(req.body.name),
+                    description: xss(req.body.description),
                     imageUrl: path
                 })
                     .then(newTopic => res.status(201).json({ message: 'Topic créé', topicId: newTopic.id }))

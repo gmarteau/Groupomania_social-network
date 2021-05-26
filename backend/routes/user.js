@@ -8,9 +8,9 @@ const auth = require('../middleware/auth');
 
 router.post('/signup', userUniqueValidator, userCtrl.signup);
 router.post('/login', userCtrl.login);
-router.get('/:id', userCtrl.getUserProfile);
-router.put('/:id', multer, userCtrl.updateUserProfile);
-router.delete('/:id', userCtrl.deleteUser);
-router.get('/', userCtrl.getUsersByIds);
+router.get('/:id', auth, userCtrl.getUserProfile);
+router.put('/:id', auth, multer, userCtrl.updateUserProfile);
+router.delete('/:id', auth, userCtrl.deleteUser);
+router.get('/', auth, userCtrl.getUsersByIds);
 
 module.exports = router;

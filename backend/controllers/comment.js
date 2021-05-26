@@ -3,12 +3,13 @@ const seq = require('../sequelize');
 const Comment = seq.comment;
 const User = seq.user;
 const Post = seq.post;
+const xss = require('xss');
 
 exports.createComment = (req, res, next) => {
     Comment.create({
         PostId: req.post.dataValues.id,
         UserId: req.body.userId,
-        content: req.body.content
+        content: xss(req.body.content)
     })
         .then(() => {
             Post.findOne({
@@ -98,7 +99,7 @@ exports.updateComment = (req, res, next) => {
                 return res.status(401).json({ error: 'Seul le créateur du commentaire peut le modifier' });
             } else {
                 Comment.update({
-                    content: req.body.content
+                    content: xss(req.body.content)
                 }, {
                     where: {
                         [Op.and]: [

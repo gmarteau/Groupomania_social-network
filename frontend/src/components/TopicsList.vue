@@ -13,7 +13,7 @@
 </template>
 
 <script>
-
+import { mapGetters } from 'vuex'
 import axios from 'axios'
 import TopicsListItem from './TopicsListItem'
 
@@ -35,20 +35,35 @@ export default {
             topics: []
         }
     },
+    computed: {
+        ...mapGetters(['currentUser'])
+    },
     async beforeMount() {
         if (this.listName == 'popular') {
             this.title = 'Les + populaires';
-            const response = await axios.get('/topics/?order=popular&limit=5');
+            const response = await axios.get('/topics/?order=popular&limit=5', {
+                headers: {
+                'Authorization': 'Bearer ' + this.currentUser.token
+                }
+            });
             this.topics = response.data;
         } else if (this.listName == 'recent') {
             this.title = 'Les + récents';
-            const response = await axios.get('/topics/?order=recent&limit=5');
+            const response = await axios.get('/topics/?order=recent&limit=5', {
+                headers: {
+                'Authorization': 'Bearer ' + this.currentUser.token
+                }
+            });
             this.topics = response.data;
         } else if (this.listName == 'followed') {
             this.title = 'Suivis';
             const response = await axios.get('/topics/?order=followed&limit=5', {
                 params: {
                     userId: this.userId
+                }
+            }, {
+                headers: {
+                'Authorization': 'Bearer ' + this.currentUser.token
                 }
             });
             this.topics = response.data;

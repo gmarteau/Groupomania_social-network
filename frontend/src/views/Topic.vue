@@ -123,10 +123,18 @@ export default {
             const createPost = await axios.post(reqUrlPost, {
                 userId: this.currentUser.id,
                 content: this.form.newPost
+            }, {
+                headers: {
+                'Authorization': 'Bearer ' + this.currentUser.token
+                }
             });
             console.log(createPost.data);
             const reqUrlGet = reqUrlPost + '/?order=recent' 
-            const postsRefreshed = await axios.get(reqUrlGet);
+            const postsRefreshed = await axios.get(reqUrlGet, {
+                headers: {
+                'Authorization': 'Bearer ' + this.currentUser.token
+                }
+            });
             this.posts = postsRefreshed.data;
             this.form.newPost = '';
             if (this.noPosts) {
@@ -138,7 +146,11 @@ export default {
             const searchUrl = new URLSearchParams(url);
             const topicId = searchUrl.get('id');
             const reqUrl = '/topics/' + topicId + '/posts/?order=recent';
-            const postsRefreshed = await axios.get(reqUrl);
+            const postsRefreshed = await axios.get(reqUrl, {
+                headers: {
+                'Authorization': 'Bearer ' + this.currentUser.token
+                }
+            });
             if (postsRefreshed.data.length == 0) {
                 this.noPosts = true;
             } else {
@@ -154,14 +166,22 @@ export default {
         const searchUrl = new URLSearchParams(url);
         const topicId = searchUrl.get('id');
         const reqUrlInfo = '/topics/' + topicId;
-        const topicInfo = await axios.get(reqUrlInfo);
+        const topicInfo = await axios.get(reqUrlInfo, {
+            headers: {
+            'Authorization': 'Bearer ' + this.currentUser.token
+            }
+        });
         this.topic = topicInfo.data;
         this.topic.hasFollowed = Array.from(this.topic.hasFollowed).filter(char => char !== ',');
         if (this.topic.hasFollowed.includes(this.currentUser.id.toString())) {
             this.followed = true;
         }
         const reqUrlPosts = reqUrlInfo + '/posts/?order=recent';
-        const topicPosts = await axios.get(reqUrlPosts);
+        const topicPosts = await axios.get(reqUrlPosts, {
+            headers: {
+            'Authorization': 'Bearer ' + this.currentUser.token
+            }
+        });
         if (topicPosts.data.length == 0) {
             this.noPosts = true;
         } else {

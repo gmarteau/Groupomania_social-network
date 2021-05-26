@@ -5,36 +5,49 @@ require('dotenv').config();
 const { Op } = require('sequelize');
 const seq = require('../sequelize');
 const User = seq.user;
+const xss = require('xss');
 
 exports.signup = (req, res, next) => {
     User.findOne({
         where: {
-            [Op.or]: [{ username: req.body.username }, { email: req.body.email }]
+            username: req.body.username
         }
     })
-        .then(userAlreadyExists => {
-            console.log('sfsfagsrs');
-            if (!userAlreadyExists) {
-                console.log('ici');
-                bcrypt.hash(req.body.password, 10)
-                .then(hash => {
-                    const defaultAvatar = 'http://localhost:3000/images/default_avatar.png';
-                    User.create({
-                        username: req.body.username,
-                        password: hash,
-                        email: req.body.email,
-                        firstName: req.body.firstName,
-                        lastName: req.body.lastName,
-                        bio: req.body.bio,
-                        profilePicture: defaultAvatar
-                    })
-                        .then(() => res.status(201).json({ message: 'Utilisateur créé' }))
-                        .catch(error => res.status(400).json({ error }));
+        .then(usernameAlreadyExists => {
+            console.log('xxxxx');
+            if (!usernameAlreadyExists) {
+                User.findOne({
+                    where: {
+                        email: req.body.email
+                    }
                 })
-                .catch(error => res.status(500).json({ error }));                    
+                    .then(emailAlreadyExists => {
+                        console.log('aaaa');
+                        if (!emailAlreadyExists) {
+                            bcrypt.hash(req.body.password, 10)
+                            .then(hash => {
+                                const defaultAvatar = 'http://localhost:3000/images/default_avatar.png';
+                                User.create({
+                                    username: xss(req.body.username),
+                                    password: hash,
+                                    email: xss(req.body.email),
+                                    firstName: xss(req.body.firstName),
+                                    lastName: xss(req.body.lastName),
+                                    bio: xss(req.body.bio),
+                                    profilePicture: defaultAvatar
+                                })
+                                    .then(() => res.status(201).json({ message: 'Utilisateur créé' }))
+                                    .catch(error => res.status(400).json({ error }));
+                            })
+                            .catch(error => res.status(500).json({ error }));                    
+                        } else {
+                            console.log('erreur');
+                            return res.status(401).json({ error002: new Error('Email déjà existant') });
+                        }
+                    })
+                    .catch(error => res.status(400).json({ error }));
             } else {
-                console.log('la');
-                return res.status(401).json({ error: new Error('Username ou email déjà existant')});
+                return res.status(401).json({ error001: new Error('Username déjà existant') });
             }
         })
         .catch(error => res.status(400).json({ error }));
@@ -98,9 +111,9 @@ exports.updateUserProfile = (req, res, next) => {
                     const filename = user.profilePicture.split('/images/')[1];
                     fs.unlink(`images/${filename}`, () => {
                         User.update({
-                            firstName: req.body.firstName,
-                            lastName: req.body.lastName,
-                            bio: req.body.bio,
+                            firstName: xss(req.body.firstName),
+                            lastName: xss(req.body.lastName),
+                            bio: xss(req.body.bio),
                             profilePicture: `http://localhost:3000/images/${req.file.filename}`
                         }, {
                             where: {
@@ -113,9 +126,9 @@ exports.updateUserProfile = (req, res, next) => {
                 } else {
                     console.log("la");
                     User.update({
-                        firstName: req.body.firstName,
-                        lastName: req.body.lastName,
-                        bio: req.body.bio,
+                        firstName: xss(req.body.firstName),
+                        lastName: xss(req.body.lastName),
+                        bio: xss(req.body.bio),
                         profilePicture: `http://localhost:3000/images/${req.file.filename}`
                     }, {
                         where: {
@@ -129,9 +142,9 @@ exports.updateUserProfile = (req, res, next) => {
             .catch(error => res.status(500).json({ error }));
     } else {
         User.update({
-            firstName: req.body.firstName,
-            lastName: req.body.lastName,
-            bio: req.body.bio
+            firstName: xss(req.body.firstName),
+            lastName: xss(req.body.lastName),
+            bio: xss(req.body.bio)
         }, {
             where: {
                 id: req.params.id

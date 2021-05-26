@@ -97,6 +97,10 @@ export default {
                 data: {
                     userId: this.authorId
                 }
+            }, {
+                headers: {
+                'Authorization': 'Bearer ' + this.currentUser.token
+                }
             });
             console.log(response.data);
             this.$emit('comment-deleted');
@@ -117,6 +121,10 @@ export default {
             const response = await axios.put(reqUrl, {
                 userId: this.authorId,
                 content: this.content
+            }, {
+                headers: {
+                'Authorization': 'Bearer ' + this.currentUser.token
+                }
             });
             console.log(response.data);
             this.updating = false;
@@ -132,6 +140,10 @@ export default {
                 const response = await axios.post(reqUrl, {
                     userId: this.currentUser.id,
                     like: 0
+                }, {
+                    headers: {
+                    'Authorization': 'Bearer ' + this.currentUser.token
+                    }
                 });
                 console.log(response.data);
                 this.userHasLiked = false;
@@ -140,6 +152,10 @@ export default {
                 const response = await axios.post(reqUrl, {
                     userId: this.currentUser.id,
                     like: 1
+                }, {
+                    headers: {
+                    'Authorization': 'Bearer ' + this.currentUser.token
+                    }
                 });
                 console.log(response.data);
                 this.userHasLiked = true;
@@ -160,6 +176,10 @@ export default {
                 const response = await axios.post(reqUrl, {
                     userId: this.currentUser.id,
                     like: 0
+                }, {
+                    headers: {
+                    'Authorization': 'Bearer ' + this.currentUser.token
+                    }
                 });
                 console.log(response.data);
                 this.userHasDisliked = false;
@@ -168,6 +188,10 @@ export default {
                 const response = await axios.post(reqUrl, {
                     userId: this.currentUser.id,
                     like: -1
+                }, {
+                    headers: {
+                    'Authorization': 'Bearer ' + this.currentUser.token
+                    }
                 });
                 console.log(response.data);
                 this.userHasDisliked = true;

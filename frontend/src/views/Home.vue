@@ -98,7 +98,11 @@ export default {
   },
   async beforeMount() {
     if (this.loggedIn) {
-      const response = await axios.get('/posts/?order=recent');
+      const response = await axios.get('/posts/?order=recent', {
+        headers: {
+          'Authorization': 'Bearer ' + this.currentUser.token
+        }
+      });
       this.posts = response.data;
       if (this.posts.length == 0) {
         this.noPosts = true;

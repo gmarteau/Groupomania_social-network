@@ -120,10 +120,18 @@ export default {
             const createComment = await axios.post(reqUrlPost, {
                 userId: this.currentUser.id,
                 content: this.form.newComment
+            }, {
+                headers: {
+                'Authorization': 'Bearer ' + this.currentUser.token
+                }
             });
             console.log(createComment.data);
             const reqUrlGet = reqUrlPost + '/?order=recent';
-            const commentsRefreshed = await axios.get(reqUrlGet);
+            const commentsRefreshed = await axios.get(reqUrlGet, {
+                headers: {
+                'Authorization': 'Bearer ' + this.currentUser.token
+                }
+            });
             this.comments = commentsRefreshed.data;
             this.form.newComment = '';
         },
@@ -136,7 +144,11 @@ export default {
             const topicId = searchUrl.get('topic');
             const postId = searchUrl.get('id');
             const reqUrl = '/topics/' + topicId + '/posts/' + postId + '/comments/?order=recent';
-            const commentsRefreshed = await axios.get(reqUrl);
+            const commentsRefreshed = await axios.get(reqUrl, {
+                headers: {
+                'Authorization': 'Bearer ' + this.currentUser.token
+                }
+            });
             this.comments = commentsRefreshed.data;
         },
         async refreshPost() {
@@ -145,7 +157,11 @@ export default {
             const topicId = searchUrl.get('topic');
             const postId = searchUrl.get('id');
             const reqUrl = '/topics/' + topicId + '/posts/' + postId;
-            const postRefreshed = await axios.get(reqUrl);
+            const postRefreshed = await axios.get(reqUrl, {
+                headers: {
+                'Authorization': 'Bearer ' + this.currentUser.token
+                }
+            });
             this.post = postRefreshed.data;
         }
     },
@@ -158,10 +174,18 @@ export default {
         const topicId = searchUrl.get('topic');
         const postId = searchUrl.get('id');
         const reqUrlPost = '/topics/' + topicId + '/posts/' + postId;
-        const post = await axios.get(reqUrlPost);
+        const post = await axios.get(reqUrlPost, {
+            headers: {
+            'Authorization': 'Bearer ' + this.currentUser.token
+            }
+        });
         this.post = post.data;
         const reqUrlComments = reqUrlPost + '/comments/?order=recent';
-        const comments = await axios.get(reqUrlComments);
+        const comments = await axios.get(reqUrlComments, {
+            headers: {
+            'Authorization': 'Bearer ' + this.currentUser.token
+            }
+        });
         this.comments = comments.data;
     }
 }
