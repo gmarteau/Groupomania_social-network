@@ -21,5 +21,8 @@
     "sequelize": "^6.6.2",
     "x-xss-protection": "^2.0.0",
     "xss": "^1.0.9"
+  },
+  "devDependencies": {
+    "sequelize-cli": "^6.2.0"
   }
 }

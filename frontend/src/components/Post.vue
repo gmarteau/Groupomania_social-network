@@ -10,14 +10,14 @@
                 <router-link :to="userProfile" class="post__header__txt__username font-weight-bold mb-0 mr-3">{{ firstName }} {{ lastName }} <span class="font-weight-normal">/{{ username }}</span></router-link>
                 <p class="post__header__txt__topic mb-0" v-if="topic">@<router-link :to="href" class="text-dark">{{ topic }}</router-link></p>
             </div>
-            <div class="post__header__modify col-1" v-if="currentUser.id == authorId">
+            <div class="post__header__modify col-1" v-if="(currentUser.id == authorId) || currentUser.isAdmin">
                 <b-dropdown class="post__header__modify__button dropdown" toggle-class="text-decoration-none" size="lg" dropleft no-caret>
                     <template #button-content>
                         <i class="fas fa-ellipsis-h"></i>
                     </template>
-                    <b-dropdown-item @click="startUpdatingPost">Modifier</b-dropdown-item>
+                    <b-dropdown-item @click="startUpdatingPost" v-if="currentUser.id == authorId">Modifier</b-dropdown-item>
                     <b-dropdown-divider></b-dropdown-divider>
-                    <b-dropdown-item @click="deletePost">Supprimer</b-dropdown-item>
+                    <b-dropdown-item @click="deletePost" v-if="(currentUser.id == authorId) || currentUser.isAdmin">Supprimer</b-dropdown-item>
                 </b-dropdown>
             </div>
         </router-link>

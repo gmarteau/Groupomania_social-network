@@ -32,6 +32,10 @@ module.exports = (sequelize, type) => {
         },
         profilePicture: {
             type: type.STRING,
+        },
+        isAdmin: {
+            type: type.BOOLEAN,
+            defaultValue: false
         }
     }, {
         indexes: [

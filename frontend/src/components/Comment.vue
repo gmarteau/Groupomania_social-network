@@ -24,14 +24,14 @@
                     </div>
                 </b-form>
             </div>
-            <div class="comment__body__modify col-1" v-if="currentUser.id == authorId">
+            <div class="comment__body__modify col-1" v-if="(currentUser.id == authorId) || currentUser.isAdmin">
                 <b-dropdown class="comment__body__modify__button dropdown" toggle-class="text-decoration-none" dropleft no-caret>
                     <template #button-content>
                         <i class="fas fa-ellipsis-h"></i>
                     </template>
-                    <b-dropdown-item @click="startUpdatingComment">Modifier</b-dropdown-item>
+                    <b-dropdown-item @click="startUpdatingComment" v-if="currentUser.id == authorId">Modifier</b-dropdown-item>
                     <b-dropdown-divider></b-dropdown-divider>
-                    <b-dropdown-item @click="deleteComment">Supprimer</b-dropdown-item>
+                    <b-dropdown-item @click="deleteComment" v-if="(currentUser.id == authorId) || currentUser.isAdmin">Supprimer</b-dropdown-item>
                 </b-dropdown>
             </div>
         </div>

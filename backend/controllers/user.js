@@ -8,6 +8,7 @@ const User = seq.user;
 const xss = require('xss');
 
 exports.signup = (req, res, next) => {
+    console.log('wwwoooooow');
     User.findOne({
         where: {
             username: req.body.username
@@ -37,7 +38,7 @@ exports.signup = (req, res, next) => {
                                     profilePicture: defaultAvatar
                                 })
                                     .then(() => res.status(201).json({ message: 'Utilisateur créé' }))
-                                    .catch(error => res.status(400).json({ error }));
+                                    .catch(error => res.status(400).json({ error: 'ciao' }));
                             })
                             .catch(error => res.status(500).json({ error }));                    
                         } else {
@@ -45,12 +46,12 @@ exports.signup = (req, res, next) => {
                             return res.status(401).json({ error002: new Error('Email déjà existant') });
                         }
                     })
-                    .catch(error => res.status(400).json({ error }));
+                    .catch(error => res.status(400).json({ error: 'hello' }));
             } else {
                 return res.status(401).json({ error001: new Error('Username déjà existant') });
             }
         })
-        .catch(error => res.status(400).json({ error }));
+        .catch(error => res.status(400).json({ error: 'coucou' }));
 };
 
 exports.login = (req, res, next) => {
@@ -70,6 +71,7 @@ exports.login = (req, res, next) => {
                     }
                     res.status(200).json({
                         userId: user.id,
+                        isAdmin: user.isAdmin,
                         token: jwt.sign(
                             { userId: user.dataValues.id },
                             process.env.TOKEN_KEY,

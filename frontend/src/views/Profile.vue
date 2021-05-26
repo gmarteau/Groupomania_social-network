@@ -11,7 +11,7 @@
                 </div>
                 <div class="profile__info__header my-3">
                     <h1 class="profile__info__header__name mr-3"><span class="font-weight-bold">{{ user.firstName }} {{ user.lastName }}</span> /{{ user.username }}</h1>
-                    <b-dropdown class="profile__info__header__settings dropdown" toggle-class="text-decoration-none" size="lg" dropright no-caret v-if="userId == currentUser.id">
+                    <b-dropdown class="profile__info__header__settings dropdown" toggle-class="text-decoration-none" size="lg" dropright no-caret v-if="(userId == currentUser.id) && !currentUser.isAdmin">
                         <template #button-content>
                             <i class="fas fa-cog fa-lg"></i>
                         </template>
