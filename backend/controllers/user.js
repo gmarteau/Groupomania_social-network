@@ -110,7 +110,7 @@ exports.updateUserProfile = (req, res, next) => {
             .then(user => {
                 const defaultAvatarUrl = 'http://localhost:3000/images/default_avatar.png';
                 if (user.profilePicture !== defaultAvatarUrl) {
-                    const filename = user.profilePicture.split('/images/')[1];
+                    const filename = user.dataValues.profilePicture.split('/images/')[1];
                     fs.unlink(`images/${filename}`, () => {
                         User.update({
                             firstName: xss(req.body.firstName),
@@ -171,7 +171,7 @@ exports.deleteUser = (req, res, next) => {
                     }
                     const defaultAvatar = 'http://localhost:3000/images/default_avatar.png';
                     if (user.profilePicture !== defaultAvatar) {
-                        const filename = user.profilePicture.split('/images/')[1];
+                        const filename = user.dataValues.profilePicture.split('/images/')[1];
                         fs.unlink(`images/${filename}`, () => {
                             User.destroy({
                                 where: {

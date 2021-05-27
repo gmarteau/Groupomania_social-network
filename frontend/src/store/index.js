@@ -34,6 +34,7 @@ export default new Vuex.Store({
     },
     USER_AUTH_INFO(state, user) {
       state.currentUser.id = user.userId;
+      state.currentUser.isAdmin = user.isAdmin;
       state.currentUser.token = user.token;
     }
   },

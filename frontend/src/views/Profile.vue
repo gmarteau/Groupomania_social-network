@@ -215,7 +215,7 @@ export default {
         },
         cancelDeleteProfile() {
             this.$refs['delete-profile-modal'].hide();
-            this.password = '';
+            this.deleteForm.password = '';
         },
         async deleteProfile() {
             this.$v.deleteForm.$touch();
@@ -226,15 +226,15 @@ export default {
             const searchUrl = new URLSearchParams(url);
             const userId = searchUrl.get('id');
             const reqUrl = '/users/' + userId;
-            const deleteResponse = await axios.delete(reqUrl, {
+            const config = {
+                headers: {
+                    'Authorization': 'Bearer ' + this.currentUser.token
+                },
                 data: {
                     password: this.deleteForm.password
                 }
-            }, {
-                headers: {
-                'Authorization': 'Bearer ' + this.currentUser.token
-                }
-            });
+            };
+            const deleteResponse = await axios.delete(reqUrl, config);
             console.log(deleteResponse.data);
             this.currentUser.id = 0;
             this.currentUser.token = '';

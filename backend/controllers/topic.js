@@ -3,6 +3,8 @@ const seq = require('../sequelize');
 const Topic = seq.topic;
 const User = seq.user;
 const xss = require('xss');
+const bcrypt = require('bcrypt');
+const fs = require('fs');
 
 exports.createTopic = (req, res, next) => {
     Topic.findOne({
@@ -144,25 +146,41 @@ exports.getTopicById = (req, res, next) => {
 };
 
 exports.deleteTopic = (req, res, next) => {
-    Topic.findOne({
+    User.findOne({
         where: {
-            id: req.params.id
+            isAdmin: true
         }
     })
-        .then(topic => {
-            if (topic.dataValues.UserId !== req.body.userId) {
-                return res.status(401).json({ error: 'Vous n\'avez pas les droits nécessaires à la suppression de ce topic' });
-            } else {
-                Topic.destroy({
-                    where:{
-                        id: req.params.id
+        .then(admin => {
+            bcrypt.compare(req.body.password, admin.password)
+                .then(valid => {
+                    if (!valid) {
+                        return res.status(401).json({ message: 'Mot de passe erroné' });
+                    } else {
+                        Topic.findOne({
+                            where: {
+                                id: req.params.id
+                            }
+                        })
+                            .then(topic => {
+                                const filename = topic.dataValues.imageUrl.split('/images\\')[1];
+                                console.log(filename);
+                                fs.unlink(`images/${filename}`, () => {
+                                    Topic.destroy({
+                                        where: {
+                                            id: req.params.id
+                                        }
+                                    })
+                                        .then(() => res.status(200).json({ message: 'Topic supprimé' }))
+                                        .catch(error => res.status(400).json({ error }));
+                                });                    
+                            })
+                            .catch(error => res.status(400).json({ error }));
                     }
                 })
-                    .then(() => res.status(200).json({ message: 'Topic supprimé' }))
-                    .catch(error => res.status(400).json({ error }));
-            }
+                .catch(error => res.status(400).json({ error }));
         })
-        .catch(error => res.status(400).json({ error }));
+        .catch(error => res.status(400).json({ error }));
 };
 
 exports.followTopic = (req, res, next) => {

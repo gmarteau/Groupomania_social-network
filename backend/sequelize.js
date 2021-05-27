@@ -6,7 +6,7 @@ const PostModel = require('./models/Post');
 const CommentModel = require('./models/Comment');
 
 const sequelize = new Sequelize('groupomania', process.env.USER, process.env.PASSWORD, {
-    host: process.env.HOST,
+    host: process.env.DATABASE_HOST,
     dialect: 'mysql'
 });
 

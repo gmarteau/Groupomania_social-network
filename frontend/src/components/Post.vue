@@ -16,7 +16,7 @@
                         <i class="fas fa-ellipsis-h"></i>
                     </template>
                     <b-dropdown-item @click="startUpdatingPost" v-if="currentUser.id == authorId">Modifier</b-dropdown-item>
-                    <b-dropdown-divider></b-dropdown-divider>
+                    <b-dropdown-divider v-if="currentUser.id == authorId"></b-dropdown-divider>
                     <b-dropdown-item @click="deletePost" v-if="(currentUser.id == authorId) || currentUser.isAdmin">Supprimer</b-dropdown-item>
                 </b-dropdown>
             </div>
