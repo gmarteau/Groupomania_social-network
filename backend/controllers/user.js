@@ -8,50 +8,22 @@ const User = seq.user;
 const xss = require('xss');
 
 exports.signup = (req, res, next) => {
-    console.log('wwwoooooow');
-    User.findOne({
-        where: {
-            username: req.body.username
-        }
-    })
-        .then(usernameAlreadyExists => {
-            console.log('xxxxx');
-            if (!usernameAlreadyExists) {
-                User.findOne({
-                    where: {
-                        email: req.body.email
-                    }
-                })
-                    .then(emailAlreadyExists => {
-                        console.log('aaaa');
-                        if (!emailAlreadyExists) {
-                            bcrypt.hash(req.body.password, 10)
-                            .then(hash => {
-                                const defaultAvatar = 'http://localhost:3000/images/default_avatar.png';
-                                User.create({
-                                    username: xss(req.body.username),
-                                    password: hash,
-                                    email: xss(req.body.email),
-                                    firstName: xss(req.body.firstName),
-                                    lastName: xss(req.body.lastName),
-                                    bio: xss(req.body.bio),
-                                    profilePicture: defaultAvatar
-                                })
-                                    .then(() => res.status(201).json({ message: 'Utilisateur créé' }))
-                                    .catch(error => res.status(400).json({ error: 'ciao' }));
-                            })
-                            .catch(error => res.status(500).json({ error }));                    
-                        } else {
-                            console.log('erreur');
-                            return res.status(401).json({ error002: new Error('Email déjà existant') });
-                        }
-                    })
-                    .catch(error => res.status(400).json({ error: 'hello' }));
-            } else {
-                return res.status(401).json({ error001: new Error('Username déjà existant') });
-            }
+    bcrypt.hash(req.body.password, 10)
+    .then(hash => {
+        const defaultAvatar = 'http://localhost:3000/images/default_avatar.png';
+        User.create({
+            username: xss(req.body.username),
+            password: hash,
+            email: xss(req.body.email),
+            firstName: xss(req.body.firstName),
+            lastName: xss(req.body.lastName),
+            bio: xss(req.body.bio),
+            profilePicture: defaultAvatar
         })
-        .catch(error => res.status(400).json({ error: 'coucou' }));
+            .then(() => res.status(201).json({ message: 'Utilisateur créé' }))
+            .catch(error => res.status(400).json({ error }));
+    })
+    .catch(error => res.status(500).json({ error }));                    
 };
 
 exports.login = (req, res, next) => {

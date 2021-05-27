@@ -94,6 +94,7 @@ export default {
                 .catch(error => {
                     console.log(error);
                     this.nameAlreadyExists = true;
+                    document.getElementById('nameInput').classList.replace('is-valid', 'is-invalid');
                 })
         }
     },

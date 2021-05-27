@@ -23,14 +23,18 @@
                 </b-form-group>
 
                 <b-form-group id="usernameGroup" label="Username*" label-for="usernameInput">
-                    <b-form-input id="usernameInput" name="usernameInput" v-model="$v.form.username.$model" :state="validateState('username')" aria-describedby="usernameInputFeedback" type="text" placeholder="mar.desc56" required></b-form-input>
+                    <b-form-input id="usernameInput" name="usernameInput" v-model="$v.form.username.$model" :state="validateState('username')" @change="changeUsernameValue" aria-describedby="usernameInputFeedback" type="text" placeholder="mar.desc56" required></b-form-input>
                     <b-form-invalid-feedback id="usernameInputFeedback" :state="validateState('username')">Ce champ est requis</b-form-invalid-feedback>
                 </b-form-group>
 
+                <p class="signup__form__alert text-danger" v-if="usernameAlreadyUsed">Désolé, ce nom d'utilisateur est déjà pris...</p> 
+
                 <b-form-group id="emailGroup" label="Email*" label-for="emailInput">
-                    <b-form-input id="emailInput" name="emailInput" v-model="$v.form.email.$model" :state="validateState('email')" aria-describedby="emailInputFeedback" type="email" placeholder="marine.deschamps@gmail.com" required></b-form-input>
+                    <b-form-input id="emailInput" name="emailInput" v-model="$v.form.email.$model" :state="validateState('email')" @change="changeEmailValue" aria-describedby="emailInputFeedback" type="email" placeholder="marine.deschamps@gmail.com" required></b-form-input>
                     <b-form-invalid-feedback id="emailInputFeedback" :state="validateState('email')">Ce champ est requis et doit respecter le format email (*****@****.**)</b-form-invalid-feedback>
                 </b-form-group>
+
+                <p class="signup__form__alert text-danger" v-if="emailAlreadyUsed">Un compte est déjà associé à cet email</p> 
 
                 <b-form-group id="passwordGroup" label="Mot de passe*" label-for="passwordInput">
                     <b-form-input id="passwordInput" name="passwordInput" v-model="$v.form.password.$model" :state="validateState('password')" aria-describedby="passwordInstructions" type="password" placeholder="ex: g12DfeJs/dj" required></b-form-input>
@@ -93,7 +97,9 @@ export default {
                 email: '',
                 password: '',
                 confirmPassword: ''
-            }
+            },
+            usernameAlreadyUsed: false,
+            emailAlreadyUsed: false
         }
     },
     validations: {
@@ -131,6 +137,16 @@ export default {
             const { $dirty, $error } = this.$v.form[field];
             return $dirty ? !$error : null;
         },
+        changeUsernameValue() {
+            if (this.usernameAlreadyUsed) {
+                this.usernameAlreadyUsed = false;
+            }
+        },
+        changeEmailValue() {
+            if (this.emailAlreadyUsed) {
+                this.emailAlreadyUsed = false;
+            }
+        },
         signupSubmit() {
             this.$v.form.$touch();
             if (this.$v.form.$anyError) {
@@ -149,7 +165,15 @@ export default {
                     this.$router.push('/login');
                 })
                 .catch(error => {
-                    console.log(error)
+                    if (error.response.data.message == 'Username déjà existant') {
+                        this.usernameAlreadyUsed = true;
+                        document.getElementById('usernameInput').classList.replace('is-valid', 'is-invalid');
+                    } else if (error.response.data.message == 'Un compte est déjà associé à cet email') {
+                        this.emailAlreadyUsed = true;
+                        document.getElementById('emailInput').classList.replace('is-valid', 'is-invalid');
+                    } else {
+                        console.log(error);
+                    }
                 });
         }
     }

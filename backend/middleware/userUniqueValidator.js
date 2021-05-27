@@ -9,7 +9,7 @@ module.exports = (req, res, next) => {
     })
         .then(user => {
             if (user) {
-                return res.status(400).json({ message: 'Username déjà existant' });
+                return res.status(401).json({ message: 'Username déjà existant' });
             } else {
                 User.findOne({
                     where: {
@@ -18,7 +18,7 @@ module.exports = (req, res, next) => {
                 })
                     .then(userEmail => {
                         if (userEmail) {
-                            return res.status(400).json({ message: 'Un compte est déjà associé à cet email' });
+                            return res.status(401).json({ message: 'Un compte est déjà associé à cet email' });
                         } else {
                             next();
                         }
