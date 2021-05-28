@@ -1,16 +1,16 @@
 <template>
     <div class="post container px-2 pb-1">
         <router-link :to="postDetails" class="post__header row">
-            <div class="post__header__pic col-1">
+            <div class="post__header__pic col-3 col-md-2 col-lg-1">
                 <div class="post__header__pic__circle">
                     <img class="post__header__pic__img" :src="imageUrl" alt="Photo de profil de l'utilisateur" />
                 </div>
             </div>
-            <div class="post__header__txt col-10 p-0">
+            <div class="post__header__txt col-7 col-md-8 col-lg-10 py-2 py-md-0 px-0">
                 <router-link :to="userProfile" class="post__header__txt__username font-weight-bold mb-0 mr-3">{{ firstName }} {{ lastName }} <span class="font-weight-normal">/{{ username }}</span></router-link>
                 <p class="post__header__txt__topic mb-0" v-if="topic">@<router-link :to="href" class="text-dark">{{ topic }}</router-link></p>
             </div>
-            <div class="post__header__modify col-1" v-if="(currentUser.id == authorId) || currentUser.isAdmin">
+            <div class="post__header__modify col-2 col-lg-1" v-if="(currentUser.id == authorId) || currentUser.isAdmin">
                 <b-dropdown class="post__header__modify__button dropdown" toggle-class="text-decoration-none" size="lg" dropleft no-caret>
                     <template #button-content>
                         <i class="fas fa-ellipsis-h"></i>
@@ -32,8 +32,11 @@
                     <b-form-invalid-feedback id="updatePostInputFeedback" :state="validateState()">Écrivez du contenu pour pouvoir le publier</b-form-invalid-feedback>
                 </b-form-group>
                 <div class="post__body__update__submit">
-                    <button type="submit" class="post__body__update__submit__btn btn px-3 py-1 ml-3">
+                    <button type="submit" class="post__body__update__submit__btn btn px-3 py-1 ml-3 d-none d-lg-block">
                         Publier
+                    </button>
+                    <button type="submit" class="post__body__update__submit__btn btn px-2 py-1 ml-3 d-lg-none">
+                        <i class="fas fa-check fa-xs"></i>
                     </button>
                 </div>
             </b-form>
@@ -232,10 +235,17 @@ export default {
     overflow: hidden;
     margin-top: 15px;
     margin-bottom: 15px;
+    @media screen and (max-width: 576px) {
+        font-size: .9rem;;
+    }
     &__header {
         height: 50px;
         background-color: #FFD7D7;
         color: #000;
+        position: relative;
+        @media screen and (max-width: 576px) {
+            height: auto;
+        }
         &:hover {
             color: #000;
             text-decoration: none;
@@ -262,8 +272,19 @@ export default {
             align-items: center;
             &__username {
                 color: #000;
+                @media screen and (max-width: 576px) {
+                    display: flex;
+                    flex-direction: column;
+                }
                 &:hover {
                     color: #000;
+                }
+            }
+            &__topic {
+                @media screen and (max-width: 576px) {
+                    position: absolute;
+                    bottom: 5px;
+                    right: -30px;
                 }
             }
         }
@@ -271,6 +292,10 @@ export default {
             display: flex;
             justify-content: center;
             align-items: center;
+            @media screen and (max-width: 576px) {
+                position: absolute;
+                right: 0;
+            }
             &__button {
                 width: 30px;
                 height: 30px;

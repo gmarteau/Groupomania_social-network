@@ -2,7 +2,7 @@
   <div id="app">
     <HeaderNav />
 
-    <main class="main container py-5">
+    <main class="main container py-3 py-md-5">
       <router-view />
     </main>
 

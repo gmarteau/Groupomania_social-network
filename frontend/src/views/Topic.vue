@@ -15,7 +15,7 @@
         />
 
         <div class="topic__body row">
-            <section class="topic__body__feed col-9 pr-5">
+            <section class="topic__body__feed col-12 col-lg-9 pr-5">
                 <div class="topic__body__feed__publish pb-3 pr-5 mb-2">
                     <b-form id="publishNewPostForm" @submit.stop.prevent="publishNewPost" novalidate>
                         <b-form-group id="newPostGroup" label="Exprimez-vous!" class="h3" label-for="newPostInput">
@@ -60,7 +60,7 @@
                 </div>
             </section>
 
-            <aside class="topic__body__followers col-3">
+            <aside class="topic__body__followers col-3 d-none d-lg-block">
                 <TopicFollowers 
                     :hasFollowed="topic.hasFollowed"
                     :numberOfFollowers="topic.numberOfFollowers"

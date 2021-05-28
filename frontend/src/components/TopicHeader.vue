@@ -2,13 +2,13 @@
     <section class="topicHeader row">
         <div class="topicHeader__bgd col-12"></div>
 
-        <div class="topicHeader__pic col-2">
+        <div class="topicHeader__pic col-12 col-lg-2">
             <div class="topicHeader__pic__circle">
                 <img class="topicHeader__pic__circle__img" :src="imageUrl" :alt="alt" />
             </div>
         </div>
 
-        <div class="topicHeader__info col-10 pt-3 mb-5">
+        <div class="topicHeader__info col-12 col-lg-10 pt-3 mb-5">
             <div class="topicHeader__info__txt">
                 <div class="topicHeader__info__txt__hdr">
                     <h1 class="topicHeader__info__txt__hdr__name mb-3">{{ name }}</h1>
@@ -148,6 +148,9 @@ export default {
         margin-top: -50px;
         z-index: -1000;
         background-color: #FFD7D7;
+        @media screen and (max-width: 992px) {
+            height: 130px;
+        }
     }
     &__pic {
         display: flex;
@@ -160,6 +163,10 @@ export default {
             overflow: hidden;
             background-color: #d3d3d3;
             margin-top: -55px;
+            @media screen and (max-width: 992px) {
+                width: 150px;
+                height: 150px;
+            }
             &__img {
                 width: 100%;
                 height: 100%;
@@ -171,6 +178,11 @@ export default {
         position: relative;
         display: flex;
         align-items: flex-end;
+        @media screen and (max-width: 992px) {
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
         &::after {
             content: '';
             height: 2px;

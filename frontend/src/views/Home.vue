@@ -9,9 +9,9 @@
     </div>
 
     <div class="home--loggedIn row" v-if="loggedIn">
-      <section class="home--loggedIn__feed col-12 col-lg-9 pr-lg-5">
+      <section class="home--loggedIn__feed col-12 col-lg-9 mt-1 mt-lg-0 pr-lg-5">
         <div class="feed row">          
-          <h1 class="col-12 mb-2 mb-lg-4 pl-0 pl-lg-3">Fil d'actualité</h1>
+          <h1 class="home--loggedIn__feed__title col-12 mb-2 mb-lg-4 pl-0 pl-lg-3">Fil d'actualité</h1>
           <p class="noPosts col-12 text-center h4 my-5 py-5" v-if="noPosts">Rien à afficher...</p>
 
           <Post
@@ -39,21 +39,21 @@
         </div>
       </section>
 
-      <aside class="aside home--loggedIn__aside col-12 col-lg-3">
-        <div class="aside__header mb-3">
+      <aside class="aside home--loggedIn__aside col-12 col-lg-3 mt-3 mt-md-0">
+        <div class="aside__header mb-2 mb-md-3">
           <h2 class="aside__header__title mr-3">Topics</h2>
           <router-link to="/newtopic" class="aside__header__newTopic btn px-3 py-1"><i class="fas fa-plus mr-1"></i> Créer un topic</router-link>
         </div>
 
-        <div class="searchbar mb-4">
+        <div class="searchbar mb-3 mb-md-4">
             <input type="search" class="searchbar__bar form-control" id="searchbar" aria-label="Search topics" placeholder="Rechercher" v-model="search" />
             <button type="submit" class="searchbar__btn btn" @click="makeResearch"><i class="fas fa-search fa-lg"></i></button>
         </div>
 
         <div class="aside__icons d-lg-none mb-4">
-          <router-link :to="toPopular" class="aside__icons__icon py-2 px-3"><i class="fas fa-fire fa-md-lg"></i><span class="d-none d-md-inline ml-2"> Populaires</span></router-link>
-          <router-link :to="toRecent" class="aside__icons__icon py-2 px-3 mx-3"><i class="fas fa-clock fa-md-lg"></i><span class="d-none d-md-inline ml-2"> Récents</span></router-link>
-          <router-link :to="toFollowed" class="aside__icons__icon py-2 px-3"><i class="fas fa-user-check fa-md-lg"></i><span class="d-none d-md-inline ml-2"> Suivis</span></router-link>
+          <router-link :to="toPopular" class="aside__icons__icon py-2 px-3"><i class="fas fa-fire fa-sm fa-md-lg"></i><span class="d-none d-md-inline ml-2"> Populaires</span></router-link>
+          <router-link :to="toRecent" class="aside__icons__icon py-2 px-3 mx-3"><i class="fas fa-clock fa-sm fa-md-lg"></i><span class="d-none d-md-inline ml-2"> Récents</span></router-link>
+          <router-link :to="toFollowed" class="aside__icons__icon py-2 px-3"><i class="fas fa-user-check fa-sm fa-md-lg"></i><span class="d-none d-md-inline ml-2"> Suivis</span></router-link>
         </div>
 
         <div class="d-none d-lg-block">
@@ -179,6 +179,11 @@ export default {
       @media screen and (max-width: 992px) {
         order: 2;
       }
+      &__title {
+        @media screen and (max-width: 576px) {
+          font-size: 2rem;
+        }
+      }
     }
     &__aside {
       @media screen and (max-width: 992px) {
@@ -212,11 +217,19 @@ export default {
   &__header {
     display: flex;
     align-items: center;
+    &__title {
+      @media screen and (max-width: 576px) {
+        font-size: 1.5rem;;
+      }
+    }
     &__newTopic {
       height: min-content;
       background-color: #FD3C13;
       color: #fff;
       font-weight: bold;
+      @media screen and (max-width: 576px) {
+        font-size: .9rem;
+      }
       &:hover {
         background-color: #FFD7D7;
         color: #FD3C13;

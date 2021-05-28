@@ -29,16 +29,21 @@
             <div class="postDetails__comments__body row">
                 <div class="postDetails__comments__publish container py-3">
                     <b-form id="publishNewCommentForm" class="row" @submit.stop.prevent="publishNewComment" novalidate>
-                        <b-form-group id="newCommentGroup" class="col-10 mb-0">
+                        <b-form-group id="newCommentGroup" class="col-10 col-md-11 col-lg-10 mb-0">
                             <b-form-textarea id="newCommentInput" name="newCommentInput" v-model="$v.form.newComment.$model" :state="validateState('newComment')" aria-describedby="newCommentInputFeedback" type="text" rows="2" placeholder="Ecrivez un commentaire..." required></b-form-textarea>
                             <b-form-invalid-feedback id="newCommentInputFeedback" :state="validateState('newComment')">Votre commentaire ne peut pas être vide</b-form-invalid-feedback>
                         </b-form-group>
                         <!-- <div class="form-group col-10 mb-0">
                             <textarea class="postDetails__comments__publish__content form-control" type="text" id="newComment" name="newComment" v-model="newComment" placeholder="Ecrivez un commentaire..."></textarea>
                         </div> -->
-                        <div class="postDetails__comments__publish__submit col-2">
+                        <div class="postDetails__comments__publish__submit col-2 d-none d-lg-block">
                             <button type="submit" class="postDetails__comments__publish__submit__btn btn px-3 py-1">
                                 Commenter
+                            </button>
+                        </div>
+                        <div class="postDetails__comments__publish__submit col-2 col-md-1 d-lg-none pl-0">
+                            <button type="submit" class="postDetails__comments__publish__submit__btn btn px-2 py-1">
+                                <i class="fas fa-paper-plane"></i>
                             </button>
                         </div>
                     </b-form>
@@ -196,6 +201,9 @@ export default {
 .postDetails {
     width: 75%;
     margin: auto;
+    @media screen and (max-width: 992px) {
+        width: 100%;
+    }
     &__comments {
         &__body {
             border: solid 1px #d3d3d3;

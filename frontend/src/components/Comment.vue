@@ -1,30 +1,33 @@
 <template>
     <div class="comment container mx-0 py-3">
         <div class="comment__body row mb-2">
-            <div class="comment__body__pic col-1">
+            <div class="comment__body__pic col-2 col-lg-1">
                 <div class="comment__body__pic__circle">
                     <img class="comment__body__pic__circle__img" :src="imageUrl" alt="Photo de profil de l'utilisateur" />
                 </div>
             </div>
-            <div class="comment__body__txt col-10 p-0">
+            <div class="comment__body__txt col-9 col-lg-10 p-0">
                 <p class="comment__body__txt__user mb-0 mr-4"><span class="font-weight-bold">{{ firstName }} {{ lastName }}</span> /{{ username }} :</p>
                 <p class="comment__body__txt__content mb-0" v-if="!updating">
                     {{ content }}
                 </p>
 
-                <b-form id="updateCommentForm" class="comment__body__txt__update col-9 py-0" @submit.stop.prevent="updateComment" v-if="updating" novalidate>
+                <b-form id="updateCommentForm" class="comment__body__txt__update col-12 col-lg-9 px-0 py-1 py-lg-0" @submit.stop.prevent="updateComment" v-if="updating" novalidate>
                     <b-form-group id="updateCommentGroup">
                         <b-form-textarea id="updateCommentInput" name="updateCommentInput" v-model="$v.content.$model" :state="validateState()" aria-describedby="updateCommentInputFeedback" type="text" required></b-form-textarea>
                         <b-form-invalid-feedback id="updateCommentInputFeedback" :state="validateState()">Votre commentaire ne peut pas être vide</b-form-invalid-feedback>
                     </b-form-group>
                     <div class="comment__body__txt__update__submit">
-                        <button type="submit" class="comment__body__txt__update__submit__btn btn px-3 py-1 ml-3">
+                        <button type="submit" class="comment__body__txt__update__submit__btn btn px-3 py-1 ml-3 d-none d-lg-block">
                             Publier
+                        </button>
+                        <button type="submit" class="comment__body__txt__update__submit__btn btn px-2 py-1 ml-3 d-lg-none">
+                            <i class="fas fa-check fa-xs"></i>
                         </button>
                     </div>
                 </b-form>
             </div>
-            <div class="comment__body__modify col-1" v-if="(currentUser.id == authorId) || currentUser.isAdmin">
+            <div class="comment__body__modify col-2 col-lg-1" v-if="(currentUser.id == authorId) || currentUser.isAdmin">
                 <b-dropdown class="comment__body__modify__button dropdown" toggle-class="text-decoration-none" dropleft no-caret>
                     <template #button-content>
                         <i class="fas fa-ellipsis-h"></i>
@@ -221,6 +224,7 @@ export default {
     border-bottom: solid 2px #d3d3d3;
     min-width: 100%;
     &__body {
+        position: relative;
         &__pic {
             display: flex;
             align-items: center;
@@ -230,6 +234,10 @@ export default {
                 height: 30px;
                 border-radius: 50%;
                 overflow: hidden;
+                @media screen and (max-width: 576px) {
+                    width: 25px;
+                    height: 25px;
+                }
                 &__img {
                     width: 100%;
                     height: 100%;
@@ -240,6 +248,13 @@ export default {
         &__txt {
             display: flex;
             align-items: center;
+            @media screen and (max-width: 576px) {
+                font-size: .9rem;
+            }
+            @media screen and (max-width: 992px) {
+                flex-direction: column;
+                align-items: flex-start;
+            }
             &__update {
                 display: flex;
                 align-items: center;
@@ -264,6 +279,10 @@ export default {
             display: flex;
             justify-content: center;
             align-items: center;
+            @media screen and (max-width: 992px) {
+                position: absolute;
+                right: 0;
+            }
             &__button {
                 width: 25px;
                 height: 25px;

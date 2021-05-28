@@ -19,7 +19,7 @@
         <nav class="navbar navbar-expand-lg" v-if="loggedIn">
             <router-link to="/" class="navbar-brand"><img class="navbar-brand__img" :src="logo.src" :alt="logo.alt" /></router-link>
 
-            <b-dropdown class="dropdown nav__dropdown" toggle-class="text-decoration-none" size="lg" dropleft no-caret>
+            <b-dropdown class="dropdown nav__dropdown ml-auto" toggle-class="text-decoration-none" size="lg" dropleft no-caret>
                 <template #button-content>
                     <i class="fas fa-user-circle fa-lg"></i>
                 </template>
@@ -69,7 +69,7 @@ header {
     width: 90%;
     margin: auto;
     @media screen and (max-width: 576px) {
-        height: 50px;
+        height: 60px;
     }
     &-brand {
         width: 25%;
