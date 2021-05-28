@@ -243,8 +243,9 @@ export default {
         background-color: #FFD7D7;
         color: #000;
         position: relative;
-        @media screen and (max-width: 576px) {
+        @media screen and (max-width: 992px) {
             height: auto;
+            min-height: 50px;
         }
         &:hover {
             color: #000;

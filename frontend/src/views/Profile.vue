@@ -10,7 +10,7 @@
                     </div>
                 </div>
                 <div class="profile__info__header my-3">
-                    <h1 class="profile__info__header__name mr-3"><span class="font-weight-bold">{{ user.firstName }} {{ user.lastName }}</span> /{{ user.username }}</h1>
+                    <h1 class="profile__info__header__name mr-md-3"><span class="font-weight-bold">{{ user.firstName }} {{ user.lastName }}</span> /{{ user.username }}</h1>
                     <b-dropdown class="profile__info__header__settings dropdown" toggle-class="text-decoration-none" size="lg" dropright no-caret v-if="(userId == currentUser.id) && !currentUser.isAdmin">
                         <template #button-content>
                             <i class="fas fa-cog fa-lg"></i>
@@ -36,10 +36,10 @@
                 </b-modal>
 
                 <p class="profile__info__date text-center">Membre depuis le {{ dateCreation }}</p>
-                <p class="profile__info__bio text-center h4 mt-5">{{ user.bio }}</p>
+                <p class="profile__info__bio text-center h4 mt-lg-5">{{ user.bio }}</p>
             </section>
 
-            <aside class="profile__followed mt-5">
+            <aside class="profile__followed mt-3 mt-lg-5">
                 <TopicsList listName="followed" :userId="userId" class="profile__followed__list" />
             </aside>
         </div>
@@ -76,11 +76,11 @@
                 </b-form-group>
 
                 <div class="profile__updating__form__submit">
-                    <div class="profile__updating__form__submit__cancel my-5 mx-3 text-center">
+                    <div class="profile__updating__form__submit__cancel my-3 my-lg-5 mx-3 text-center">
                         <button type="submit" class="profile__updating__form__submit__cancel__btn btn py-1 px-3" @click="cancelUpdate">Annuler</button>
                     </div>
 
-                    <div class="profile__updating__form__submit__save my-5 mx-3 text-center">
+                    <div class="profile__updating__form__submit__save my-3 my-lg-5 mx-3 text-center">
                         <button type="submit" class="profile__updating__form__submit__save__btn btn py-1 px-3">Enregistrer</button>
                     </div>
                 </div>
@@ -275,6 +275,9 @@ export default {
         margin-top: -50px;
         z-index: -1000;
         background-color: #FFD7D7;
+        @media screen and (max-width: 992px) {
+            height: 130px;
+        }
     }
     &__info {
         &__pic {
@@ -288,6 +291,10 @@ export default {
                 overflow: hidden;
                 background-color: #d3d3d3;
                 margin-top: -55px;
+                @media screen and (max-width: 992px) {
+                    width: 150px;
+                    height: 150px;
+                }
                 &__img {
                     width: 100%;
                     height: 100%;
@@ -299,6 +306,15 @@ export default {
             display: flex;
             justify-content: center;
             align-items: center;
+            @media screen and (max-width: 576px) {
+                flex-direction: column;
+                text-align: center;
+            }
+            &__name {
+                @media screen and (max-width: 992px) {
+                    font-size: 2rem;
+                }
+            }
             &__settings {
                 width: 35px;
                 height: 35px;
@@ -309,12 +325,23 @@ export default {
                 }
             }
         }
+        &__bio {
+            @media screen and (max-width: 992px) {
+                font-size: 1.25rem;
+            }
+        }
     }
     &__followed {
         display: flex;
         justify-content: center;
         &__list {
             width: 50%;
+            @media screen and (max-width: 576px) {
+                width: 100%;
+            }
+            @media screen and (min-width: 576px) and (max-width: 992px) {
+                width: 75%;
+            }
         }
     }
     &__updating {
@@ -322,8 +349,24 @@ export default {
         flex-direction: column;
         justify-content: center;
         align-items: center;
+        &__title {
+            @media screen and (max-width: 992px) {
+                font-size: 2rem;
+            }
+        }
         &__form {
             width: 50%;
+            @media screen and (max-width: 576px) {
+                width: 100%;
+            }
+            @media screen and (min-width: 576px) and (max-width: 992px) {
+                width: 75%;
+            }
+            label {
+                @media screen and (max-width: 992px) {
+                    font-size: 1.25rem;
+                }
+            }
             &__submit {
                 display: flex;
                 justify-content: center;

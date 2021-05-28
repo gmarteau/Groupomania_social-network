@@ -5,7 +5,7 @@
         </div>
 
         <div class="signup__form-cont col-12 col-lg-6">
-            <h1 class="signup__title">Créer un compte</h1>
+            <h1 class="signup__title mt-3 mt-md-0">Créer un compte</h1>
 
             <b-form class="signup__form my-4" @submit.stop.prevent="signupSubmit" novalidate>
                 <b-form-group id="firstNameGroup" label="Prénom*" label-for="firstNameInput">

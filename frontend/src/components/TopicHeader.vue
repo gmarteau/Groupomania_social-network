@@ -37,8 +37,8 @@
                 <p class="topicHeader__info__description mb-1">{{ description }}</p>
                 <p class="topicHeader__info__created">Créé le {{ dateCreation }} par {{ createdBy }}</p>
             </div>
-            <button class="topicHeader__info__btn btn mb-3 ml-5 mr-3 px-3 py-1 font-weight-bold" v-if="!followed" @click="followTopic"><i class="fas fa-plus mr-1"></i> Suivre</button>
-            <button class="topicHeader__info__btn--followed btn mb-3 ml-5 mr-3 px-3 py-1 font-weight-bold" v-if="followed" @click="unfollowTopic"><i class="fas fa-check mr-1"></i> Suivi</button>
+            <button class="topicHeader__info__btn btn mb-2 mb-lg-3 ml-lg-5 mr-lg-3 px-3 py-1 font-weight-bold" v-if="!followed" @click="followTopic"><i class="fas fa-plus mr-1"></i> Suivre</button>
+            <button class="topicHeader__info__btn--followed btn mb-2 mb-lg-3 ml-lg-5 mr-lg-3 px-3 py-1 font-weight-bold" v-if="followed" @click="unfollowTopic"><i class="fas fa-check mr-1"></i> Suivi</button>
             <p class="topicHeader__info__followers font-italic">{{ followers }} follower(s)</p>
         </div>
     </section>
@@ -182,6 +182,7 @@ export default {
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            text-align: center;
         }
         &::after {
             content: '';
@@ -195,6 +196,14 @@ export default {
             &__hdr {
                 display: flex;
                 align-items: center;
+                @media screen and (max-width: 992px) {
+                    justify-content: center;
+                }
+                &__name {
+                    @media screen and (max-width: 576px) {
+                        font-size: 2rem;
+                    }
+                }
                 &__settings {
                     width: 35px;
                     height: 35px;

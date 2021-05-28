@@ -22,5 +22,8 @@ export default {
     color: #fff;
     display: flex;
     align-items: center;
+    @media screen and (max-width: 576px) {
+        height: 100px;
+    }
 }
 </style>

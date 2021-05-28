@@ -5,7 +5,7 @@
         </div>
 
         <div class="login__form-cont col-12 col-lg-6">
-            <h1 class="login__title">Se connecter</h1>
+            <h1 class="login__title mt-3 mt-md-0">Se connecter</h1>
 
             <b-form class="login__form my-4" @submit.stop.prevent="loginSubmit" novalidate>
                 <b-form-group id="usernameGroup" label="Username / Email" label-for="usernameInput">

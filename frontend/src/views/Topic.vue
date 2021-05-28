@@ -15,8 +15,8 @@
         />
 
         <div class="topic__body row">
-            <section class="topic__body__feed col-12 col-lg-9 pr-5">
-                <div class="topic__body__feed__publish pb-3 pr-5 mb-2">
+            <section class="topic__body__feed col-12 col-lg-9 pr-lg-5">
+                <div class="topic__body__feed__publish pb-3 pr-lg-5 mb-2">
                     <b-form id="publishNewPostForm" @submit.stop.prevent="publishNewPost" novalidate>
                         <b-form-group id="newPostGroup" label="Exprimez-vous!" class="h3" label-for="newPostInput">
                             <b-form-textarea id="newPostInput" name="newPostInput" v-model="$v.form.newPost.$model" :state="validateState('newPost')" aria-describedby="newPostInputFeedback" type="text" rows="3" placeholder="Publiez quelque chose..." required></b-form-textarea>
@@ -250,6 +250,11 @@ export default {
                     position: absolute;
                     bottom: 0;
                     width: 95%;
+                }
+                label {
+                    @media screen and (max-width: 992px) {
+                        font-size: 1.5rem;
+                    }
                 }
                 &__content {
                     min-height: 100px;

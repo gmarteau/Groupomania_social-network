@@ -1,7 +1,7 @@
 <template>
     <div class="newTopic row">
-        <div class="col-4">
-            <h1 class="mb-5">Créer un nouveau topic</h1>
+        <div class="newTopic__container col-12 col-lg-5">
+            <h1 class="newTopic__title mt-3 mb-4 mt-md-0 mb-md-5 text-center">Créer un nouveau topic</h1>
 
             <b-form class="newTopic__form" @submit.stop.prevent="createNewTopic" novalidate>
                 <b-form-group id="nameGroup" label="Nom du topic" class="h4 mb-1" label-for="nameInput">
@@ -112,8 +112,26 @@ export default {
 .newTopic {
     display: flex;
     justify-content: center;
+    &__container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    &__title {
+        @media screen and (max-width: 992px) {
+            font-size: 2rem;
+        }
+    }
     &__form {
-        width: 75%;
+        width: 100%;
+        @media screen and (min-width: 576px) and (max-width: 992px) {
+            width: 75%;
+        }
+        label {
+            @media screen and (max-width: 992px) {
+                font-size: 1.25rem;
+            }
+        }
         &__image {
             .custom-file-label {
                 &:hover {
