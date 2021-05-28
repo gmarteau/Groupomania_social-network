@@ -257,6 +257,7 @@ export default {
             }
         });
         this.user = response.data;
+        console.log(this.user);
         this.updateForm.firstName = this.user.firstName;
         this.updateForm.lastName = this.user.lastName;
         this.username = this.user.username;

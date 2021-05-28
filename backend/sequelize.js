@@ -38,10 +38,14 @@ User.hasMany(Comment, {
 });
 Comment.belongsTo(User);
 
-Topic.hasMany(Post);
+Topic.hasMany(Post, {
+    onDelete: 'cascade'
+});
 Post.belongsTo(Topic);
 
-Post.hasMany(Comment);
+Post.hasMany(Comment, {
+    onDelete: 'cascade'
+});
 Comment.belongsTo(Post);
 
 sequelize.sync()

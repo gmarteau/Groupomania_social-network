@@ -1,11 +1,26 @@
 <template>
     <div class="topic">
         <TopicHeader
+            v-if="!topicCreatorRemoved"
             :imageUrl="topic.imageUrl"
             :name="topic.name"
             :description="topic.description"
             :createdAt="topic.dateCreation"
             :createdBy="topic.User.username"
+            :topicId="topic.id"
+            :userId="currentUser.id"
+            :followed="followed"
+            :followers="topic.numberOfFollowers"
+            @topic-followed="refreshFollowers"
+            @topic-unfollowed="refreshFollowers"
+        />
+        <TopicHeader
+            v-if="topicCreatorRemoved"
+            :imageUrl="topic.imageUrl"
+            :name="topic.name"
+            :description="topic.description"
+            :createdAt="topic.dateCreation"
+            createdBy="un ancien utilisateur"
             :topicId="topic.id"
             :userId="currentUser.id"
             :followed="followed"
@@ -97,7 +112,8 @@ export default {
             followers: [],
             form: {
                 newPost: ''
-            }
+            },
+            topicCreatorRemoved: false
         }
     },
     validations: {
@@ -171,6 +187,9 @@ export default {
                 'Authorization': 'Bearer ' + this.currentUser.token
                 }
             });
+            if (topicInfo.data.User == null) {
+                this.topicCreatorRemoved = true;
+            }
             this.topic = topicInfo.data;
             this.topic.hasFollowed = Array.from(this.topic.hasFollowed).filter(char => char !== ',');
             if (this.topic.hasFollowed.includes(this.currentUser.id.toString())) {
@@ -203,6 +222,9 @@ export default {
             'Authorization': 'Bearer ' + this.currentUser.token
             }
         });
+        if (topicInfo.data.User == null) {
+            this.topicCreatorRemoved = true;
+        }
         this.topic = topicInfo.data;
         this.topic.hasFollowed = Array.from(this.topic.hasFollowed).filter(char => char !== ',');
         if (this.topic.hasFollowed.includes(this.currentUser.id.toString())) {
