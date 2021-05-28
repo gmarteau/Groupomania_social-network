@@ -1,11 +1,11 @@
 <template>
     <div class="login row">
-        <div class="login__logo col-6">
+        <div class="login__logo col-6 d-none d-lg-block">
             <img :src="logoVertical.src" :alt="logoVertical.alt" class="login__logo__img" />
         </div>
 
-        <div class="login__form-cont col-6">
-            <h1>Se connecter</h1>
+        <div class="login__form-cont col-12 col-lg-6">
+            <h1 class="login__title">Se connecter</h1>
 
             <b-form class="login__form my-4" @submit.stop.prevent="loginSubmit" novalidate>
                 <b-form-group id="usernameGroup" label="Username / Email" label-for="usernameInput">
@@ -99,6 +99,11 @@ export default {
             object-fit: cover;
         }
     }
+    &__title {
+        @media screen and (max-width: 576px) {
+            font-size: 2rem;
+        }
+    }
     &__form-cont {
         height: auto;
         display: flex;
@@ -125,6 +130,12 @@ export default {
                 color: #fff;
                 font-weight: bold;
             }
+        }
+        @media screen and (max-width: 576px) {
+            width: 100%;
+        }
+        @media screen and (min-width: 576px) and (max-width: 992px) {
+            width: 65%;
         }
     }
 }

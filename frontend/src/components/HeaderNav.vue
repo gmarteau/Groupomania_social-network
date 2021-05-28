@@ -2,42 +2,31 @@
     <header>
         <nav class="navbar navbar-expand-lg" v-if="!loggedIn">
             <router-link to="/" class="navbar-brand"><img class="navbar-brand__img" :src="logo.src" :alt="logo.alt" /></router-link>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarContentNotLogged" aria-controls="navbarContentNotLogged" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+            <b-navbar-toggle target="navbarContentNotLogged" class="navbar__toggler" variant="dark"><i class="fas fa-bars"></i></b-navbar-toggle>
 
-            <div class="collapse navbar-collapse" id="navbarContentNotLogged">
+            <b-collapse id="navbarContentNotLogged" is-nav>
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item mx-3">
-                        <router-link to="/login" class="nav-link text-dark font-weight-bold">Se connecter</router-link>
+                        <router-link to="/login" class="nav-link text-dark font-weight-bold text-right pt-4 pt-lg-2">Se connecter</router-link>
                     </li>
                     <li class="nav-item mx-3">
-                        <router-link to="/signup" class="nav-link text-dark font-weight-bold">S'inscrire</router-link>
+                        <router-link to="/signup" class="nav-link text-dark font-weight-bold text-right">S'inscrire</router-link>
                     </li>
                 </ul>
-            </div> 
+            </b-collapse> 
         </nav>
 
         <nav class="navbar navbar-expand-lg" v-if="loggedIn">
             <router-link to="/" class="navbar-brand"><img class="navbar-brand__img" :src="logo.src" :alt="logo.alt" /></router-link>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarContentLoggedIn" aria-controls="navbarContentLoggedIn" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
 
-            <div class="collapse navbar-collapse" id="navbarContentLoggedIn">
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item">
-                        <b-dropdown class="dropdown nav__dropdown" toggle-class="text-decoration-none" size="lg" dropleft no-caret>
-                            <template #button-content>
-                                <i class="fas fa-user-circle fa-lg"></i>
-                            </template>
-                            <b-dropdown-item><a href="javascript:void(0);" class="dropdown__item text-dark" @click="toProfile">Mon profil</a></b-dropdown-item>
-                            <b-dropdown-divider></b-dropdown-divider>
-                            <b-dropdown-item><a href="javascript:void(0);" class="dropdown__item text-dark" @click="logout">Se déconnecter</a></b-dropdown-item>
-                        </b-dropdown>
-                    </li>
-                </ul>
-            </div> 
+            <b-dropdown class="dropdown nav__dropdown" toggle-class="text-decoration-none" size="lg" dropleft no-caret>
+                <template #button-content>
+                    <i class="fas fa-user-circle fa-lg"></i>
+                </template>
+                <b-dropdown-item><a href="javascript:void(0);" class="dropdown__item text-dark" @click="toProfile">Mon profil</a></b-dropdown-item>
+                <b-dropdown-divider></b-dropdown-divider>
+                <b-dropdown-item><a href="javascript:void(0);" class="dropdown__item text-dark" @click="logout">Se déconnecter</a></b-dropdown-item>
+            </b-dropdown>
         </nav>
     </header>
 </template>
@@ -79,13 +68,32 @@ header {
     height: 80px;
     width: 90%;
     margin: auto;
+    @media screen and (max-width: 576px) {
+        height: 50px;
+    }
     &-brand {
         width: 25%;
         height: 100%;
+        display: flex;
+        align-items: center;
         &__img {
             max-width: 100%;
             max-height: 100%;
             object-fit: cover;
+            @media screen and (max-width: 576px) {
+                width: 100%;
+                height: 100%;
+            }
+        }
+        @media screen and (max-width: 576px) {
+            width: 35%;
+        }
+    }
+    &-toggler {
+        color: #FD3C13;
+        &.not-collapsed {
+            background-color: #FD3C13;
+            color: #fff;
         }
     }
 }

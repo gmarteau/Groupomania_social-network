@@ -1,5 +1,5 @@
 <template>
-    <div class="topics row pl-5 ml-5">
+    <div class="topics row pl-lg-5 ml-lg-5">
         <p class="topics__noresults" v-if="noResults">Désolé, aucun résultat ne correspond à votre recherche...</p>
 
         <TopicCard

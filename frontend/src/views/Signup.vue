@@ -1,11 +1,11 @@
 <template>
     <div class="signup row">
-        <div class="signup__logo col-6">
+        <div class="signup__logo col-6 d-none d-lg-block">
             <img :src="logoVertical.src" :alt="logoVertical.alt" class="signup__logo__img" />
         </div>
 
-        <div class="signup__form-cont col-6">
-            <h1>Créer un compte</h1>
+        <div class="signup__form-cont col-12 col-lg-6">
+            <h1 class="signup__title">Créer un compte</h1>
 
             <b-form class="signup__form my-4" @submit.stop.prevent="signupSubmit" novalidate>
                 <b-form-group id="firstNameGroup" label="Prénom*" label-for="firstNameInput">
@@ -190,6 +190,11 @@ export default {
             object-fit: cover;
         }
     }
+    &__title {
+        @media screen and (max-width: 576px) {
+            font-size: 2rem;
+        }
+    }
     &__form-cont {
         height: auto;
         display: flex;
@@ -216,6 +221,12 @@ export default {
                 color: #fff;
                 font-weight: bold;
             }
+        }
+        @media screen and (max-width: 576px) {
+            width: 100%;
+        }
+        @media screen and (min-width: 576px) and (max-width: 992px) {
+            width: 75%;
         }
     }
 }

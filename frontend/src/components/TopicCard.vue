@@ -1,5 +1,5 @@
 <template>
-    <router-link :to="href" class="topicCard col-3 mx-5 mb-5 px-2 py-3">
+    <router-link :to="href" class="topicCard col-12 col-lg-3 mx-lg-5 mb-3 mb-lg-5 px-2 py-3">
         <div class="topicCard__pic mx-3">
             <div class="topicCard__pic__circle">
                 <img class="topicCard__pic__circle__img" :src="imageUrl" :alt="alt" />
@@ -51,6 +51,9 @@ export default {
     text-decoration: none;
     color: #000;
     display: flex;
+    @media screen and (max-width: 576px) {
+        font-size: .8rem;
+    }
     &:hover {
         text-decoration: none;
         color: #000;
@@ -67,6 +70,10 @@ export default {
             border: solid 2px #FFD7D7;
             border-radius: 50%;
             overflow: hidden;
+            @media screen and (max-width: 576px) {
+                width: 80px;
+                height: 80px;
+            }
             &__img {
                 width: 100%;
                 height: 100%;
