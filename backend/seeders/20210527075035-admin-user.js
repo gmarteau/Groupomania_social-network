@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt');
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    const adminPassword = bcrypt.hash(process.env.ADMIN_PASSWORD, 10).then(async (password) => {
+    const adminPassword = await bcrypt.hash(process.env.ADMIN_PASSWORD, 10).then(async (password) => {
       await queryInterface.bulkInsert('users', [{
         username: 'groupo-admin',
         password: password,

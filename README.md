@@ -33,28 +33,28 @@ Puis se référer au README.md présent dans le dossier frontend/.
 Crée un nouvel utilisateur et l'ajoute à la table Users    
   
 **req**:   
-        {  
-          username: string,  
-          password: string,  
-          email: string,  
-          firstName: string,  
-          lastName: string,  
-          bio: string  
-        }  
+    {  
+      username: string,  
+      password: string,  
+      email: string,  
+      firstName: string,  
+      lastName: string,  
+      bio: string  
+    }  
 *exemple*:   
-        {  
-          username: 'a.dupont',  
-          password: '425SFHjs6/',  
-          email: 'a.dupont@mail.com',  
-          firstName: 'Alain',  
-          lastName: 'Dupont',  
-          bio: 'Moi c'est Alain, responsable de la manutention chez Groupomania!'  
-        }
+    {  
+      username: 'a.dupont',  
+      password: '425SFHjs6/',  
+      email: 'a.dupont@mail.com',  
+      firstName: 'Alain',  
+      lastName: 'Dupont',  
+      bio: 'Moi c'est Alain, responsable de la manutention chez Groupomania!'  
+    }
   
 **res**: **201 CREATED**   
-        {  
-          message: 'Utilisateur créé'  
-        }  
+    {  
+      message: 'Utilisateur créé'  
+    }  
 *erreurs possibles*:  
 `* 400 Bad Request: utilisateur déjà existant`  
 `* 400 Bad Request: utilisation de caractères non autorisés`  
@@ -63,22 +63,22 @@ Crée un nouvel utilisateur et l'ajoute à la table Users
 Va chercher l'utilisateur dans la table Users, puis retourne un token de session  
   
 **req**:   
-        {  
-          username: string,  
-          password: string  
-        }  
+    {  
+      username: string,  
+      password: string  
+    }  
 *exemple*:   
-        {  
-          username: 'a.dupont' || 'a.dupont@mail.com',  
-          password: '425SFHjs6/'  
-        }  
+    {  
+      username: 'a.dupont' || 'a.dupont@mail.com',  
+      password: '425SFHjs6/'  
+    }  
   
 **res**: **200 OK**   
-        {  
-          userId: number,  
-          isAdmin: boolean,  
-          token: string  
-        }  
+    {  
+      userId: number,  
+      isAdmin: boolean,  
+      token: string  
+    }  
 *erreurs possibles*:  
 `* 401 Unauthorized: utilisateur inexistant`  
 `* 401 Unauthorized: mot de passe erroné`  
@@ -89,14 +89,14 @@ Récupère les informations de l'utilisateur correspondant à l'id donné
 **req**: -  
   
 **res**: **200 OK**   
-        {  
-          id: number,  
-          username: string,  
-          firstName: string,  
-          lastName: string,  
-          bio: string,  
-          profilePicture: string  
-        }  
+    {  
+      id: number,  
+      username: string,  
+      firstName: string,  
+      lastName: string,  
+      bio: string,  
+      profilePicture: string  
+    }  
 *erreurs possibles*:  
 `* 404 Not Found: aucun utilisateur ne correspondant à cet identifiant`  
    
@@ -104,24 +104,24 @@ Récupère les informations de l'utilisateur correspondant à l'id donné
 Met à jour les infos de l'utilisateur dans la table Users  
   
 **req**:   
-        {  
-          firstName: string,  
-          lastName: string,  
-          bio: string,  
-          profilePicture: string  
-        }  
+    {  
+      firstName: string,  
+      lastName: string,  
+      bio: string,  
+      profilePicture: string  
+    }  
 *exemple*:   
-        {  
-          firstName: 'Georges',  
-          lastName: 'Durand',  
-          bio: 'Je m'appelle Georges, je travaille dans le département RH.',  
-          profilePicture: 'https://host.new-pic.jpeg'  
-        }  
+    {  
+      firstName: 'Georges',  
+      lastName: 'Durand',  
+      bio: 'Je m'appelle Georges, je travaille dans le département RH.',  
+      profilePicture: 'https://host.new-pic.jpeg'  
+    }  
   
 **res**: **200 OK**   
-        {  
-          message: 'Informations mises à jour'  
-        }  
+    {   
+      message: 'Informations mises à jour'  
+    }  
 *erreurs possibles*:  
 `* 400 Bad Request: un champ contient des caractères non autorisés`  
   
@@ -129,18 +129,18 @@ Met à jour les infos de l'utilisateur dans la table Users
 Supprime l'utilisateur de la base de données  
   
 **req**:   
-        {  
-          password: string  
-        }  
+    {  
+      password: string  
+    }  
 *exemple*:   
-        {  
-          password: '425SFHjs6/'  
-        }  
+    {  
+      password: '425SFHjs6/'  
+    }  
   
 **res**: **200 OK**   
-        {  
-          message: 'Utilisateur supprimé'  
-        }  
+    {  
+      message: 'Utilisateur supprimé'  
+    }  
 *erreurs possibles*:  
 `* 401 Unauthorized: mot de passe erroné`  
   
@@ -151,11 +151,11 @@ Récupère la liste de tous les objets Topic de la base de données
 **req**: -     
   
 **res**: **200 OK**   
-        [  
-          {topic1},  
-          {topic2},  
-          ...  
-        ]   
+    [  
+      { topic1 },  
+      { topic2 },  
+      ...  
+    ]   
   
 * **GET** /topics/:id  
 Récupère l'objet Topic correspondant à l'id passé en paramètre  
@@ -163,38 +163,38 @@ Récupère l'objet Topic correspondant à l'id passé en paramètre
 **req**: -  
   
 **res**: **200 OK**   
-        {  
-          id: number,  
-          name: string,  
-          description: string,  
-          imageUrl: string,  
-          dateCreation: date,  
-          numberOfFollowers: number,  
-          hasFollowed: array,  
-          UserId: number,  
-          User: Object    
-        }  
+    {  
+      id: number,  
+      name: string,  
+      description: string,  
+      imageUrl: string,  
+      dateCreation: date,  
+      numberOfFollowers: number,  
+      hasFollowed: array,  
+      UserId: number,  
+      User: Object    
+    }  
   
 * **POST** /topics  
 Crée un nouveau topic et l'ajoute à la table Topics  
   
 **req**:   
-        {  
-          name: string,  
-          description: string,  
-          image: string    
-        }  
+    {  
+      name: string,  
+      description: string,  
+      image: string    
+    }  
 *exemple*:   
-        {  
-          name: 'Animaux',  
-          description: 'Ce forum concerne les animaux',  
-          image: 'chien.jpg'  
-        }  
+    {  
+      name: 'Animaux',  
+      description: 'Ce forum concerne les animaux',  
+      image: 'chien.jpg'  
+    }  
   
 **res**: **201 CREATED**   
-        {  
-          message: 'Topic créé'  
-        }  
+    {  
+      message: 'Topic créé'  
+    }  
 *erreurs possibles*:  
 `* 400 Bad Request: un champ contient des caractères non autorisés`  
 `* 400 Bad Request: un champ requis n'est pas rempli`  
@@ -203,18 +203,18 @@ Crée un nouveau topic et l'ajoute à la table Topics
 Supprime un topic de la base de données (possible seulement pour l'administrateur)  
   
 **req**:   
-        {  
-          password: string    
-        }  
+    {  
+      password: string    
+    }  
 *exemple*:   
-        {  
-          password: Jefjwfw54/dcsd    
-        }  
+    {  
+      password: Jefjwfw54/dcsd    
+    }  
   
 **res**: **200 OK**   
-        {  
-          message: 'Topic supprimé'  
-        }  
+    {  
+      message: 'Topic supprimé'  
+    }   
 *erreurs possibles*:  
 `* 401 Unauthorized: vous n'avez pas les droits nécessaires à la suppression de ce topic`  
   
@@ -223,20 +223,20 @@ Met à jour les informations concernant les followers du topic donné dans la ba
 *Le paramètre follow prend 2 valeurs possibles: 1 (follow), 0 (unfollow)*  
   
 **req**:   
-        {  
-          userId: number,  
-          follow: number  
-        }  
+    {  
+      userId: number,  
+      follow: number  
+    }  
 *exemple*:   
-        {  
-          userId: 123,  
-          follow: 1  
-        }  
+    {  
+      userId: 123,  
+      follow: 1  
+    }  
   
 **res**: **200 OK**   
-        {  
-          message: 'Topic suivi'  
-        }  
+    {  
+      message: 'Topic suivi'  
+    }  
 *erreurs possibles*:  
 `* 401 Unauthorized: l'utilisateur suit déjà ce topic`  
   
@@ -245,20 +245,20 @@ Met à jour les informations concernant les followers du topic donné dans la ba
 Crée un nouveau post et l'ajoute à la table Posts  
   
 **req**:   
-        {  
-          userId: number,  
-          content: string  
-        }  
+    {  
+      userId: number,  
+      content: string  
+    }  
 *exemple*:   
-        {  
-          userId: 123,  
-          content: "J'adore mon chien"  
-        }  
+    {  
+      userId: 123,  
+      content: "J'adore mon chien"  
+    }  
   
 **res**: **201 CREATED**   
-        {  
-          message: 'Post créé'  
-        }  
+    {  
+      message: 'Post créé'  
+    }  
 *erreurs possibles*:  
 `* 400 Bad Request: un champ contient des caractères non autorisés`  
 `* 400 Bad Request: un champ requis n'est pas rempli`  
@@ -269,11 +269,11 @@ Récupère la liste de tous les objets post (contenant toutes les infos nécessa
 **req**: -  
   
 **res**: **200 OK**   
-        [  
-          {post1},  
-          {post2},  
-          ...  
-        ]  
+    [  
+      { post1 },  
+      { post2 },  
+      ...  
+    ]  
   
 * **GET** /topics/:topicId/posts/:id  
 Retourne le post (avec les infos liées nécessaires au bon affichage du post récupérées d'autres tables) correspondant à l'id donné pour un topic donné  
@@ -281,20 +281,20 @@ Retourne le post (avec les infos liées nécessaires au bon affichage du post r�
 **req**: -  
   
 **res**: **200 OK**   
-        {  
-          id: number,  
-          date_publication: string,  
-          content: string,  
-          likes: number,  
-          dislikes: number,  
-          hasLiked: array,  
-          hasDisliked: array,  
-          numberOfComments: number,   
-          UserId: number,  
-          TopicId: number,  
-          User: Object,  
-          Topic: Object  
-        }  
+    {  
+      id: number,  
+      date_publication: string,  
+      content: string,  
+      likes: number,  
+      dislikes: number,  
+      hasLiked: array,  
+      hasDisliked: array,  
+      numberOfComments: number,   
+      UserId: number,  
+      TopicId: number,  
+      User: Object,  
+      Topic: Object  
+    }  
 *erreurs possibles*:  
 `* 404 Not Found: la ressource demandée n'existe pas`  
     
@@ -302,20 +302,20 @@ Retourne le post (avec les infos liées nécessaires au bon affichage du post r�
 Met à jour le post donné dans la base de données (possible seulement pour le créateur du post)  
   
 **req**:   
-        {  
-          userId: number,  
-          content: string  
-        }  
+    {  
+      userId: number,  
+      content: string  
+    }  
 *exemple*:   
-        {  
-          userId: 123,  
-          content: "J'adore vraiment mon chien"  
-        }  
+    {  
+      userId: 123,  
+      content: "J'adore vraiment mon chien"  
+    }  
   
 **res**: **200 OK**   
-        {  
-          message: 'Post mis à jour'  
-        }  
+    {  
+      message: 'Post mis à jour'  
+    }  
 *erreurs possibles*:  
 `* 400 Bad Request: un champ contient des caractères non autorisés`  
 `* 401 Unauthorized: vous n'avez pas l'autorisation requise pour effectuer cette opération`  
@@ -324,18 +324,18 @@ Met à jour le post donné dans la base de données (possible seulement pour le 
 Supprime le post de la base de données (possible seulement pour le créateur du post)  
   
 **req**:   
-        {  
-          userId: number,  
-        }  
+    {  
+      userId: number,  
+    }  
 *exemple*:   
-        {  
-          userId: 123  
-        }  
+    {  
+      userId: 123  
+    }  
   
 **res**: **200 OK**   
-        {  
-          message: 'Post supprimé'  
-        }
+    {  
+      message: 'Post supprimé'  
+    }
 *erreurs possibles*:  
 `* 404 Not Found: la ressource demandée n'existe pas`  
 `* 401 Unauthorized: vous n'avez pas l'autorisation requise pour effectuer cette opération`  
@@ -345,40 +345,40 @@ Met à jour les informations concernant les likes du post donné dans la base de
 *Le paramètre like prend 3 valeurs possibles: -1 (dislike), 0 (neutre), 1 (like)*  
   
 **req**:   
-        {  
-          userId: number,  
-          like: number  
-        }  
+    {  
+      userId: number,  
+      like: number  
+    }  
 *exemple*:   
-        {  
-          userId: 175,  
-          like: 1  
-        }  
+    {  
+      userId: 175,  
+      like: 1  
+    }  
   
 **res**: **200 OK**   
-        {  
-          message: 'Post mis à jour avec la nouvelle réaction'  
-        }  
+    {  
+      message: 'Post mis à jour avec la nouvelle réaction'  
+    }  
   
 ### Comment
 * **POST** /topics/:topicId/posts/:postId/comments  
 Crée un nouveau commentaire pour le post et l'ajoute à la table Comments  
   
 **req**:   
-        {  
-          userId: number,  
-          content: string  
-        }  
+    {  
+      userId: number,  
+      content: string  
+    }  
 *exemple*:   
-        {  
-          userId: 175,  
-          content: "Comment s'appelle ton chien?"  
-        }  
+    {  
+      userId: 175,  
+      content: "Comment s'appelle ton chien?"  
+    }  
   
 **res**: **201 CREATED**   
-        {  
-          message: 'Commentaire créé'  
-        }  
+    {  
+      message: 'Commentaire créé'  
+    }  
 *erreurs possibles*:  
 `* 400 Bad Request: un champ contient des caractères non autorisés`  
 `* 400 Bad Request: un champ requis n'est pas rempli`  
@@ -389,11 +389,11 @@ Récupère la liste de tous les objets comment pour le post donné
 **req**: -  
   
 **res**: **200 OK**   
-        [  
-          {comment1},  
-          {comment2},  
-          ...  
-        ]  
+    [  
+      { comment1 },  
+      { comment2 },  
+      ...  
+    ]   
   
 * **GET** /topics/:topicId/posts/:postId/comments/:id  
 Retourne le commentaire correspondant à l'id donné pour un post donné  
@@ -401,19 +401,19 @@ Retourne le commentaire correspondant à l'id donné pour un post donné
 **req**: -  
   
 **res**: **200 OK**   
-        {  
-          id: number,  
-          date_publication: string,  
-          content: string,  
-          likes: number,  
-          dislikes: number,  
-          hasLiked: array,  
-          hasDisliked: array,  
-          UserId: number,  
-          PostId: number,  
-          User: Object,  
-          Post: Object,  
-        }  
+    {  
+      id: number,  
+      date_publication: string,  
+      content: string,  
+      likes: number,  
+      dislikes: number,  
+      hasLiked: array,  
+      hasDisliked: array,  
+      UserId: number,  
+      PostId: number,  
+      User: Object,  
+      Post: Object,  
+    }  
 *erreurs possibles*:  
 `* 404 Not Found: la ressource demandée n'existe pas`  
     
@@ -421,20 +421,20 @@ Retourne le commentaire correspondant à l'id donné pour un post donné
 Met à jour le commentaire donné dans la base de données (possible seulement pour le créateur du commentaire)  
   
 **req**:   
-        {  
-          userId: number,  
-          content: string  
-        }  
+    {  
+      userId: number,  
+      content: string  
+    }   
 *exemple*:   
-        {  
-          userId: 175,  
-          content: "Comment s'appelle ce joli chien?"  
-        }  
+    {  
+      userId: 175,  
+      content: "Comment s'appelle ce joli chien?"  
+    }  
   
 **res**: **200 OK**   
-        {  
-          message: 'Commentaire mis à jour'  
-        }  
+    {  
+      message: 'Commentaire mis à jour'  
+    }  
 *erreurs possibles*:  
 `* 400 Bad Request: un champ contient des caractères non autorisés`  
 `* 401 Unauthorized: vous n'avez pas l'autorisation requise pour effectuer cette opération`  
@@ -443,18 +443,18 @@ Met à jour le commentaire donné dans la base de données (possible seulement p
 Supprime le commentaire de la base de données (possible seulement pour le créateur du post)  
   
 **req**:   
-        {  
-          userId: number,  
-        }  
+    {  
+      userId: number,  
+    }  
 *exemple*:   
-        {  
-          userId: 175  
-        }  
+    {  
+      userId: 175  
+    }  
   
 **res**: **200 OK**   
-        {  
-          message: 'Commentaire supprimé'  
-        }
+    {  
+      message: 'Commentaire supprimé'  
+    }
 *erreurs possibles*:  
 `* 404 Not Found: la ressource demandée n'existe pas`  
 `* 401 Unauthorized: vous n'avez pas l'autorisation requise pour effectuer cette opération`  
@@ -464,20 +464,20 @@ Met à jour les informations concernant les likes du commentaire donné dans la 
 *Le paramètre like prend 3 valeurs possibles: -1 (dislike), 0 (neutre), 1 (like)*  
   
 **req**:   
-        {  
-          userId: number,  
-          like: number  
-        }  
+    {  
+      userId: number,  
+      like: number  
+    }  
 *exemple*:   
-        {  
-          userId: 250,  
-          like: 1  
-        }  
+    {  
+      userId: 250,  
+      like: 1  
+    }  
   
 **res**: **200 OK**   
-        {  
-          message: 'Commentaire mis à jour avec la nouvelle réaction'  
-        }  
+    {  
+      message: 'Commentaire mis à jour avec la nouvelle réaction'  
+    }  
   
 </details>
 
