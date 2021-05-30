@@ -13,7 +13,8 @@ Puis:
   
     npm install  
   
-Enfin:  
+Créer une copie de '.env.dist' nommée '.env' et remplacer les placeholders par les valeurs requises.  
+Enfin, exécuter:  
   
     node server  
   
