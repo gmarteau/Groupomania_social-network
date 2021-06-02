@@ -47,7 +47,7 @@ export default {
 .topicCard {
     border: solid 1px #d3d3d3;
     border-radius: .3rem;
-    box-shadow: 1px 1px 6px #FFD7D7;
+    box-shadow: 1px 1px 6px #d3d3d3;
     text-decoration: none;
     color: #000;
     display: flex;
@@ -57,7 +57,7 @@ export default {
     &:hover {
         text-decoration: none;
         color: #000;
-        box-shadow: 3px 3px 3px #FFD7D7;
+        box-shadow: 3px 3px 3px #d3d3d3;
     }
     &__pic {
         width: 25%;
@@ -67,7 +67,7 @@ export default {
         &__circle {
             width: 100px;
             height: 100px;
-            border: solid 2px #FFD7D7;
+            border: solid 2px #D1515A;
             border-radius: 50%;
             overflow: hidden;
             @media screen and (max-width: 576px) {

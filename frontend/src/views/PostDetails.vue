@@ -211,19 +211,19 @@ export default {
         }
         &__publish {
             min-width: 100%;
-            background-color: #FFD7D7;
+            background-color: #D1515A;
             &__submit {
                 display: flex;
                 justify-content: center;
                 align-items: center;
                 &__btn {
-                    background-color: #FD3C13;
+                    background-color: #091F43;
                     color: #fff;
                     font-weight: bold;
                     &:hover {
                         background-color: #fff;
-                        color: #FD3C13;
-                        border: solid 2px #FD3C13;
+                        color: #091F43;
+                        border: solid 2px #091F43;
                     }
                 }
             }

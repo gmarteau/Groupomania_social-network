@@ -268,7 +268,7 @@ export default {
                 &::after {
                     content: '';
                     height: 2px;
-                    background-color: #FFD7D7;
+                    background-color: #D1515A;
                     position: absolute;
                     bottom: 0;
                     width: 95%;
@@ -285,12 +285,12 @@ export default {
                     display: flex;
                     justify-content: flex-end;
                     &__btn {
-                        background-color: #FD3C13;
+                        background-color: #091F43;
                         color: #fff;
                         font-weight: bold;
                         &:hover {
-                            background-color: #FFD7D7;
-                            color: #FD3C13;
+                            background-color: #D1515A;
+                            color: #fff;
                         }
                     }
                 }

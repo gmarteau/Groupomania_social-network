@@ -41,8 +41,8 @@ export default {
 
 .form-control {
     &:focus {
-        border-color: #FFD7D7;
-        box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px #FFD7D7;
+        border-color: #d3d3d3;
+        box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px #d3d3d3;
     }
 }
 </style>

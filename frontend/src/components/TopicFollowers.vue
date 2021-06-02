@@ -34,7 +34,7 @@ export default {
 <style lang="scss">
 
 .followers {
-    background-color: #FD3C13;
+    background-color: #D1515A;
     border-radius: .3rem;
     &__title {
         color: #fff;

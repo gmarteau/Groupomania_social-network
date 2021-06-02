@@ -75,7 +75,7 @@ export default {
 <style lang="scss">
 
 .topicsList {
-    background-color: #FD3C13;
+    background-color: #D1515A;
     color: #fff;
     border-radius: .3rem;
     &__title {

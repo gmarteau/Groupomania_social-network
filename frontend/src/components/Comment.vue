@@ -96,15 +96,15 @@ export default {
             const topicId = searchUrl.get('topic');
             const postId = searchUrl.get('id');
             const reqUrl = '/topics/' + topicId + '/posts/' + postId + '/comments/' + this.id;
-            const response = await axios.delete(reqUrl, {
+            const config = {
+                headers: {
+                'Authorization': 'Bearer ' + this.currentUser.token
+                },
                 data: {
                     userId: this.authorId
                 }
-            }, {
-                headers: {
-                'Authorization': 'Bearer ' + this.currentUser.token
-                }
-            });
+            };
+            const response = await axios.delete(reqUrl, config);
             console.log(response.data);
             this.$emit('comment-deleted');
         },
@@ -264,12 +264,12 @@ export default {
                 }
                 &__submit {
                     &__btn {
-                        background-color: #FD3C13;
+                        background-color: #091F43;
                         color: #fff;
                         font-weight: bold;
                         &:hover {
-                            background-color: #FFD7D7;
-                            color: #FD3C13;
+                            background-color: #D1515A;
+                            color: #fff;
                         }
                     }
                 }
@@ -305,7 +305,7 @@ export default {
                     color: #000;
                 }
                 &--active {
-                    color: #FFD7D7;
+                    color: #091F43;
                 }
             }
         }
@@ -317,7 +317,7 @@ export default {
                     color: #000;
                 }
                 &--active {
-                    color: #FD3C13;
+                    color: #D1515A;
                 }
             }
         }

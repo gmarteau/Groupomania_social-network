@@ -275,7 +275,7 @@ export default {
         height: 200px;
         margin-top: -50px;
         z-index: -1000;
-        background-color: #FFD7D7;
+        background-color: #091F43;
         @media screen and (max-width: 992px) {
             height: 130px;
         }
@@ -373,24 +373,24 @@ export default {
                 justify-content: center;
                 &__save {
                     &__btn {
-                        background-color: #FD3C13;
-                        border: solid 2px #FD3C13;
+                        background-color: #091F43;
+                        border: solid 2px #091F43;
                         color: #fff;
                         font-weight: bold;
                         &:hover {
-                            background-color: #FFD7D7;
-                            color: #FD3C13;
-                            border: solid 2px #FFD7D7;
+                            background-color: #D1515A;
+                            color: #fff;
+                            border: solid 2px #D1515A;
                         }
                     }
                 }
                 &__cancel {
                     &__btn {
-                        border: solid 2px #FD3C13;
-                        color: #FD3C13;
+                        border: solid 2px #091F43;
+                        color: #091F43;
                         font-weight: bold;
                         &:hover {
-                            background-color: #FD3C13;
+                            background-color: #091F43;
                             color: #fff;
                         }
                     }
@@ -404,23 +404,23 @@ export default {
                 display: flex;
                 justify-content: flex-end;
                 &__cancel {
-                    border: solid 2px #FD3C13;
-                    color: #FD3C13;
+                    border: solid 2px #091F43;
+                    color: #091F43;
                     font-weight: bold;
                     &:hover {
-                        background-color: #FD3C13;
+                        background-color: #091F43;
                         color: #fff;
                     }
                 }
                 &__confirm {
-                    background-color: #FD3C13;
-                    border: solid 2px #FD3C13;
+                    background-color: #091F43;
+                    border: solid 2px #091F43;
                     color: #fff;
                     font-weight: bold;
                     &:hover {
-                        background-color: #FFD7D7;
-                        color: #FD3C13;
-                        border: solid 2px #FFD7D7;
+                        background-color: #D1515A;
+                        color: #fff;
+                        border: solid 2px #D1515A;
                     }                   
                 }
             }

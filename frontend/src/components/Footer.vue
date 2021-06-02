@@ -18,7 +18,7 @@ export default {
 
 .footer {
     height: 130px;
-    background-color: #FFD7D7;
+    background-color: #091F43;
     color: #fff;
     display: flex;
     align-items: center;

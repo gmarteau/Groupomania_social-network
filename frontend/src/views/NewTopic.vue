@@ -141,12 +141,12 @@ export default {
         }
         &__submit {
             &__btn {
-                background-color: #FD3C13;
+                background-color: #D1515A;
                 color: #fff;
                 font-weight: bold;
                 &:hover {
-                    background-color: #FFD7D7;
-                    color: #FD3C13;
+                    background-color: #091F43;
+                    color: #fff;
                 }
             }
         }

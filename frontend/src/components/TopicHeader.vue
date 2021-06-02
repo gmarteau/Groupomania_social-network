@@ -147,7 +147,7 @@ export default {
         height: 200px;
         margin-top: -50px;
         z-index: -1000;
-        background-color: #FFD7D7;
+        background-color: #D1515A;
         @media screen and (max-width: 992px) {
             height: 130px;
         }
@@ -188,7 +188,7 @@ export default {
             content: '';
             height: 2px;
             width: 75%;
-            background-color: #FD3C13;
+            background-color: #091F43;
             position: absolute;
             bottom: 0;
         }
@@ -216,15 +216,15 @@ export default {
             }
         }
         &__btn {
-            background-color: #FD3C13;
+            background-color: #D1515A;
             color: #fff;
             &:hover {
-                color: #FD3C13;
-                background-color: #FFD7D7;
+                color: #fff;
+                background-color: #091F43;
             }
             &--followed {
-                color: #FD3C13;
-                background-color: #FFD7D7;
+                color: #fff;
+                background-color: #091F43;
             }
         }
     }

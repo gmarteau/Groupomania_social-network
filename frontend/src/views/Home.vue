@@ -42,12 +42,12 @@
       <aside class="aside home--loggedIn__aside col-12 col-lg-3 mt-3 mt-md-0">
         <div class="aside__header mb-2 mb-md-3">
           <h2 class="aside__header__title mr-3">Topics</h2>
-          <router-link to="/newtopic" class="aside__header__newTopic btn px-3 py-1"><i class="fas fa-plus mr-1"></i> Créer un topic</router-link>
+          <router-link to="/newtopic" class="aside__header__newTopic btn px-3 py-1" aria-label="Créer"><i class="fas fa-plus mr-1"></i> Créer un topic</router-link>
         </div>
 
         <div class="searchbar mb-3 mb-md-4">
             <input type="search" class="searchbar__bar form-control" id="searchbar" aria-label="Search topics" placeholder="Rechercher" v-model="search" />
-            <button type="submit" class="searchbar__btn btn" @click="makeResearch"><i class="fas fa-search fa-lg"></i></button>
+            <button type="submit" class="searchbar__btn btn" aria-label="Rechercher" @click="makeResearch"><i class="fas fa-search fa-lg"></i></button>
         </div>
 
         <div class="aside__icons d-lg-none mb-4">
@@ -166,9 +166,9 @@ export default {
       }
     }
     &__link {
-      color: #FD3C13;
+      color: #D1515A;
       &:hover {
-        color: #FFD7D7;
+        color: #091F43;
         text-decoration: none;
       }
     }
@@ -201,10 +201,10 @@ export default {
   &__btn {
     flex: 1;
     color: #fff;
-    background-color: #FD3C13;
+    background-color: #091F43;
     &:hover {
-      background-color: #FFD7D7;
-      color: #FD3C13;
+      background-color: #D1515A;
+      color: #fff;
     }
   }
 }
@@ -224,21 +224,21 @@ export default {
     }
     &__newTopic {
       height: min-content;
-      background-color: #FD3C13;
+      background-color: #091F43;
       color: #fff;
       font-weight: bold;
       @media screen and (max-width: 576px) {
         font-size: .9rem;
       }
       &:hover {
-        background-color: #FFD7D7;
-        color: #FD3C13;
+        background-color: #D1515A;
+        color: #fff;
       }
     }
   }
   &__icons {
     &__icon {
-      background-color: #FD3C13;
+      background-color: #D1515A;
       color: #fff;
       font-weight: bold;
       border-radius: .75rem;
