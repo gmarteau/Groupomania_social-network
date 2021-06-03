@@ -220,6 +220,9 @@ export default {
         &__publish {
             min-width: 100%;
             background-color: #D1515A;
+            .invalid-feedback {
+                color: #fff;
+            }
             &__submit {
                 display: flex;
                 justify-content: center;
