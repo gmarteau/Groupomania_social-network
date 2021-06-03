@@ -173,6 +173,7 @@ export default {
             if (this.$v.updateForm.$anyError) {
                 return;
             }
+            const token = localStorage.getItem('token');
             const url = window.location.search;
             const searchUrl = new URLSearchParams(url);
             const userId = searchUrl.get('id');
@@ -186,7 +187,7 @@ export default {
                 formData.append('image', this.updateForm.image);
                 const putResponse = await axios.put(reqUrl, formData, {
                     headers: {
-                    'Authorization': 'Bearer ' + this.currentUser.token
+                    'Authorization': 'Bearer ' + token
                     }
                 });
                 console.log(putResponse.data);
@@ -197,14 +198,14 @@ export default {
                     bio: this.updateForm.bio
                 }, {
                     headers: {
-                    'Authorization': 'Bearer ' + this.currentUser.token
+                    'Authorization': 'Bearer ' + token
                     }
                 });
                 console.log(putResponse.data);
             }
             const profileRefreshed = await axios.get(reqUrl, {
                 headers: {
-                'Authorization': 'Bearer ' + this.currentUser.token
+                'Authorization': 'Bearer ' + token
                 }
             });
             this.user = profileRefreshed.data;
@@ -222,13 +223,14 @@ export default {
             if (this.$v.deleteForm.$anyError) {
                 return;
             }
+            const token = localStorage.getItem('token');
             const url = window.location.search;
             const searchUrl = new URLSearchParams(url);
             const userId = searchUrl.get('id');
             const reqUrl = '/users/' + userId;
             const config = {
                 headers: {
-                    'Authorization': 'Bearer ' + this.currentUser.token
+                    'Authorization': 'Bearer ' + token
                 },
                 data: {
                     password: this.deleteForm.password
@@ -236,34 +238,40 @@ export default {
             };
             const deleteResponse = await axios.delete(reqUrl, config);
             console.log(deleteResponse.data);
-            this.currentUser.id = 0;
-            this.currentUser.token = '';
+            localStorage.clear();
             this.$store.dispatch('changeLoginState');
             this.$router.push('/');
         }
     },
     async beforeMount() {
-        if (!this.loggedIn) {
+        if (!localStorage.getItem('token')) {
+            this.$store.dispatch('changeLoginState', false);
             this.$router.push('/');
+        } else {
+            this.$store.dispatch('changeLoginState', true);
+            this.$store.dispatch('storeUserId', parseInt(localStorage.getItem('userId')));
+            const isAdmin = (localStorage.getItem('admin') === 'true') ? true : false;
+            this.$store.dispatch('storeIsAdmin', isAdmin);
+            const token = localStorage.getItem('token');
+            const url = window.location.search;
+            const searchUrl = new URLSearchParams(url);
+            const userId = searchUrl.get('id');
+            this.userId = parseInt(userId);
+            const reqUrl = '/users/' + userId;
+            const response = await axios.get(reqUrl, {
+                headers: {
+                'Authorization': 'Bearer ' + token
+                }
+            });
+            this.user = response.data;
+            console.log(this.user);
+            this.updateForm.firstName = this.user.firstName;
+            this.updateForm.lastName = this.user.lastName;
+            this.username = this.user.username;
+            this.email = this.user.email;
+            this.updateForm.bio = this.user.bio;
+            this.updateForm.image = this.user.profilePicture;
         }
-        const url = window.location.search;
-        const searchUrl = new URLSearchParams(url);
-        const userId = searchUrl.get('id');
-        this.userId = parseInt(userId);
-        const reqUrl = '/users/' + userId;
-        const response = await axios.get(reqUrl, {
-            headers: {
-            'Authorization': 'Bearer ' + this.currentUser.token
-            }
-        });
-        this.user = response.data;
-        console.log(this.user);
-        this.updateForm.firstName = this.user.firstName;
-        this.updateForm.lastName = this.user.lastName;
-        this.username = this.user.username;
-        this.email = this.user.email;
-        this.updateForm.bio = this.user.bio;
-        this.updateForm.image = this.user.profilePicture;
     }
 }
 </script>
@@ -275,7 +283,7 @@ export default {
         height: 200px;
         margin-top: -50px;
         z-index: -1000;
-        background-color: #FFD7D7;
+        background-color: #091F43;
         @media screen and (max-width: 992px) {
             height: 130px;
         }
@@ -373,24 +381,24 @@ export default {
                 justify-content: center;
                 &__save {
                     &__btn {
-                        background-color: #FD3C13;
-                        border: solid 2px #FD3C13;
+                        background-color: #091F43;
+                        border: solid 2px #091F43;
                         color: #fff;
                         font-weight: bold;
                         &:hover {
-                            background-color: #FFD7D7;
-                            color: #FD3C13;
-                            border: solid 2px #FFD7D7;
+                            background-color: #D1515A;
+                            color: #fff;
+                            border: solid 2px #D1515A;
                         }
                     }
                 }
                 &__cancel {
                     &__btn {
-                        border: solid 2px #FD3C13;
-                        color: #FD3C13;
+                        border: solid 2px #091F43;
+                        color: #091F43;
                         font-weight: bold;
                         &:hover {
-                            background-color: #FD3C13;
+                            background-color: #091F43;
                             color: #fff;
                         }
                     }
@@ -404,23 +412,23 @@ export default {
                 display: flex;
                 justify-content: flex-end;
                 &__cancel {
-                    border: solid 2px #FD3C13;
-                    color: #FD3C13;
+                    border: solid 2px #091F43;
+                    color: #091F43;
                     font-weight: bold;
                     &:hover {
-                        background-color: #FD3C13;
+                        background-color: #091F43;
                         color: #fff;
                     }
                 }
                 &__confirm {
-                    background-color: #FD3C13;
-                    border: solid 2px #FD3C13;
+                    background-color: #091F43;
+                    border: solid 2px #091F43;
                     color: #fff;
                     font-weight: bold;
                     &:hover {
-                        background-color: #FFD7D7;
-                        color: #FD3C13;
-                        border: solid 2px #FFD7D7;
+                        background-color: #D1515A;
+                        color: #fff;
+                        border: solid 2px #D1515A;
                     }                   
                 }
             }

@@ -136,6 +136,7 @@ export default {
             if (this.$v.form.$anyError) {
                 return;
             }
+            const token = localStorage.getItem('token');
             const url = window.location.search;
             const searchUrl = new URLSearchParams(url);
             const topicId = searchUrl.get('id');
@@ -145,14 +146,14 @@ export default {
                 content: this.form.newPost
             }, {
                 headers: {
-                'Authorization': 'Bearer ' + this.currentUser.token
+                'Authorization': 'Bearer ' + token
                 }
             });
             console.log(createPost.data);
             const reqUrlGet = reqUrlPost + '/?order=recent' 
             const postsRefreshed = await axios.get(reqUrlGet, {
                 headers: {
-                'Authorization': 'Bearer ' + this.currentUser.token
+                'Authorization': 'Bearer ' + token
                 }
             });
             this.posts = postsRefreshed.data;
@@ -162,13 +163,15 @@ export default {
             }
         },
         async refreshPosts() {
+            const token = localStorage.getItem('token');
             const url = window.location.search;
             const searchUrl = new URLSearchParams(url);
             const topicId = searchUrl.get('id');
+            this.posts = [];
             const reqUrl = '/topics/' + topicId + '/posts/?order=recent';
             const postsRefreshed = await axios.get(reqUrl, {
                 headers: {
-                'Authorization': 'Bearer ' + this.currentUser.token
+                'Authorization': 'Bearer ' + token
                 }
             });
             if (postsRefreshed.data.length == 0) {
@@ -178,13 +181,14 @@ export default {
             }
         }, 
         async refreshFollowers() {
+            const token = localStorage.getItem('token');
             const url = window.location.search;
             const searchUrl = new URLSearchParams(url);
             const topicId = searchUrl.get('id');
             const reqUrlInfo = '/topics/' + topicId;
             const topicInfo = await axios.get(reqUrlInfo, {
                 headers: {
-                'Authorization': 'Bearer ' + this.currentUser.token
+                'Authorization': 'Bearer ' + token
                 }
             });
             if (topicInfo.data.User == null) {
@@ -199,7 +203,7 @@ export default {
             }
             const config = {
                 headers: {
-                    'Authorization': 'Bearer ' + this.currentUser.token
+                    'Authorization': 'Bearer ' + token
                 },
                 params: {
                     followers: this.topic.hasFollowed,
@@ -210,46 +214,53 @@ export default {
         }
     },
     async beforeMount() {
-        if (!this.loggedIn) {
+        if (!localStorage.getItem('token')) {
+            this.$store.dispatch('changeLoginState', false);
             this.$router.push('/');
-        }
-        const url = window.location.search;
-        const searchUrl = new URLSearchParams(url);
-        const topicId = searchUrl.get('id');
-        const reqUrlInfo = '/topics/' + topicId;
-        const topicInfo = await axios.get(reqUrlInfo, {
-            headers: {
-            'Authorization': 'Bearer ' + this.currentUser.token
-            }
-        });
-        if (topicInfo.data.User == null) {
-            this.topicCreatorRemoved = true;
-        }
-        this.topic = topicInfo.data;
-        this.topic.hasFollowed = Array.from(this.topic.hasFollowed).filter(char => char !== ',');
-        if (this.topic.hasFollowed.includes(this.currentUser.id.toString())) {
-            this.followed = true;
-        }
-        const config = {
-            headers: {
-                'Authorization': 'Bearer ' + this.currentUser.token
-            },
-            params: {
-                followers: this.topic.hasFollowed,
-            }
-        };
-        const topicFollowers = await axios.get('/users/?limit=10', config);
-        this.followers = topicFollowers.data;
-        const reqUrlPosts = reqUrlInfo + '/posts/?order=recent';
-        const topicPosts = await axios.get(reqUrlPosts, {
-            headers: {
-            'Authorization': 'Bearer ' + this.currentUser.token
-            }
-        });
-        if (topicPosts.data.length == 0) {
-            this.noPosts = true;
         } else {
-            this.posts = topicPosts.data;
+            this.$store.dispatch('changeLoginState', true);
+            this.$store.dispatch('storeUserId', parseInt(localStorage.getItem('userId')));
+            const isAdmin = (localStorage.getItem('admin') === 'true') ? true : false;
+            this.$store.dispatch('storeIsAdmin', isAdmin);
+            const token = localStorage.getItem('token');
+            const url = window.location.search;
+            const searchUrl = new URLSearchParams(url);
+            const topicId = searchUrl.get('id');
+            const reqUrlInfo = '/topics/' + topicId;
+            const topicInfo = await axios.get(reqUrlInfo, {
+                headers: {
+                'Authorization': 'Bearer ' + token
+                }
+            });
+            if (topicInfo.data.User == null) {
+                this.topicCreatorRemoved = true;
+            }
+            this.topic = topicInfo.data;
+            this.topic.hasFollowed = Array.from(this.topic.hasFollowed).filter(char => char !== ',');
+            if (this.topic.hasFollowed.includes(this.currentUser.id.toString())) {
+                this.followed = true;
+            }
+            const config = {
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                },
+                params: {
+                    followers: this.topic.hasFollowed,
+                }
+            };
+            const topicFollowers = await axios.get('/users/?limit=10', config);
+            this.followers = topicFollowers.data;
+            const reqUrlPosts = reqUrlInfo + '/posts/?order=recent';
+            const topicPosts = await axios.get(reqUrlPosts, {
+                headers: {
+                'Authorization': 'Bearer ' + token
+                }
+            });
+            if (topicPosts.data.length == 0) {
+                this.noPosts = true;
+            } else {
+                this.posts = topicPosts.data;
+            }
         }
     }
 }
@@ -268,7 +279,7 @@ export default {
                 &::after {
                     content: '';
                     height: 2px;
-                    background-color: #FFD7D7;
+                    background-color: #D1515A;
                     position: absolute;
                     bottom: 0;
                     width: 95%;
@@ -285,12 +296,12 @@ export default {
                     display: flex;
                     justify-content: flex-end;
                     &__btn {
-                        background-color: #FD3C13;
+                        background-color: #091F43;
                         color: #fff;
                         font-weight: bold;
                         &:hover {
-                            background-color: #FFD7D7;
-                            color: #FD3C13;
+                            background-color: #D1515A;
+                            color: #fff;
                         }
                     }
                 }

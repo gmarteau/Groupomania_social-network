@@ -113,6 +113,7 @@ export default {
             return $dirty ? !$error : null;
         },
         async publishNewComment() {
+            const token = localStorage.getItem('token');
             this.$v.form.$touch();
             if (this.$v.form.$anyError) {
                 return;
@@ -127,14 +128,14 @@ export default {
                 content: this.form.newComment
             }, {
                 headers: {
-                'Authorization': 'Bearer ' + this.currentUser.token
+                'Authorization': 'Bearer ' + token
                 }
             });
             console.log(createComment.data);
             const reqUrlGet = reqUrlPost + '/?order=recent';
             const commentsRefreshed = await axios.get(reqUrlGet, {
                 headers: {
-                'Authorization': 'Bearer ' + this.currentUser.token
+                'Authorization': 'Bearer ' + token
                 }
             });
             this.comments = commentsRefreshed.data;
@@ -144,6 +145,7 @@ export default {
             this.$router.push({ path: '/topic', query: { id: this.post.TopicId } });
         },
         async refreshComments() {
+            const token = localStorage.getItem('token');
             const url = window.location.search;
             const searchUrl = new URLSearchParams(url);
             const topicId = searchUrl.get('topic');
@@ -151,12 +153,14 @@ export default {
             const reqUrl = '/topics/' + topicId + '/posts/' + postId + '/comments/?order=recent';
             const commentsRefreshed = await axios.get(reqUrl, {
                 headers: {
-                'Authorization': 'Bearer ' + this.currentUser.token
+                'Authorization': 'Bearer ' + token
                 }
             });
             this.comments = commentsRefreshed.data;
         },
         async refreshPost() {
+            this.post = '';
+            const token = localStorage.getItem('token');
             const url = window.location.search;
             const searchUrl = new URLSearchParams(url);
             const topicId = searchUrl.get('topic');
@@ -164,34 +168,41 @@ export default {
             const reqUrl = '/topics/' + topicId + '/posts/' + postId;
             const postRefreshed = await axios.get(reqUrl, {
                 headers: {
-                'Authorization': 'Bearer ' + this.currentUser.token
+                'Authorization': 'Bearer ' + token
                 }
             });
             this.post = postRefreshed.data;
         }
     },
     async beforeMount() {
-        if (!this.loggedIn) {
+        if (!localStorage.getItem('token')) {
+            this.$store.dispatch('changeLoginState', false);
             this.$router.push('/');
+        } else {
+            this.$store.dispatch('changeLoginState', true);
+            this.$store.dispatch('storeUserId', parseInt(localStorage.getItem('userId')));
+            const isAdmin = (localStorage.getItem('admin') === 'true') ? true : false;
+            this.$store.dispatch('storeIsAdmin', isAdmin);
+            const token = localStorage.getItem('token');
+            const url = window.location.search;
+            const searchUrl = new URLSearchParams(url);
+            const topicId = searchUrl.get('topic');
+            const postId = searchUrl.get('id');
+            const reqUrlPost = '/topics/' + topicId + '/posts/' + postId;
+            const post = await axios.get(reqUrlPost, {
+                headers: {
+                'Authorization': 'Bearer ' + token
+                }
+            });
+            this.post = post.data;
+            const reqUrlComments = reqUrlPost + '/comments/?order=recent';
+            const comments = await axios.get(reqUrlComments, {
+                headers: {
+                'Authorization': 'Bearer ' + token
+                }
+            });
+            this.comments = comments.data;
         }
-        const url = window.location.search;
-        const searchUrl = new URLSearchParams(url);
-        const topicId = searchUrl.get('topic');
-        const postId = searchUrl.get('id');
-        const reqUrlPost = '/topics/' + topicId + '/posts/' + postId;
-        const post = await axios.get(reqUrlPost, {
-            headers: {
-            'Authorization': 'Bearer ' + this.currentUser.token
-            }
-        });
-        this.post = post.data;
-        const reqUrlComments = reqUrlPost + '/comments/?order=recent';
-        const comments = await axios.get(reqUrlComments, {
-            headers: {
-            'Authorization': 'Bearer ' + this.currentUser.token
-            }
-        });
-        this.comments = comments.data;
     }
 }
 </script>
@@ -211,19 +222,19 @@ export default {
         }
         &__publish {
             min-width: 100%;
-            background-color: #FFD7D7;
+            background-color: #D1515A;
             &__submit {
                 display: flex;
                 justify-content: center;
                 align-items: center;
                 &__btn {
-                    background-color: #FD3C13;
+                    background-color: #091F43;
                     color: #fff;
                     font-weight: bold;
                     &:hover {
                         background-color: #fff;
-                        color: #FD3C13;
-                        border: solid 2px #FD3C13;
+                        color: #091F43;
+                        border: solid 2px #091F43;
                     }
                 }
             }

@@ -82,9 +82,10 @@ export default {
             formData.append('name', this.form.name);
             formData.append('description', this.form.description);
             formData.append('image', this.form.image);
+            const token = localStorage.getItem('token');
             axios.post('/topics', formData, {
                 headers: {
-                'Authorization': 'Bearer ' + this.currentUser.token
+                'Authorization': 'Bearer ' + token
                 }
             })
                 .then(response => {
@@ -99,9 +100,13 @@ export default {
         }
     },
     beforeMount() {
-        console.log(this.loggedIn);
-        if (!this.loggedIn) {
-            this.$router.push('/');
+        if (!localStorage.getItem('token')) {
+            this.$store.dispatch('changeLoginState', false);
+        } else {
+            this.$store.dispatch('changeLoginState', true);
+            this.$store.dispatch('storeUserId', parseInt(localStorage.getItem('userId')));
+            const isAdmin = (localStorage.getItem('admin') === 'true') ? true : false;
+            this.$store.dispatch('storeIsAdmin', isAdmin);
         }
     }
 }
@@ -141,12 +146,12 @@ export default {
         }
         &__submit {
             &__btn {
-                background-color: #FD3C13;
+                background-color: #091F43;
                 color: #fff;
                 font-weight: bold;
                 &:hover {
-                    background-color: #FFD7D7;
-                    color: #FD3C13;
+                    background-color: #D1515A;
+                    color: #fff;
                 }
             }
         }

@@ -16,8 +16,7 @@ export default new Vuex.Store({
     loggedIn: false,
     currentUser: {
       id: 0,
-      isAdmin: false,
-      token: ''
+      isAdmin: false
     }
   },
   getters: {
@@ -29,21 +28,25 @@ export default new Vuex.Store({
     }
   },
   mutations: {
-    SWITCH_LOGGEDIN(state) {
-      state.loggedIn = !state.loggedIn;
+    SWITCH_LOGGEDIN(state, boolean) {
+      state.loggedIn = boolean;
     },
-    USER_AUTH_INFO(state, user) {
-      state.currentUser.id = user.userId;
-      state.currentUser.isAdmin = user.isAdmin;
-      state.currentUser.token = user.token;
+    USER_ID(state, userId) {
+      state.currentUser.id = userId;
+    },
+    USER_ADMIN(state, isAdmin) {
+      state.currentUser.isAdmin = isAdmin;
     }
   },
   actions: {
-    changeLoginState(context) {
-      context.commit('SWITCH_LOGGEDIN');
+    changeLoginState(context, boolean) {
+      context.commit('SWITCH_LOGGEDIN', boolean);
     },
-    storeUserAuthInfo(context, user) {
-      context.commit('USER_AUTH_INFO', user);
+    storeUserId(context, userId) {
+      context.commit('USER_ID', userId);
+    },
+    storeIsAdmin(context, isAdmin) {
+      context.commit('USER_ADMIN', isAdmin);
     }
   },
   modules: {

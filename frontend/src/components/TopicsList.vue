@@ -39,11 +39,12 @@ export default {
         ...mapGetters(['currentUser'])
     },
     async beforeMount() {
+        const token = localStorage.getItem('token')
         if (this.listName == 'popular') {
             this.title = 'Les + populaires';
             const response = await axios.get('/topics/?order=popular&limit=5', {
                 headers: {
-                'Authorization': 'Bearer ' + this.currentUser.token
+                'Authorization': 'Bearer ' + token
                 }
             });
             this.topics = response.data;
@@ -51,7 +52,7 @@ export default {
             this.title = 'Les + récents';
             const response = await axios.get('/topics/?order=recent&limit=5', {
                 headers: {
-                'Authorization': 'Bearer ' + this.currentUser.token
+                'Authorization': 'Bearer ' + token
                 }
             });
             this.topics = response.data;
@@ -59,7 +60,7 @@ export default {
             this.title = 'Suivis';
             const config = {
                 headers: {
-                    'Authorization': 'Bearer ' + this.currentUser.token
+                    'Authorization': 'Bearer ' + token
                 },
                 params: {
                     userId: this.userId
@@ -75,7 +76,7 @@ export default {
 <style lang="scss">
 
 .topicsList {
-    background-color: #FD3C13;
+    background-color: #D1515A;
     color: #fff;
     border-radius: .3rem;
     &__title {

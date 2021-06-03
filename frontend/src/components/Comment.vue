@@ -91,20 +91,21 @@ export default {
             return $dirty ? !$error : null;
         },
         async deleteComment() {
+            const token = localStorage.getItem('token');
             const url = window.location.search;
             const searchUrl = new URLSearchParams(url);
             const topicId = searchUrl.get('topic');
             const postId = searchUrl.get('id');
             const reqUrl = '/topics/' + topicId + '/posts/' + postId + '/comments/' + this.id;
-            const response = await axios.delete(reqUrl, {
+            const config = {
+                headers: {
+                'Authorization': 'Bearer ' + token
+                },
                 data: {
                     userId: this.authorId
                 }
-            }, {
-                headers: {
-                'Authorization': 'Bearer ' + this.currentUser.token
-                }
-            });
+            };
+            const response = await axios.delete(reqUrl, config);
             console.log(response.data);
             this.$emit('comment-deleted');
         },
@@ -116,6 +117,7 @@ export default {
             if (this.$v.$anyError) {
                 return;
             }
+            const token = localStorage.getItem('token');
             const url = window.location.search;
             const searchUrl = new URLSearchParams(url);
             const topicId = searchUrl.get('topic');
@@ -126,7 +128,7 @@ export default {
                 content: this.content
             }, {
                 headers: {
-                'Authorization': 'Bearer ' + this.currentUser.token
+                'Authorization': 'Bearer ' + token
                 }
             });
             console.log(response.data);
@@ -134,6 +136,7 @@ export default {
             this.$emit('comment-updated');
         },
         async likeComment() {
+            const token = localStorage.getItem('token');
             const url = window.location.search;
             const searchUrl = new URLSearchParams(url);
             const topicId = searchUrl.get('topic');
@@ -145,7 +148,7 @@ export default {
                     like: 0
                 }, {
                     headers: {
-                    'Authorization': 'Bearer ' + this.currentUser.token
+                    'Authorization': 'Bearer ' + token
                     }
                 });
                 console.log(response.data);
@@ -157,7 +160,7 @@ export default {
                     like: 1
                 }, {
                     headers: {
-                    'Authorization': 'Bearer ' + this.currentUser.token
+                    'Authorization': 'Bearer ' + token
                     }
                 });
                 console.log(response.data);
@@ -170,6 +173,7 @@ export default {
             this.$emit('comment-liked');
         },
         async dislikeComment() {
+            const token = localStorage.getItem('token');
             const url = window.location.search;
             const searchUrl = new URLSearchParams(url);
             const topicId = searchUrl.get('topic');
@@ -181,7 +185,7 @@ export default {
                     like: 0
                 }, {
                     headers: {
-                    'Authorization': 'Bearer ' + this.currentUser.token
+                    'Authorization': 'Bearer ' + token
                     }
                 });
                 console.log(response.data);
@@ -193,7 +197,7 @@ export default {
                     like: -1
                 }, {
                     headers: {
-                    'Authorization': 'Bearer ' + this.currentUser.token
+                    'Authorization': 'Bearer ' + token
                     }
                 });
                 console.log(response.data);
@@ -264,12 +268,12 @@ export default {
                 }
                 &__submit {
                     &__btn {
-                        background-color: #FD3C13;
+                        background-color: #091F43;
                         color: #fff;
                         font-weight: bold;
                         &:hover {
-                            background-color: #FFD7D7;
-                            color: #FD3C13;
+                            background-color: #D1515A;
+                            color: #fff;
                         }
                     }
                 }
@@ -305,7 +309,7 @@ export default {
                     color: #000;
                 }
                 &--active {
-                    color: #FFD7D7;
+                    color: #091F43;
                 }
             }
         }
@@ -317,7 +321,7 @@ export default {
                     color: #000;
                 }
                 &--active {
-                    color: #FD3C13;
+                    color: #D1515A;
                 }
             }
         }

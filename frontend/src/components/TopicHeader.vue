@@ -79,26 +79,28 @@ export default {
     },
     methods: {
         async followTopic() {
+            const token = localStorage.getItem('token');
             const reqUrl = '/topics/' + this.topicId + '/follow';
             const response = await axios.post(reqUrl, {
                 userId: this.userId,
                 follow: 1
             }, {
                 headers: {
-                'Authorization': 'Bearer ' + this.currentUser.token
+                'Authorization': 'Bearer ' + token
                 }
             });
             console.log(response.data);
             this.$emit('topic-followed');
         },
         async unfollowTopic() {
+            const token = localStorage.getItem('token');
             const reqUrl = '/topics/' + this.topicId + '/follow';
             const response = await axios.post(reqUrl, {
                 userId: this.userId,
                 follow: 0
             }, {
                 headers: {
-                'Authorization': 'Bearer ' + this.currentUser.token
+                'Authorization': 'Bearer ' + token
                 }
             });
             console.log(response.data);
@@ -120,13 +122,14 @@ export default {
             if (this.$v.form.$anyError) {
                 return;
             }
+            const token = localStorage.getItem('token');
             const url = window.location.search;
             const searchUrl = new URLSearchParams(url);
             const topicId = searchUrl.get('id');
             const reqUrl = '/topics/' + topicId;
             const config = {
                 headers: {
-                    'Authorization': 'Bearer ' + this.currentUser.token
+                    'Authorization': 'Bearer ' + token
                 },
                 data: {
                     password: this.form.password
@@ -147,7 +150,7 @@ export default {
         height: 200px;
         margin-top: -50px;
         z-index: -1000;
-        background-color: #FFD7D7;
+        background-color: #D1515A;
         @media screen and (max-width: 992px) {
             height: 130px;
         }
@@ -188,7 +191,7 @@ export default {
             content: '';
             height: 2px;
             width: 75%;
-            background-color: #FD3C13;
+            background-color: #091F43;
             position: absolute;
             bottom: 0;
         }
@@ -216,15 +219,18 @@ export default {
             }
         }
         &__btn {
-            background-color: #FD3C13;
+            background-color: #D1515A;
             color: #fff;
             &:hover {
-                color: #FD3C13;
-                background-color: #FFD7D7;
+                color: #fff;
+                background-color: #091F43;
             }
             &--followed {
-                color: #FD3C13;
-                background-color: #FFD7D7;
+                color: #fff;
+                background-color: #091F43;
+                &:hover {
+                    color: #fff;
+                }
             }
         }
     }
