@@ -173,6 +173,7 @@ export default {
             if (this.$v.updateForm.$anyError) {
                 return;
             }
+            const token = localStorage.getItem('token');
             const url = window.location.search;
             const searchUrl = new URLSearchParams(url);
             const userId = searchUrl.get('id');
@@ -186,7 +187,7 @@ export default {
                 formData.append('image', this.updateForm.image);
                 const putResponse = await axios.put(reqUrl, formData, {
                     headers: {
-                    'Authorization': 'Bearer ' + this.currentUser.token
+                    'Authorization': 'Bearer ' + token
                     }
                 });
                 console.log(putResponse.data);
@@ -197,14 +198,14 @@ export default {
                     bio: this.updateForm.bio
                 }, {
                     headers: {
-                    'Authorization': 'Bearer ' + this.currentUser.token
+                    'Authorization': 'Bearer ' + token
                     }
                 });
                 console.log(putResponse.data);
             }
             const profileRefreshed = await axios.get(reqUrl, {
                 headers: {
-                'Authorization': 'Bearer ' + this.currentUser.token
+                'Authorization': 'Bearer ' + token
                 }
             });
             this.user = profileRefreshed.data;
@@ -222,13 +223,14 @@ export default {
             if (this.$v.deleteForm.$anyError) {
                 return;
             }
+            const token = localStorage.getItem('token');
             const url = window.location.search;
             const searchUrl = new URLSearchParams(url);
             const userId = searchUrl.get('id');
             const reqUrl = '/users/' + userId;
             const config = {
                 headers: {
-                    'Authorization': 'Bearer ' + this.currentUser.token
+                    'Authorization': 'Bearer ' + token
                 },
                 data: {
                     password: this.deleteForm.password
@@ -236,34 +238,40 @@ export default {
             };
             const deleteResponse = await axios.delete(reqUrl, config);
             console.log(deleteResponse.data);
-            this.currentUser.id = 0;
-            this.currentUser.token = '';
+            localStorage.clear();
             this.$store.dispatch('changeLoginState');
             this.$router.push('/');
         }
     },
     async beforeMount() {
-        if (!this.loggedIn) {
+        if (!localStorage.getItem('token')) {
+            this.$store.dispatch('changeLoginState', false);
             this.$router.push('/');
+        } else {
+            this.$store.dispatch('changeLoginState', true);
+            this.$store.dispatch('storeUserId', parseInt(localStorage.getItem('userId')));
+            const isAdmin = (localStorage.getItem('admin') === 'true') ? true : false;
+            this.$store.dispatch('storeIsAdmin', isAdmin);
+            const token = localStorage.getItem('token');
+            const url = window.location.search;
+            const searchUrl = new URLSearchParams(url);
+            const userId = searchUrl.get('id');
+            this.userId = parseInt(userId);
+            const reqUrl = '/users/' + userId;
+            const response = await axios.get(reqUrl, {
+                headers: {
+                'Authorization': 'Bearer ' + token
+                }
+            });
+            this.user = response.data;
+            console.log(this.user);
+            this.updateForm.firstName = this.user.firstName;
+            this.updateForm.lastName = this.user.lastName;
+            this.username = this.user.username;
+            this.email = this.user.email;
+            this.updateForm.bio = this.user.bio;
+            this.updateForm.image = this.user.profilePicture;
         }
-        const url = window.location.search;
-        const searchUrl = new URLSearchParams(url);
-        const userId = searchUrl.get('id');
-        this.userId = parseInt(userId);
-        const reqUrl = '/users/' + userId;
-        const response = await axios.get(reqUrl, {
-            headers: {
-            'Authorization': 'Bearer ' + this.currentUser.token
-            }
-        });
-        this.user = response.data;
-        console.log(this.user);
-        this.updateForm.firstName = this.user.firstName;
-        this.updateForm.lastName = this.user.lastName;
-        this.username = this.user.username;
-        this.email = this.user.email;
-        this.updateForm.bio = this.user.bio;
-        this.updateForm.image = this.user.profilePicture;
     }
 }
 </script>

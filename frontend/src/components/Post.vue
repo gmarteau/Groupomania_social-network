@@ -113,10 +113,11 @@ export default {
             return $dirty ? !$error : null;
         },
         async deletePost() {
+            const token = localStorage.getItem('token');
             const reqUrl = '/topics/' + this.topicId + '/posts/' + this.id;
             const config = {
                 headers: {
-                'Authorization': 'Bearer ' + this.currentUser.token
+                'Authorization': 'Bearer ' + token
                 },
                 data: {
                     userId: this.authorId
@@ -134,13 +135,14 @@ export default {
             if (this.$v.$anyError) {
                 return;
             }
+            const token = localStorage.getItem('token');
             const reqUrl = '/topics/' + this.topicId + '/posts/' + this.id;
             const response = await axios.put(reqUrl, {
                 userId: this.authorId,
                 content: this.content  
             }, {
                 headers: {
-                'Authorization': 'Bearer ' + this.currentUser.token
+                'Authorization': 'Bearer ' + token
                 }
             });
             console.log(response.data);
@@ -148,6 +150,7 @@ export default {
             this.$emit('post-updated');
         },
         async likePost() {
+            const token = localStorage.getItem('token');
             const reqUrl = '/topics/' + this.topicId + '/posts/' + this.id + '/like';
             if (this.userHasLiked) {
                 const response = await axios.post(reqUrl, {
@@ -155,31 +158,25 @@ export default {
                     like: 0
                 }, {
                     headers: {
-                    'Authorization': 'Bearer ' + this.currentUser.token
+                    'Authorization': 'Bearer ' + token
                     }
                 });
                 console.log(response.data);
-                this.userHasLiked = false;
-                this.numberOfLikes--;
             } else {
                 const response = await axios.post(reqUrl, {
                     userId: this.currentUser.id,
                     like: 1
                 }, {
                     headers: {
-                    'Authorization': 'Bearer ' + this.currentUser.token
+                    'Authorization': 'Bearer ' + token
                     }
                 });
                 console.log(response.data);
-                this.userHasLiked = true;
-                this.numberOfLikes++;
-                if (this.userHasDisliked) {
-                    this.userHasDisliked = false;
-                }
             }
             this.$emit('post-liked');
         },
         async dislikePost() {
+            const token = localStorage.getItem('token');
             const reqUrl = '/topics/' + this.topicId + '/posts/' + this.id + '/like';
             if (this.userHasDisliked) {
                 const response = await axios.post(reqUrl, {
@@ -187,27 +184,20 @@ export default {
                     like: 0
                 }, {
                     headers: {
-                    'Authorization': 'Bearer ' + this.currentUser.token
+                    'Authorization': 'Bearer ' + token
                     }
                 });
                 console.log(response.data);
-                this.userHasDisliked = false;
-                this.numberOfDislikes--;
             } else {
                 const response = await axios.post(reqUrl, {
                     userId: this.currentUser.id,
                     like: -1
                 }, {
                     headers: {
-                    'Authorization': 'Bearer ' + this.currentUser.token
+                    'Authorization': 'Bearer ' + token
                     }
                 });
                 console.log(response.data);
-                this.userHasDisliked = true;
-                this.numberOfDislikes++;
-                if (this.userHasLiked) {
-                    this.userHasLiked = false;
-                }
             }
             this.$emit('post-disliked');
         }

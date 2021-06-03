@@ -13,16 +13,12 @@
 <script>
 import HeaderNav from './components/HeaderNav'
 import Footer from './components/Footer'
-import { mapGetters } from 'vuex'
 
 export default {
   name: 'App',
   components: {
     HeaderNav,
     Footer
-  },
-  computed: {
-    ...mapGetters(['loggedIn'])
   }
 }
 </script>

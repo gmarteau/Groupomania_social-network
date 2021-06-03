@@ -79,26 +79,28 @@ export default {
     },
     methods: {
         async followTopic() {
+            const token = localStorage.getItem('token');
             const reqUrl = '/topics/' + this.topicId + '/follow';
             const response = await axios.post(reqUrl, {
                 userId: this.userId,
                 follow: 1
             }, {
                 headers: {
-                'Authorization': 'Bearer ' + this.currentUser.token
+                'Authorization': 'Bearer ' + token
                 }
             });
             console.log(response.data);
             this.$emit('topic-followed');
         },
         async unfollowTopic() {
+            const token = localStorage.getItem('token');
             const reqUrl = '/topics/' + this.topicId + '/follow';
             const response = await axios.post(reqUrl, {
                 userId: this.userId,
                 follow: 0
             }, {
                 headers: {
-                'Authorization': 'Bearer ' + this.currentUser.token
+                'Authorization': 'Bearer ' + token
                 }
             });
             console.log(response.data);
@@ -120,13 +122,14 @@ export default {
             if (this.$v.form.$anyError) {
                 return;
             }
+            const token = localStorage.getItem('token');
             const url = window.location.search;
             const searchUrl = new URLSearchParams(url);
             const topicId = searchUrl.get('id');
             const reqUrl = '/topics/' + topicId;
             const config = {
                 headers: {
-                    'Authorization': 'Bearer ' + this.currentUser.token
+                    'Authorization': 'Bearer ' + token
                 },
                 data: {
                     password: this.form.password
@@ -225,6 +228,9 @@ export default {
             &--followed {
                 color: #fff;
                 background-color: #091F43;
+                &:hover {
+                    color: #fff;
+                }
             }
         }
     }

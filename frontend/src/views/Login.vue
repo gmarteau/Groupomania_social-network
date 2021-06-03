@@ -74,8 +74,11 @@ export default {
                 password: this.form.password
             })
                 .then(response => {
-                    this.$store.dispatch('storeUserAuthInfo', response.data);
-                    this.$store.dispatch('changeLoginState');
+                    localStorage.setItem('userId', response.data.userId);
+                    this.$store.dispatch('storeUserId', response.data.userId);
+                    localStorage.setItem('admin', response.data.isAdmin);
+                    this.$store.dispatch('storeIsAdmin', response.data.isAdmin);
+                    localStorage.setItem('token', response.data.token);
                     this.$router.push('/');
                 })
                 .catch(error => {

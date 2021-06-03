@@ -101,31 +101,40 @@ export default {
           query: {
               order: 'followed'
           }
-      },
+      }
     }
   },
   computed: {
     ...mapState(['logoVertical']),
-    ...mapGetters(['loggedIn', 'currentUser'])
+    ...mapGetters(['currentUser', 'loggedIn'])
   },
   methods: {
     makeResearch() {
       this.$router.push({ path: '/topics', query: { name: this.search } });
     },
     async refreshPosts() {
+      this.posts = [];
+      const token = localStorage.getItem('token');
       const response = await axios.get('/posts/?order=recent', {
         headers: {
-          'Authorization': 'Bearer ' + this.currentUser.token
+          'Authorization': 'Bearer ' + token
         }
       });
       this.posts = response.data;
     }
   },
   async beforeMount() {
-    if (this.loggedIn) {
+    if (!localStorage.getItem('token')) {
+      this.$store.dispatch('changeLoginState', false);
+    } else {
+      this.$store.dispatch('changeLoginState', true);
+      this.$store.dispatch('storeUserId', parseInt(localStorage.getItem('userId')));
+      const isAdmin = (localStorage.getItem('admin') === 'true') ? true : false;
+      this.$store.dispatch('storeIsAdmin', isAdmin);
+      const token = localStorage.getItem('token');
       const response = await axios.get('/posts/?order=recent', {
         headers: {
-          'Authorization': 'Bearer ' + this.currentUser.token
+          'Authorization': 'Bearer ' + token
         }
       });
       this.posts = response.data;

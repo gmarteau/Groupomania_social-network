@@ -40,14 +40,13 @@ export default {
     name: 'HeaderNav',
     computed: {
         ...mapState(['logo']),
-        ...mapGetters(['loggedIn', 'currentUser'])
+        ...mapGetters(['currentUser', 'loggedIn'])
     },
     methods: {
         logout() {
             this.currentUser.id = 0;
-            this.currentUser.token = '';
-            this.$store.dispatch('changeLoginState');
-            this.$router.push('/');
+            localStorage.clear();
+            document.location.reload();
         },
         toProfile() {
             this.$router.push({ path: '/user', query: { id: this.currentUser.id } });

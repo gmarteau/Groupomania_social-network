@@ -91,6 +91,7 @@ export default {
             return $dirty ? !$error : null;
         },
         async deleteComment() {
+            const token = localStorage.getItem('token');
             const url = window.location.search;
             const searchUrl = new URLSearchParams(url);
             const topicId = searchUrl.get('topic');
@@ -98,7 +99,7 @@ export default {
             const reqUrl = '/topics/' + topicId + '/posts/' + postId + '/comments/' + this.id;
             const config = {
                 headers: {
-                'Authorization': 'Bearer ' + this.currentUser.token
+                'Authorization': 'Bearer ' + token
                 },
                 data: {
                     userId: this.authorId
@@ -116,6 +117,7 @@ export default {
             if (this.$v.$anyError) {
                 return;
             }
+            const token = localStorage.getItem('token');
             const url = window.location.search;
             const searchUrl = new URLSearchParams(url);
             const topicId = searchUrl.get('topic');
@@ -126,7 +128,7 @@ export default {
                 content: this.content
             }, {
                 headers: {
-                'Authorization': 'Bearer ' + this.currentUser.token
+                'Authorization': 'Bearer ' + token
                 }
             });
             console.log(response.data);
@@ -134,6 +136,7 @@ export default {
             this.$emit('comment-updated');
         },
         async likeComment() {
+            const token = localStorage.getItem('token');
             const url = window.location.search;
             const searchUrl = new URLSearchParams(url);
             const topicId = searchUrl.get('topic');
@@ -145,7 +148,7 @@ export default {
                     like: 0
                 }, {
                     headers: {
-                    'Authorization': 'Bearer ' + this.currentUser.token
+                    'Authorization': 'Bearer ' + token
                     }
                 });
                 console.log(response.data);
@@ -157,7 +160,7 @@ export default {
                     like: 1
                 }, {
                     headers: {
-                    'Authorization': 'Bearer ' + this.currentUser.token
+                    'Authorization': 'Bearer ' + token
                     }
                 });
                 console.log(response.data);
@@ -170,6 +173,7 @@ export default {
             this.$emit('comment-liked');
         },
         async dislikeComment() {
+            const token = localStorage.getItem('token');
             const url = window.location.search;
             const searchUrl = new URLSearchParams(url);
             const topicId = searchUrl.get('topic');
@@ -181,7 +185,7 @@ export default {
                     like: 0
                 }, {
                     headers: {
-                    'Authorization': 'Bearer ' + this.currentUser.token
+                    'Authorization': 'Bearer ' + token
                     }
                 });
                 console.log(response.data);
@@ -193,7 +197,7 @@ export default {
                     like: -1
                 }, {
                     headers: {
-                    'Authorization': 'Bearer ' + this.currentUser.token
+                    'Authorization': 'Bearer ' + token
                     }
                 });
                 console.log(response.data);
