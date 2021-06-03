@@ -14,14 +14,14 @@
 
                 <b-form id="updateCommentForm" class="comment__body__txt__update col-12 col-lg-9 px-0 py-1 py-lg-0" @submit.stop.prevent="updateComment" v-if="updating" novalidate>
                     <b-form-group id="updateCommentGroup">
-                        <b-form-textarea id="updateCommentInput" name="updateCommentInput" v-model="$v.content.$model" :state="validateState()" aria-describedby="updateCommentInputFeedback" type="text" required></b-form-textarea>
+                        <b-form-textarea id="updateCommentInput" name="updateCommentInput" v-model="$v.content.$model" :state="validateState()" aria-describedby="updateCommentInputFeedback" aria-label="Modifier le commentaire" type="text" required></b-form-textarea>
                         <b-form-invalid-feedback id="updateCommentInputFeedback" :state="validateState()">Votre commentaire ne peut pas être vide</b-form-invalid-feedback>
                     </b-form-group>
                     <div class="comment__body__txt__update__submit">
                         <button type="submit" class="comment__body__txt__update__submit__btn btn px-3 py-1 ml-3 d-none d-lg-block">
                             Publier
                         </button>
-                        <button type="submit" class="comment__body__txt__update__submit__btn btn px-2 py-1 ml-3 d-lg-none">
+                        <button type="submit" class="comment__body__txt__update__submit__btn btn px-2 py-1 ml-3 d-lg-none" aria-label="Publier">
                             <i class="fas fa-check fa-xs"></i>
                         </button>
                     </div>
@@ -29,7 +29,7 @@
             </div>
             <div class="comment__body__modify col-2 col-lg-1" v-if="(currentUser.id == authorId) || currentUser.isAdmin">
                 <b-dropdown class="comment__body__modify__button dropdown" toggle-class="text-decoration-none" dropleft no-caret>
-                    <template #button-content>
+                    <template #button-content aria-label="Modifier ou supprimer">
                         <i class="fas fa-ellipsis-h"></i>
                     </template>
                     <b-dropdown-item @click="startUpdatingComment" v-if="currentUser.id == authorId">Modifier</b-dropdown-item>
@@ -42,14 +42,14 @@
         <div class="row m-0">
             <div class="comment__footer col">
                 <div class="comment__footer__likes mx-2">
-                    <button class="comment__footer__likes__btn btn px-1" @click="likeComment">
+                    <button class="comment__footer__likes__btn btn px-1" @click="likeComment" aria-label="Like">
                         <i class="far fa-thumbs-up comment__footer__likes__btn--null" v-if="!userHasLiked"></i>
                         <i class="far fa-thumbs-up comment__footer__likes__btn--active" v-if="userHasLiked"></i>
                     </button>
                     <p class="comment__footer__likes__number mb-0">{{ numberOfLikes }}</p>
                 </div>
                 <div class="comment__footer__dislikes mx-2">
-                    <button class="comment__footer__dislikes__btn btn px-1" @click="dislikeComment">
+                    <button class="comment__footer__dislikes__btn btn px-1" @click="dislikeComment" aria-label="Dislike">
                         <i class="far fa-thumbs-down comment__footer__dislikes__btn--null" v-if="!userHasDisliked"></i>
                         <i class="far fa-thumbs-down comment__footer__dislikes__btn--active" v-if="userHasDisliked"></i>
                     </button>

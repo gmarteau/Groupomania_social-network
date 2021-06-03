@@ -12,7 +12,7 @@
             </div>
             <div class="post__header__modify col-2 col-lg-1" v-if="(currentUser.id == authorId) || currentUser.isAdmin">
                 <b-dropdown class="post__header__modify__button dropdown" toggle-class="text-decoration-none" size="lg" dropleft no-caret aria-label="Modifier ou supprimer">
-                    <template #button-content aria-label="Modifier ou supprimer">
+                    <template #button-content>
                         <i class="fas fa-ellipsis-h" aria-label="Modifier ou supprimer"></i>
                     </template>
                     <b-dropdown-item @click="startUpdatingPost" v-if="currentUser.id == authorId">Modifier</b-dropdown-item>
@@ -28,14 +28,14 @@
 
             <b-form id="updatePostForm" class="post__body__update col-12 py-3" @submit.stop.prevent="updatePost" v-if="updating" novalidate>
                 <b-form-group id="updatePostGroup">
-                    <b-form-textarea id="updatePostInput" name="updatePostInput" v-model="$v.content.$model" :state="validateState()" aria-describedby="updatePostInputFeedback" type="text" required></b-form-textarea>
+                    <b-form-textarea id="updatePostInput" name="updatePostInput" v-model="$v.content.$model" :state="validateState()" aria-describedby="updatePostInputFeedback" aria-label="Modifier le post" type="text" required></b-form-textarea>
                     <b-form-invalid-feedback id="updatePostInputFeedback" :state="validateState()">Écrivez du contenu pour pouvoir le publier</b-form-invalid-feedback>
                 </b-form-group>
                 <div class="post__body__update__submit">
                     <button type="submit" class="post__body__update__submit__btn btn px-3 py-1 ml-3 d-none d-lg-block">
                         Publier
                     </button>
-                    <button type="submit" class="post__body__update__submit__btn btn px-2 py-1 ml-3 d-lg-none">
+                    <button type="submit" class="post__body__update__submit__btn btn px-2 py-1 ml-3 d-lg-none" aria-label="Publier">
                         <i class="fas fa-check fa-xs"></i>
                     </button>
                 </div>
