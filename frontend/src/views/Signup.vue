@@ -217,7 +217,7 @@ export default {
             display: flex;
             justify-content: center;
             .btn {
-                background-color: #D1515A;
+                background-color: #091F43;
                 color: #fff;
                 font-weight: bold;
             }

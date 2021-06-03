@@ -16,8 +16,9 @@
                     <b-form-invalid-feedback id="descriptionInputFeedback" :state="validateState('description')">Ce champ est requis</b-form-invalid-feedback>
                 </b-form-group>
 
-                <b-form-group id="imageGroup" label="Ajoutez une image" class="newTopic__form__image h4 mb-4" label-for="imageInput">
-                    <b-form-file id="imageInput" name="imageInput" class="h6" v-model="$v.form.image.$model" :state="validateState('image')" aria-describedby="imageInputFeedback" type="file" accept="image/png, image/jpg, image/jpeg" placeholder="Choisir une image ou la glisser ici..." drop-placeholder="Faire glisser l'image ici..." required></b-form-file>
+                <b-form-group id="imageGroup" class="newTopic__form__image h4 mb-4" label-for="imageInput">
+                    <p class="mb-1">Ajoutez une image</p>
+                    <b-form-file id="imageInput" name="imageInput" class="h6" v-model="$v.form.image.$model" :state="validateState('image')" aria-describedby="imageInputFeedback" aria-hidden="true" type="file" accept="image/png, image/jpg, image/jpeg" placeholder="Choisir une image ou la glisser ici..." drop-placeholder="Faire glisser l'image ici..." required></b-form-file>
                     <b-form-invalid-feedback id="imageInputFeedback" :state="validateState('image')">L'ajout d'une image est requis</b-form-invalid-feedback>
                 </b-form-group>
 

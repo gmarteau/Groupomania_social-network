@@ -12,7 +12,7 @@
                 <div class="profile__info__header my-3">
                     <h1 class="profile__info__header__name mr-md-3"><span class="font-weight-bold">{{ user.firstName }} {{ user.lastName }}</span> /{{ user.username }}</h1>
                     <b-dropdown class="profile__info__header__settings dropdown" toggle-class="text-decoration-none" size="lg" dropright no-caret v-if="(userId == currentUser.id) && !currentUser.isAdmin">
-                        <template #button-content>
+                        <template #button-content aria-label="Modifier ou supprimer">
                             <i class="fas fa-cog fa-lg"></i>
                         </template>
                         <b-dropdown-item @click="startUpdatingProfile">Modifier mes informations</b-dropdown-item>
@@ -48,7 +48,8 @@
             <h1 class="profile__updating__title text-center my-5">Modifier mes informations</h1>
 
             <b-form class="profile__updating__form" @submit.stop.prevent="updateUserProfile" novalidate>
-                <b-form-group id="imageGroup" label="Changer la photo de profil" class="h4" label-for="imageInput">
+                <b-form-group id="imageGroup" class="h4" label-for="imageInput">
+                    <p class="mb-1">Changer la photo de profil</p>
                     <b-form-file id="imageInput" name="imageInput" class="h6" v-model="$v.updateForm.image.$model" :state="validateState('image')" @change="changeProfilePicture" aria-describedby="imageInputFeedback" type="file" accept="image/png, image/jpg, image/jpeg" placeholder="Choisir une image ou la glisser ici..." drop-placeholder="Faire glisser l'image ici..."></b-form-file>
                     <b-form-invalid-feedback id="imageInputFeedback" :state="validateState('image')">L'ajout d'une image est requis</b-form-invalid-feedback>
                 </b-form-group>
