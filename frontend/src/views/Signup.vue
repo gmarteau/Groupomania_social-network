@@ -65,10 +65,10 @@
 
 <script>
 import { validationMixin } from 'vuelidate'
-import { required, alpha, email, minLength, sameAs } from 'vuelidate/lib/validators'
+import { required, email, minLength, sameAs } from 'vuelidate/lib/validators'
 import { mapState } from 'vuex'
 import axios from 'axios'
-const respectRegExp = (password) => {
+const passwordRegExp = (password) => {
     if (/[A-Z]/.test(password)) {
         if (/[0-9]/.test(password)) {
             if(/[@#\\$&?!/]/.test(password)) {
@@ -82,6 +82,9 @@ const respectRegExp = (password) => {
     } else {
         return false;
     }
+}
+const nameRegExp = (name) => {
+    return /^[A-Za-z\s-]*$/.test(name);
 }
 
 export default {
@@ -106,11 +109,11 @@ export default {
         form: {
             firstName: {
                 required,
-                alpha
+                nameRegExp
             },
             lastName: {
                 required,
-                alpha
+                nameRegExp
             },
             username: {
                 required
@@ -122,7 +125,7 @@ export default {
             password: {
                 required,
                 minLength: minLength(8),
-                respectRegExp
+                passwordRegExp
             },
             confirmPassword: {
                 sameAsPassword: sameAs('password')
